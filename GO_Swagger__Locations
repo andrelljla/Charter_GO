@@ -15,47 +15,25 @@ produces:
   - application/json
 paths:
 
-  /ServiceableLocations:
-    get:
-      summary: Docref W13
-      description: Determine if a location supports Charter service; is the specified address/location in the universe of known serviceable locations.
-      parameters:
-        - name: functionRequest
-          in: body
-          description: Incudes input parameters common to all invocations
-          required: true
-          schema: 
-           $ref: "#/definitions/LocationServiceabilityRequest"
-      tags:
-        - W13
-      responses:
-        200:
-          description: Successful completion; return <function>
-          schema:
-            $ref: '#/definitions/LocationServiceabilityResponse'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/CommonErrorReturn'
-
   /ServiceabilityAtLocation/{LocationID}:
     get:
-      summary: Docref <XXX>
-      description: Determine <function>
+      summary: Docref W13, W18 - Determine serviceability at location
+      description: Determine the products and services eligible for sale at the requested address/location.  The same service will be used to determine both "New Connect" location service compatability as well as "Transfer-To" Location service compatability.  Boolean value for serviceability (is/is not serivceable) can be inferred from the existence of rows in the service return data set. 
       parameters:
         - name: LocationID
           in: path
           required: true
           type: integer
-          description: <dr>
-        - name: functionRequest
+          description: Unique identifier for the address/location being queried for serviceability
+        - name: ServiceabilityAtLocationRequest
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
            $ref: "#/definitions/ServiceabilityAtLocationRequest"
       tags:
-        - XXX
+        - W13
+        - W18
       responses:
         200:
           description: Successful completion; return location serviceability
@@ -68,8 +46,8 @@ paths:
 
   /ActiveServicesAtLocation/{LocationID}:
     get:
-      summary: Docref <XXX>
-      description: Determine <function>
+      summary: Docref W16 - Get active services at location
+      description: Retrieves the list of products and services currently active at the queried address/location.
       parameters:
         - name: LocationID
           in: path
@@ -83,7 +61,7 @@ paths:
           schema: 
            $ref: "#/definitions/ActiveServicesAtLocationRequest"
       tags:
-        - XXX
+        - W16
       responses:
         200:
           description: Successful completion; return <function>
@@ -103,38 +81,12 @@ definitions:
 #
 ##############################################
 
-  LocationServiceabilityRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      addressID:
-        description: Unique identifier for the location being queried for serviceability
-        type: integer
-
-  LocationServiceabilityResponse:
-    properties:
-      commonReturn: 
-        type: object
-        $ref: '#/definitions/CommonNoErrorReturnHeader'
-        description: <dr>
-      addressID:
-        type: integer
-        description: Unique identifier for the location being queried for serviceability
-      LocationServiceble:
-        type: boolean
-        description: Indicates if the specified address/location found in the Charter universe of serviceable locations.
-
   ServiceabilityAtLocationRequest:
     properties:
       commonInputHeader:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      addressID:
-        description: Unique identifier for the location being queried for serviceability
-        type: integer
   
   ServiceabilityAtLocationResponse:
     properties:
@@ -160,6 +112,10 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
+      ActiveServices:
+        type: array
+        items:
+          $ref: '#/definitions/LoBLocationActiveProduct'
 
 ##############################################
 #
@@ -230,7 +186,7 @@ definitions:
   LocationServiceabilityDetail:
     properties:
       addressID:
-        description: <dr>
+        description: Address/location identifier being queried for serviceability
       dwellingType:
         type: string
         description: Code describing the type of dwelling present at the location.
@@ -253,13 +209,22 @@ definitions:
 
   LoBProductServiceability:
     properties:
-      lobServiceabilityName: 
+      lobName: 
         type: string
-        description: <description required>
-      productServiceability:
+        description: Line of Business (e.g. PHONE, TV, INTERNET)
+      lobProduct:
         type: string
-        description: <description required>
-      lobServiceabilityStatus:
+        description: Specific product within the LoB being referenced for serviceability
+      lobProductServiceabilityStatus:
         type: boolean
-        description: <description required>
+        description: Indicator to identify if the is specified product is serviceable at the submitted location
     
+  LoBLocationActiveProduct:
+    properties:
+      lobName: 
+        type: string
+        description: Line of Business (e.g. PHONE, TV, INTERNET)
+      lobProduct:
+        type: string
+        description: Specific product within the LoB being referenced for serviceability
+
