@@ -1,0 +1,216 @@
+# this is draft #1 of the TN_ADMIN component of the WebAPI specification for Gateway Ordering
+swagger: '2.0'
+info:
+  title: Gateway Ordering API - TN_ADMIN API
+  description: Gateway Ordering TN_ADMIN API
+  version: "1.0.0"
+# the domain of the service
+host: gateway.chartercom.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+
+  /TN_Admin/AvailableTNs:
+    get:
+      summary: Docref W06 - Get available TNs from TN adminstrator
+      description: <dr>
+      parameters:
+        - name: FunctionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/FunctionRequest"
+      tags:
+        - W06
+      responses:
+        200:
+          description: Successful completion; return location serviceability
+          schema:
+            $ref: '#/definitions/FunctionResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /TN_Admin/AvailableTNs/{TN}:
+    get:
+      summary: Docref W19 - Verify that the specified TN is available for resetart/reconnect
+      description: <dr>
+      parameters:
+        - name: TN
+          in: path
+          description: TN being queried for restart eligibility
+          required: true
+          type: string
+        - name: FunctionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/FunctionRequest"
+      tags:
+        - W19
+      responses:
+        200:
+          description: Successful completion; return location serviceability
+          schema:
+            $ref: '#/definitions/FunctionResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+    post:
+      summary: Docref W07 - Release unused TNs back to the TN Adminsitrator's available pool.  Called separately for each unused TN.
+      description: <dr>
+      parameters:
+        - name: TN
+          in: path
+          type: string
+          description: TN to be returned to "Available" status 
+        - name: FunctionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/FunctionRequest"
+      tags:
+        - W07
+      responses:
+        200:
+          description: Successful completion; return <function>
+          schema:
+            $ref: '#/definitions/FunctionResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /TN_Admin/TNPortability/{TN}:
+    get:
+      summary: Docref W05, W20 - Verify port/transfer eligibility
+      description: <dr>
+      parameters:
+        - name: TN
+          in: path
+          type: string
+          description: TN being queried for port/transfer eligibility
+        - name: portTransfer
+          in: query
+          type: string
+          description: Flag indicating if number is to be checked for portability or trnasferability.
+        - name: FunctionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/FunctionRequest"
+      tags:
+        - W20
+        - W05
+      responses:
+        200:
+          description: Successful completion; return boolean indicating TN can/cannot be ported/transferred
+          schema:
+            $ref: '#/definitions/FunctionResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+        
+
+
+definitions:
+
+##############################################
+#
+#	Request/Response definitions
+#
+##############################################
+
+  FunctionRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+  
+  FunctionResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+
+##############################################
+#
+#	Common Object definitions
+#
+##############################################
+
+  CommonInputHeader:
+    properties:
+      username:
+        type: string
+        description: Encrypted username for proxy user authentication
+      password:
+        type: string
+        description: Encrypted passaord for proxy user authentication
+      invokingUser:
+        type: string
+        description: User name for the actual user that invoked the call (for audit purpose)
+      applicationID:
+        type: string
+        description: Code identifying invoking application
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was invoked
+
+  CommonNoErrorReturnHeader:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+        
+  CommonErrorReturn:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+      errorInfo:
+        type: array
+        items:
+          $ref: "#/definitions/CommonErrors"
+  
+  CommonErrors:
+    properties:
+      errCode:
+        type: string
+      errMessage:
+        type: string
+      errDescription:
+        type: string
+      errGUID:
+        type: string
+
+##############################################
+#
+#	Function-Specific Object definitions
+#
+##############################################
