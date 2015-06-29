@@ -1,0 +1,265 @@
+# this is draft #1 of the Locations component of the WebAPI specification for Gateway Ordering
+swagger: '2.0'
+info:
+  title: Gateway Ordering API - Locations API
+  description: Gateway Ordering Locations API
+  version: "1.0.0"
+# the domain of the service
+host: gateway.chartercom.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+
+  /ServiceableLocations:
+    get:
+      summary: Docref W13
+      description: Determine if a location supports Charter service; is the specified address/location in the universe of known serviceable locations.
+      parameters:
+        - name: functionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/LocationServiceabilityRequest"
+      tags:
+        - W13
+      responses:
+        200:
+          description: Successful completion; return <function>
+          schema:
+            $ref: '#/definitions/LocationServiceabilityResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /ServiceabilityAtLocation/{LocationID}:
+    get:
+      summary: Docref <XXX>
+      description: Determine <function>
+      parameters:
+        - name: LocationID
+          in: path
+          required: true
+          type: integer
+          description: <dr>
+        - name: functionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/ServiceabilityAtLocationRequest"
+      tags:
+        - XXX
+      responses:
+        200:
+          description: Successful completion; return location serviceability
+          schema:
+            $ref: '#/definitions/ServiceabilityAtLocationResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /ActiveServicesAtLocation/{LocationID}:
+    get:
+      summary: Docref <XXX>
+      description: Determine <function>
+      parameters:
+        - name: LocationID
+          in: path
+          required: true
+          type: integer
+          description: <dr>
+        - name: locationServiceabilityRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/ActiveServicesAtLocationRequest"
+      tags:
+        - XXX
+      responses:
+        200:
+          description: Successful completion; return <function>
+          schema:
+            $ref: '#/definitions/ActiveServicesAtLocationResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+
+definitions:
+
+##############################################
+#
+#	Request/Response definitions
+#
+##############################################
+
+  LocationServiceabilityRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      addressID:
+        description: Unique identifier for the location being queried for serviceability
+        type: integer
+
+  LocationServiceabilityResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      addressID:
+        type: integer
+        description: Unique identifier for the location being queried for serviceability
+      LocationServiceble:
+        type: boolean
+        description: Indicates if the specified address/location found in the Charter universe of serviceable locations.
+
+  ServiceabilityAtLocationRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      addressID:
+        description: Unique identifier for the location being queried for serviceability
+        type: integer
+  
+  ServiceabilityAtLocationResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      locationServiceabilityDetail: 
+        type: object
+        $ref: '#/definitions/LocationServiceabilityDetail'
+        description: <dr>
+
+  ActiveServicesAtLocationRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+  
+  ActiveServicesAtLocationResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+
+##############################################
+#
+#	Common Object definitions
+#
+##############################################
+
+  CommonInputHeader:
+    properties:
+      username:
+        type: string
+        description: Encrypted username for proxy user authentication
+      password:
+        type: string
+        description: Encrypted passaord for proxy user authentication
+      invokingUser:
+        type: string
+        description: User name for the actual user that invoked the call (for audit purpose)
+      applicationID:
+        type: string
+        description: Code identifying invoking application
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was invoked
+
+  CommonNoErrorReturnHeader:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+        
+  CommonErrorReturn:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+      errorInfo:
+        type: array
+        items:
+          $ref: "#/definitions/CommonErrors"
+  
+  CommonErrors:
+    properties:
+      errCode:
+        type: string
+      errMessage:
+        type: string
+      errDescription:
+        type: string
+      errGUID:
+        type: string
+
+##############################################
+#
+#	Function-Specific Object definitions
+#
+##############################################
+
+  LocationServiceabilityDetail:
+    properties:
+      addressID:
+        description: <dr>
+      dwellingType:
+        type: string
+        description: Code describing the type of dwelling present at the location.
+      managementArea:
+        type: string
+        description: Telephone number management area.
+      rateCenter:
+        type: string
+        description: Rate center associated with the location.
+      market:
+        type: string
+        description: Market associated with the location.
+      FTA:
+        type: string
+        description: Franchise tax area associated with the location.
+      lobProductServiceability:
+        type: array
+        items:
+          $ref: '#/definitions/LoBProductServiceability'
+
+  LoBProductServiceability:
+    properties:
+      lobServiceabilityName: 
+        type: string
+        description: <description required>
+      productServiceability:
+        type: string
+        description: <description required>
+      lobServiceabilityStatus:
+        type: boolean
+        description: <description required>
+    
