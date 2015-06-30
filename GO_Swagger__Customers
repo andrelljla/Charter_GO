@@ -107,7 +107,7 @@ paths:
           schema: 
             $ref: "#/definitions/BillingAddressUpdateRequest"
       tags:
-        - W
+        - W23
       responses:
         200:
           description: Successful completion; return updated account information
@@ -188,7 +188,10 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-
+      CustomerInformationResponse:
+        type: object
+        $ref: '#/definitions/customerInformationReturn'
+            
   CustomerCreditCheckRequest:
     properties:
       commonInputHeader:
@@ -348,4 +351,29 @@ definitions:
         type: integer
         description: <dr>
 
-   
+  customerInformationReturn:
+    properties:
+      firstName:
+        type: string
+        description: <dr>
+      lastName:
+        type: string
+        description: <dr>
+      primaryTN:
+        type: string
+        description: <dr>
+      primaryTNType:
+        type: string
+        description: <dr>
+      alternateTN:
+        type: string
+        description: <dr>
+      alternateTNType:
+        type: string
+        description: <dr>
+      email:
+        type: string
+        description: <dr>
+      customerID:
+        type: integer
+        description: <dr>
