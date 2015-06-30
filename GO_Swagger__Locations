@@ -14,8 +14,31 @@ basePath: /v1
 produces:
   - application/json
 paths:
+  /serviceableLocations:
+    get:
+      summary: Docref W13, W18 precursor - Search for Location ID from within Gateway Ordering Application
+      description: Retrieves a specific location identifier (LocationID) based on a set of address parameters. Precursor to retrieving serviceability by location.  Overlaps with existing adaptive Search capability such that if adaptive capabilities can be referenced from within the Gateway Ordering application (with the appropriate data feeds) this function (and possibly the serviceabiltyAtLocation function as well) may be pre-empted. 
+      parameters:
+        - name: ServiceabilityAtLocationRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/ServiceableLocationRequest"
+      tags:
+        - W13
+        - W18
+      responses:
+        200:
+          description: Successful completion; return location serviceability
+          schema:
+            $ref: '#/definitions/ServiceableLocationRequest'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
 
-  ServiceableLocations/{LocationID}:
+  /serviceableLocations/{LocationID}:
     get:
       summary: Docref W13, W18 - Determine serviceability at location
       description: Determine the products and services eligible for sale at the requested address/location.  The same service will be used to determine both "New Connect" location service compatability as well as "Transfer-To" Location service compatability.  Boolean value for serviceability (is/is not serivceable) can be inferred from the existence of rows in the service return data set. 
@@ -44,7 +67,7 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  ServiceableLocations/{LocationID}/Active:
+  /serviceableLocations/{LocationID}/Active:
     get:
       summary: Docref W16 - Get active services at location
       description: Retrieves the list of products and services currently active at the queried address/location.
@@ -71,7 +94,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/CommonErrorReturn'
-
+       		      
 
 definitions:
 
@@ -81,6 +104,17 @@ definitions:
 #
 ##############################################
 
+  ServiceableLocationRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      commonAddress:
+        type: object
+        $ref: '#/definitions/locationLookupByAddress'
+        decription: <dr>
+                  
   ServiceabilityAtLocationRequest:
     properties:
       commonInputHeader:
@@ -228,3 +262,21 @@ definitions:
         type: string
         description: Specific product within the LoB being referenced for serviceability
 
+  locationLookupByAddress:
+    properties:
+      addressLine1:
+        type: string
+        descriprtion: <dr>
+      addressLine2:
+        type: string
+        descriprtion: <dr>
+      addressCity:
+        type: string
+        descriprtion: <dr>
+      addressStateCode:
+        type: string
+        descriprtion: <dr>
+      addressZipCode:
+        type: string
+        descriprtion: <dr>
+      
