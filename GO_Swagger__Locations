@@ -44,7 +44,7 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  ServiceableLocations/Active/{LocationID}:
+  ServiceableLocations/{LocationID}/Active:
     get:
       summary: Docref W16 - Get active services at location
       description: Retrieves the list of products and services currently active at the queried address/location.
