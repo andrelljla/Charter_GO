@@ -15,7 +15,7 @@ produces:
   - application/json
 paths:
 
-  /ServiceabilityAtLocation/{LocationID}:
+  ServiceableLocations/{LocationID}:
     get:
       summary: Docref W13, W18 - Determine serviceability at location
       description: Determine the products and services eligible for sale at the requested address/location.  The same service will be used to determine both "New Connect" location service compatability as well as "Transfer-To" Location service compatability.  Boolean value for serviceability (is/is not serivceable) can be inferred from the existence of rows in the service return data set. 
@@ -44,7 +44,7 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /ActiveServicesAtLocation/{LocationID}:
+  ServiceableLocations/Active/{LocationID}:
     get:
       summary: Docref W16 - Get active services at location
       description: Retrieves the list of products and services currently active at the queried address/location.
