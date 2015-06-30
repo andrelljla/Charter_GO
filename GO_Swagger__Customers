@@ -73,19 +73,19 @@ paths:
           in: path
           type: integer
           description: Unique identifier for the Customer for which PII is being collected
-        - name: CustomerPIIRequest
+        - name: CustomerCreditCheckRequest
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/CustomerPIIRequest"
+            $ref: "#/definitions/CustomerCreditCheckRequest"
       tags:
         - W11
       responses:
         200:
           description: Successful completion; return credit check result
           schema:
-            $ref: '#/definitions/CustomerPIIResponse'
+            $ref: '#/definitions/CustomerCreditCheckResponse'
         default:
           description: Unexpected error
           schema:
@@ -107,18 +107,43 @@ paths:
           schema: 
             $ref: "#/definitions/BillingAddressUpdateRequest"
       tags:
-        - W11
+        - W
       responses:
         200:
           description: Successful completion; return updated account information
           schema:
-            $ref: '#/definitions/BillingAddressUpdateRespose'
+            $ref: '#/definitions/BillingAddressUpdateResponse'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  
+  /customers/account/{accountID}:
+    get:
+      summary: Docref W14 - Get Landing Page Info
+      description: <dr>
+      parameters:
+        - name: accountID
+          in: path
+          type: integer
+          description: Unique identifier for the account being queried
+        - name: GetLandingPageRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/GetLandingPageRequest"
+      tags:
+        - W14
+      responses:
+        200:
+          description: Successful completion; return expanded customer information
+          schema:
+            $ref: '#/definitions/GetLandingPageResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
 
 definitions:
 
@@ -128,22 +153,75 @@ definitions:
 #
 ##############################################
 
-  FunctionRequest:
+  GetCustomerIDRequest:
     properties:
       commonInputHeader:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
                   
-  FunctionResponse:
+  GetCustomerIDResponse:
     properties:
       commonReturn: 
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      locationID:
-        type: integer
-        description: Unique identifier for the location.
+
+  GetCustomerInformationRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+                  
+  GetCustomerInformationResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+
+  CustomerCreditCheckRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+                  
+  CustomerCreditCheckResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+
+  BillingAddressUpdateRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+                  
+  BillingAddressUpdateResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+
+  GetLandingPageRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+                  
+  GetLandingPageResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
 
 ##############################################
 #
