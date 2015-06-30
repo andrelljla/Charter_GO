@@ -20,19 +20,19 @@ paths:
       summary: Docref W06 - Get available TNs from TN adminstrator
       description: <dr>
       parameters:
-        - name: FunctionRequest
+        - name: GetAvailableTNsRequest
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/FunctionRequest"
+           $ref: "#/definitions/GetAvailableTNsRequest"
       tags:
         - W06
       responses:
         200:
           description: Successful completion; return location serviceability
           schema:
-            $ref: '#/definitions/FunctionResponse'
+            $ref: '#/definitions/GetAvailableTNsResponse'
         default:
           description: Unexpected error
           schema:
@@ -48,19 +48,19 @@ paths:
           description: TN being queried for restart eligibility
           required: true
           type: string
-        - name: FunctionRequest
+        - name: VerifyTNRestartRequest
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/FunctionRequest"
+           $ref: "#/definitions/VerifyTNRestartRequest"
       tags:
         - W19
       responses:
         200:
           description: Successful completion; return location serviceability
           schema:
-            $ref: '#/definitions/FunctionResponse'
+            $ref: '#/definitions/VerifyTNRestartReturn'
         default:
           description: Unexpected error
           schema:
@@ -74,19 +74,19 @@ paths:
           in: path
           type: string
           description: TN to be returned to "Available" status 
-        - name: FunctionRequest
+        - name: ReleaseUnusedTNsRequest
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/FunctionRequest"
+           $ref: "#/definitions/ReleaseUnusedTNsRequest"
       tags:
         - W07
       responses:
         200:
           description: Successful completion; return <function>
           schema:
-            $ref: '#/definitions/FunctionResponse'
+            $ref: '#/definitions/ReleaseUnusedTNsResponse'
         default:
           description: Unexpected error
           schema:
@@ -94,38 +94,57 @@ paths:
 
   /TN_Admin/TNPortability/{TN}:
     get:
-      summary: Docref W05, W20 - Verify port/transfer eligibility
-      description: <dr>
+      summary: Docref W5 - Verify port-in eligibility
+      description: <dr>  
       parameters:
         - name: TN
           in: path
           type: string
-          description: TN being queried for port/transfer eligibility
-        - name: portTransfer
-          in: query
-          type: string
-          description: Flag indicating if number is to be checked for portability or trnasferability.
-        - name: FunctionRequest
+          description: TN being queried for port-in eligibility
+        - name: TNPortabilityRequest
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/FunctionRequest"
+           $ref: "#/definitions/TNPortabilityRequest"
       tags:
-        - W20
-        - W05
+        - W5
       responses:
         200:
           description: Successful completion; return boolean indicating TN can/cannot be ported/transferred
           schema:
-            $ref: '#/definitions/FunctionResponse'
+            $ref: '#/definitions/TNPortabilityResponse'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-        
-
+  /TN_Admin/TNTransferEligibility/{TN}:
+    get:
+      summary: Docref W20 - Verify transfer eligibility
+      description: <dr>  
+      parameters:
+        - name: TN
+          in: path
+          type: string
+          description: TN being queried for transfer eligibility
+        - name: TNPortabilityRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/TNTransferEligibilityRequest"
+      tags:
+        - W20
+      responses:
+        200:
+          description: Successful completion; return boolean indicating TN can/cannot be ported/transferred
+          schema:
+            $ref: '#/definitions/TNTransferEligibilityResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
 
 definitions:
 
@@ -135,19 +154,116 @@ definitions:
 #
 ##############################################
 
-  FunctionRequest:
+  GetAvailableTNsRequest:
     properties:
       commonInputHeader:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-  
-  FunctionResponse:
+      AvailableTNsInput:
+        type: object
+        $ref: '#/definitions/AvailableTNsInput'
+        
+  GetAvailableTNsResponse:
     properties:
       commonReturn: 
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
+      AvailableTNsReturn: 
+        type: object
+        $ref: '#/definitions/AvailableTNsReturn'
+        description: <dr>
+
+  VerifyTNRestartRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      TNRestartEligibilityInput:
+        type: object
+        $ref: '#/definitions/TNRestartEligibility'
+        description: <dr>
+  
+  VerifyTNRestartReturn:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      TNRestartEligibilityReturn:
+        type: object
+        $ref: '#/definitions/TNRestartEligibility'
+        description: <dr>
+      restartEligibilityFlag:
+        type: boolean
+        description: Flag indicating TN is/is not available for restart.
+
+  ReleaseUnusedTNsRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      ReleaseUnusedTNsInput:
+        type: object
+        $ref: '#/definitions/USTelephoneNumber'
+        description: <dr>      
+  
+  ReleaseUnusedTNsResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+
+  TNPortabilityRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      TNPortabilityInput:
+        type: object
+        $ref: '#/definitions/TNPortabilityInput'
+        description: <dr>      
+  
+  TNPortabilityResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      TNPortabilityReturn:
+        type: object
+        $ref: '#/definitions/TNPortabilityReturn'
+        description: <dr>
+
+  TNTransferEligibilityRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      TNPortabilityInput:
+        type: object
+        $ref: '#/definitions/TNTransferEligibility'
+        description: <dr>      
+  
+  TNTransferEligibilityResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      TNPortabilityReturn:
+        type: object
+        $ref: '#/definitions/TNTransferEligibility'
+        description: <dr>      
+      transferabilityEligibilityFlag:
+        type: boolean
+        description: Flag indicating TN is/is not available for transfer.
 
 ##############################################
 #
@@ -214,3 +330,88 @@ definitions:
 #	Function-Specific Object definitions
 #
 ##############################################
+
+  AvailableTNsInput:
+    properties: 
+      addressID:
+        type: integer
+        description: Unique identifier for the location being queried
+      requestCount:
+        type: integer
+        description: Number of available TNs to be returned.  Default will be 5.
+      TNHostedNumberSearch:
+        type: boolean
+        description: <dr>
+  
+  AvailableTNsReturn:
+    properties:
+      availableTNs:
+        type: array
+        items:
+          $ref: '#/definitions/USTelephoneNumber'
+    
+  TNPortabilityInput:
+    properties:
+      addressID:
+        type: integer
+        description: Unique identifier for the location being queried
+      portedTN:
+        type: string
+        description: Telephone number (with area code) being requested for port-in
+
+  TNPortabilityReturn:
+    properties:
+      portedCarrier:
+        type: string
+        description: <dr>
+      portedAccountNumberRequiredFlag:
+        type: boolean
+        description: <dr>
+      portedAccountPINRequiredFlag:
+        type: boolean
+        description: <dr>
+      LSRValidationStatus:
+        type: string
+        description: <dr>
+        
+  TNRestartEligibility:
+    properties:
+      accountID:
+        type: integer
+        description: <dr>
+      accountNumber:
+        type: integer
+        description: <dr>
+      billertID:
+        type: integer
+        description: <dr>
+      phoneNumber:
+        type: string
+        description: <dr>
+        
+  TNTransferEligibility:
+    properties:
+      accountID:
+        type: integer
+        description: <dr>
+      accountNumber:
+        type: integer
+        description: <dr>
+      billertID:
+        type: integer
+        description: <dr>
+      phoneNumber:
+        type: string
+        description: <dr>
+      rateCenter:
+        type: string
+        description: <dr>
+
+  USTelephoneNumber:
+    properties:
+      areaCode:
+        type: string
+        description: <dr>
+      phoneNumber:
+        type: string
+        description: <dr>
