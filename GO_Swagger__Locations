@@ -32,7 +32,7 @@ paths:
         200:
           description: Successful completion; return location serviceability
           schema:
-            $ref: '#/definitions/ServiceableLocationRequest'
+            $ref: '#/definitions/ServiceableLocationResponse'
         default:
           description: Unexpected error
           schema:
@@ -115,6 +115,16 @@ definitions:
         $ref: '#/definitions/locationLookupByAddress'
         decription: <dr>
                   
+  ServiceableLocationResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      locationID:
+        type: integer
+        description: Unique identifier for the location.
+
   ServiceabilityAtLocationRequest:
     properties:
       commonInputHeader:
