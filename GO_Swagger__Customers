@@ -37,12 +37,12 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /customers/{CustomerID}:
+  /customers/{customerID}:
     get:
       summary: Docref W17 - Retrieve key customer information
       description: <dr>
       parameters:
-        - name: CustomerID
+        - name: customerID
           in: path
           type: integer
           description: Unique identifier for the Customer being queried
@@ -64,12 +64,12 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /customers/{CustomerID}/PII:
+  /customers/{customerID}/PII:
     post:
       summary: Docref W11 precursor - Collect key personal identifying information (PII) for the specified customer.  Submitting the PII collection will trigger a credit check based on the PII supplied.
       description: <dr>
       parameters:
-        - name: CustomerID
+        - name: customerID
           in: path
           type: integer
           description: Unique identifier for the Customer for which PII is being collected
@@ -159,12 +159,20 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      customerAccountLookupInput:
+        type: object
+        $ref: '#/definitions/customerAccountLookupInput'
+        description: <dr>
                   
   GetCustomerIDResponse:
     properties:
       commonReturn: 
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      customerAccountLookupReturn:
+        type: object
+        $ref: '#/definitions/customerAccountLookupReturn'
         description: <dr>
 
   GetCustomerInformationRequest:
@@ -289,4 +297,55 @@ definitions:
 #
 ##############################################
 
-    
+  customerAccountLookupInput:
+    properties:
+      firstName:
+        type: string
+        description: <dr>
+      lastName:
+        type: string
+        description: <dr>
+      primaryTN:
+        type: string
+        description: <dr>
+      primaryTNType:
+        type: string
+        description: <dr>
+      alternateTN:
+        type: string
+        description: <dr>
+      alternateTNType:
+        type: string
+        description: <dr>
+      email:
+        type: string
+        description: <dr>
+      customerID:
+        type: integer
+        description: <dr>
+      addressID:
+        type: integer
+        description: <dr>
+        
+  customerAccountLookupReturn:
+    properties:
+      customerType:
+        type: string
+        description: <dr>
+      accountID: 
+        type: integer
+        description: <dr>
+      accountNumber: 
+        type: string
+        description: <dr>
+      billerID:
+        type: integer
+        description: <dr>
+      customerID:
+        type: integer
+        description: <dr>
+      addressID:
+        type: integer
+        description: <dr>
+
+   
