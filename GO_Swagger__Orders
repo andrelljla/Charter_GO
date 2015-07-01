@@ -509,8 +509,12 @@ definitions:
 
   SubmitBillerOrderInput:
     properties:
-      foo:
-        type: string
+      NewCustomerSetupData:
+        type: object
+        $ref: '#/definitions/NewCustomerSetupData'
+      orderContent:
+        type: object
+        $ref: '#/definitions/mecOfferBasedOrder'
         description: <dr>
         
   SubmitBillerOrderReturn:
@@ -525,6 +529,9 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ScheduleInstallWindow'
+      orderReasonCode:
+        type: string
+        description: <dr>
 
   requestNewScheduleWindowsInput:
     properties:
@@ -627,5 +634,101 @@ definitions:
         type: string
         description: <dr>
       windowTimeZone:
+        type: string
+        description: <dr>
+        
+  mecOfferBasedOrder:
+    properties:
+      orderActionType:
+        type: string
+        description: <dr>
+      orderEngineOrderID:
+        type: integer
+        description: <dr>
+      requestedInstallDate:
+        type: string
+        description: <dr>
+      configuredOffers:
+        type: array
+        items:
+          $ref: '#/definitions/validatedMECOffer'
+        description: <dr>
+      
+  validatedMECOffer:
+    properties:
+      offerID:
+        type: integer
+        description: <dr>
+      offerLOBName:
+        type: string
+        description: <dr>
+      offerLOBListPrice:
+        type: number
+        description: <dr>
+      offerComponents:
+        type: array
+        items:
+          $ref: '#/definitions/offerComponent'
+        description: <dr>
+      
+  offerComponent:
+    properties:
+      componentName:
+        type: string
+        description: <dr>
+      componentPrice:
+        type: number
+        description: <dr>
+      componentAttributes:
+        type: array
+        items:
+          $ref: '#/definitions/componentAttribute'
+        description: <dr>
+  
+  componentAttribute:
+    properties:
+      attributeName:
+        type: string
+        description: <dr>
+      attributeValue:
+        type: string
+        description: <dr>
+  
+  NewCustomerSetupData:
+    properties:
+      addressID:
+        type: integer
+        description: <dr>
+      salesAgentID:
+        type: integer
+        description: <dr>
+      customerID:
+        type: integer
+        description: <dr>
+      customerNumber:
+        type: string
+        description: <dr>
+      firstName:
+        type: string
+        description: <dr>
+      lastName:
+        type: string
+        description: <dr>
+      primaryTN:
+        type: string
+        description: <dr>
+      primaryTNType:
+        type: string
+        description: <dr>
+      alternateTN:
+        type: string
+        description: <dr>
+      alternateTNType:
+        type: string
+        description: <dr>
+      email:
+        type: string
+        description: <dr>
+      customerType:
         type: string
         description: <dr>
