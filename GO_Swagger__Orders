@@ -1,0 +1,570 @@
+# this is draft #1 of the Orders component of the WebAPI specification for Gateway Ordering
+swagger: '2.0'
+info:
+  title: Gateway Ordering API - Orders API
+  description: Gateway Ordering Orders API
+  version: "1.0.0"
+# the domain of the service
+host: gateway.chartercom.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+
+paths:
+# W01 - checkForPendingDisconnectAtLocation
+  /orders/type='DISCONNECT':
+    get:
+      summary: Docref W01 - checkForPendingDisconnectAtLocation
+      description: Determines if a pending disconnect order has been submitted for a specific location and, if so, the date that order is scheduled for completion.  Required to support the business rule that a New Connection cannot be established at a location that already has existing service unless and until that service has been disconnected.
+      parameters:
+        - name: GetPendingDisconnectRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/GetPendingDisconnectRequest"
+      tags:
+        - W1
+      responses:
+        200:
+          description: Successful completion; return key IDs
+          schema:
+            $ref: '#/definitions/GetPendingDisconnectResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+# W08 - submitBillerOrder
+  /orders/:
+    put:
+      summary: Docref W08 - submitBillerOrder
+      description: Submits a validated order to the appropriate biller system
+      parameters:
+        - name: SubmitBillerOrderRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/SubmitBillerOrderRequest"
+      tags:
+        - W8
+      responses:
+        200:
+          description: Successful completion; return key IDs
+          schema:
+            $ref: '#/definitions/SubmitBillerOrderResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+# W09 - requestNewScheduleWindows
+  /function:
+    get:
+      summary: Docref W09 - requestNewScheduleWindows
+      description: <dr>
+      parameters:
+        - name: requestNewScheduleWindowsRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/requestNewScheduleWindowsRequest"
+      tags:
+        - <XXX>
+      responses:
+        200:
+          description: Successful completion; return key IDs
+          schema:
+            $ref: '#/definitions/requestNewScheduleWindowsResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+# W10 - updateOrderScheduleWindow
+  /function:
+    get:
+      summary: Docref W10 - updateOrderScheduleWindow
+      description: <dr>
+      parameters:
+        - name: updateOrderScheduleWindowRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/updateOrderScheduleWindowRequest"
+      tags:
+        - <XXX>
+      responses:
+        200:
+          description: Successful completion; return key IDs
+          schema:
+            $ref: '#/definitions/updateOrderScheduleWindowResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+# W12 - updateOrderConfirm
+  /function:
+    get:
+      summary: Docref W12 - updateOrderConfirm
+      description: <dr>
+      parameters:
+        - name: updateOrderConfirmRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/updateOrderConfirmRequest"
+      tags:
+        - <XXX>
+      responses:
+        200:
+          description: Successful completion; return key IDs
+          schema:
+            $ref: '#/definitions/updateOrderConfirmResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+# W15 - getOrderDetails
+  /function:
+    get:
+      summary: Docref W15 - getOrderDetails
+      description: <dr>
+      parameters:
+        - name: getOrderDetailsRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/getOrderDetailsRequest"
+      tags:
+        - <XXX>
+      responses:
+        200:
+          description: Successful completion; return key IDs
+          schema:
+            $ref: '#/definitions/getOrderDetailsResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+# W21 - cancelOrder
+  /function:
+    get:
+      summary: Docref W21 - cancelOrder
+      description: <dr>
+      parameters:
+        - name: cancelOrderRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/cancelOrderRequest"
+      tags:
+        - <XXX>
+      responses:
+        200:
+          description: Successful completion; return key IDs
+          schema:
+            $ref: '#/definitions/cancelOrderResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+# W22 - deleteTransferRecord
+  /function:
+    get:
+      summary: Docref W22 - deleteTransferRecord
+      description: <dr>
+      parameters:
+        - name: deleteTransferRecordRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/deleteTransferRecordRequest"
+      tags:
+        - <XXX>
+      responses:
+        200:
+          description: Successful completion; return key IDs
+          schema:
+            $ref: '#/definitions/deleteTransferRecordResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+definitions:
+
+##############################################
+#
+#	Request/Response definitions
+#
+##############################################
+
+  GetPendingDisconnectRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      FunctionInput:
+        type: object
+        $ref: '#/definitions/GetPendingDisconnectInput'
+        description: <dr>
+                  
+  GetPendingDisconnectResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      FunctionReturn:
+        type: object
+        $ref: '#/definitions/GetPendingDisconnectReturn'
+        description: <dr>
+
+  SubmitBillerOrderRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      FunctionInput:
+        type: object
+        $ref: '#/definitions/SubmitBillerOrderInput'
+        description: <dr>
+                  
+  SubmitBillerOrderResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      FunctionReturn:
+        type: object
+        $ref: '#/definitions/SubmitBillerOrderReturn'
+        description: <dr>
+
+  requestNewScheduleWindowsRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      FunctionInput:
+        type: object
+        $ref: '#/definitions/requestNewScheduleWindowsInput'
+        description: <dr>
+                  
+  requestNewScheduleWindowsResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      FunctionReturn:
+        type: object
+        $ref: '#/definitions/requestNewScheduleWindowsReturn'
+        description: <dr>
+
+  updateOrderScheduleWindowRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      FunctionInput:
+        type: object
+        $ref: '#/definitions/updateOrderScheduleWindowInput'
+        description: <dr>
+                  
+  updateOrderScheduleWindowResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      FunctionReturn:
+        type: object
+        $ref: '#/definitions/updateOrderScheduleWindowReturn'
+        description: <dr>
+
+  updateOrderConfirmRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      FunctionInput:
+        type: object
+        $ref: '#/definitions/updateOrderConfirmInput'
+        description: <dr>
+                  
+  updateOrderConfirmResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      FunctionReturn:
+        type: object
+        $ref: '#/definitions/updateOrderConfirmReturn'
+        description: <dr>
+
+  getOrderDetailsRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      FunctionInput:
+        type: object
+        $ref: '#/definitions/getOrderDetailsInput'
+        description: <dr>
+                  
+  getOrderDetailsResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      FunctionReturn:
+        type: object
+        $ref: '#/definitions/getOrderDetailsReturn'
+        description: <dr>
+
+  cancelOrderRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      FunctionInput:
+        type: object
+        $ref: '#/definitions/cancelOrderInput'
+        description: <dr>
+                  
+  cancelOrderResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      FunctionReturn:
+        type: object
+        $ref: '#/definitions/cancelOrderReturn'
+        description: <dr>
+
+  deleteTransferRecordRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      FunctionInput:
+        type: object
+        $ref: '#/definitions/deleteTransferRecordInput'
+        description: <dr>
+                  
+  deleteTransferRecordResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      FunctionReturn:
+        type: object
+        $ref: '#/definitions/deleteTransferRecordReturn'
+        description: <dr>
+
+##############################################
+#
+#	Common Object definitions
+#
+##############################################
+
+  CommonInputHeader:
+    properties:
+      username:
+        type: string
+        description: Encrypted username for proxy user authentication
+      password:
+        type: string
+        description: Encrypted passaord for proxy user authentication
+      invokingUser:
+        type: string
+        description: User name for the actual user that invoked the call (for audit purpose)
+      applicationID:
+        type: string
+        description: Code identifying invoking application
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was invoked
+
+  CommonNoErrorReturnHeader:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+        
+  CommonErrorReturn:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+      errorInfo:
+        type: array
+        items:
+          $ref: "#/definitions/CommonErrors"
+  
+  CommonErrors:
+    properties:
+      errCode:
+        type: string
+      errMessage:
+        type: string
+      errDescription:
+        type: string
+      errGUID:
+        type: string
+
+##############################################
+#
+#	Function-Specific Object definitions
+#
+##############################################
+
+  GetPendingDisconnectInput:
+    properties:
+      addressID:
+        type: integer
+        description: Unique identifier for address/location being queried
+      accountID:
+        type: integer
+        description: Unique identifier for account being queried
+      accountNumber:
+        type: string
+        description: Unique identifier for account within the billing system
+      billerID:
+        type: integer
+        description: Unique identifier which identifies the biller system
+        
+  GetPendingDisconnectReturn:
+    properties:
+      addressID:
+        type: integer
+        description: Unique identifier for address/location being queried
+      pendingDisconnectFlag:
+        type: boolean
+        description: Flag indicating if a disconnect order has been submitted and scheduled
+      pendingDisconnectDate:
+        type: string
+        format: date
+        description: Date existing service is schedueled for disconnect
+
+  SubmitBillerOrderInput:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+        
+  SubmitBillerOrderReturn:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+
+  requestNewScheduleWindowsInput:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+        
+  requestNewScheduleWindowsReturn:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+
+  updateOrderScheduleWindowInput:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+        
+  updateOrderScheduleWindowReturn:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+
+  updateOrderConfirmInput:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+        
+  updateOrderConfirmReturn:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+
+  getOrderDetailsInput:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+        
+  getOrderDetailsReturn:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+
+  cancelOrderInput:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+        
+  cancelOrderReturn:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+
+  deleteTransferRecordInput:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+        
+  deleteTransferRecordReturn:
+    properties:
+      foo:
+        type: string
+        description: <dr>
