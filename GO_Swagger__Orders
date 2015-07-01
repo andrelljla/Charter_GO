@@ -15,6 +15,7 @@ produces:
   - application/json
 
 paths:
+# WXX - retrieve multiple orders for account
   /orders:
     get:
       summary: Docref WXX - GetAccountOrderHistory
