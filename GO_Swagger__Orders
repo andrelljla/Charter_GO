@@ -438,10 +438,6 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      deleteTransferRecordInput:
-        type: object
-        $ref: '#/definitions/deleteTransferRecordInput'
-        description: <dr>
                   
   deleteTransferRecordResponse:
     properties:
@@ -666,9 +662,10 @@ definitions:
         
   getSingleOrderDetailsReturn:
     properties:
-      foo:
-        type: string
+      orderDetail:
+        type: object
         description: <dr>
+        $ref: '#/definitions/mecOfferBasedOrder'
 
   cancelOrderInput:
     properties:
@@ -679,12 +676,6 @@ definitions:
   cancelOrderReturn:
     properties:
       orderStatus:
-        type: string
-        description: <dr>
-
-  deleteTransferRecordInput:
-    properties:
-      foo:
         type: string
         description: <dr>
         
