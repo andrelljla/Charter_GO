@@ -526,14 +526,26 @@ definitions:
 
   GetAccountOrderHistoryInput:
     properties:
-      foo:
+      accountID:
+        type: integer
+        description: <dr>
+      accountNumber: 
         type: string
+        description: <dr>
+      billerID:
+        type: integer
+        description: Unique identifier which identifies the biller system
+      ordersAfter: 
+        type: string
+        format: Date
         description: <dr>
         
   GetAccountOrderHistoryReturn:
     properties:
-      orderStatus:
-        type: string
+      orderHistory:
+        type: array
+        items:
+          $ref: '#/definitions/OrderHistoryItem'
         description: <dr>
 
   GetPendingDisconnectInput:
@@ -819,3 +831,22 @@ definitions:
       customerType:
         type: string
         description: <dr>
+
+  OrderHistoryItem:
+    properties:
+      orderID:
+        type: integer
+        description: <dr>
+      orderInstallDate:
+        type: string
+        description: Actual service date for completed orders; scheduled service date for pending or in-process orders.
+      orderInstallTime:
+        type: string
+        description: Actual service time for completed orders; scheduled service time for pending or in-process orders.
+      orderPhoneNumber:
+        type: string
+        description: <dr>
+      orderContent:
+        type: object
+        $ref: '#/definitions/mecOfferBasedOrder'
+        
