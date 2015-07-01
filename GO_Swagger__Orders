@@ -64,35 +64,42 @@ paths:
             $ref: '#/definitions/CommonErrorReturn'
 
 # W09 - requestNewScheduleWindows
-  /function:
+  /orders/{orderID}/schedule:
     get:
       summary: Docref W09 - requestNewScheduleWindows
       description: <dr>
       parameters:
+        - name: orderID
+          in: path
+          type: integer
+          description: Unique identifier for the active order
         - name: requestNewScheduleWindowsRequest
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/requestNewScheduleWindowsRequest"
+            $ref: "#/definitions/RequestNewScheduleWindowsRequest"
       tags:
-        - <XXX>
+        - W09
       responses:
         200:
           description: Successful completion; return key IDs
           schema:
-            $ref: '#/definitions/requestNewScheduleWindowsResponse'
+            $ref: '#/definitions/RequestNewScheduleWindowsResponse'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
 # W10 - updateOrderScheduleWindow
-  /function:
-    get:
+    post:
       summary: Docref W10 - updateOrderScheduleWindow
       description: <dr>
       parameters:
+        - name: orderID
+          in: path
+          type: integer
+          description: Unique identifier for the active order
         - name: updateOrderScheduleWindowRequest
           in: body
           description: Incudes input parameters common to all invocations
@@ -100,7 +107,7 @@ paths:
           schema: 
             $ref: "#/definitions/updateOrderScheduleWindowRequest"
       tags:
-        - <XXX>
+        - W10
       responses:
         200:
           description: Successful completion; return key IDs
@@ -112,11 +119,15 @@ paths:
             $ref: '#/definitions/CommonErrorReturn'
 
 # W12 - updateOrderConfirm
-  /function:
+  /orders/{orderID}/confirm:
     get:
       summary: Docref W12 - updateOrderConfirm
       description: <dr>
       parameters:
+        - name: orderID
+          in: path
+          type: integer
+          description: Unique identifier for the active order
         - name: updateOrderConfirmRequest
           in: body
           description: Incudes input parameters common to all invocations
@@ -124,7 +135,7 @@ paths:
           schema: 
             $ref: "#/definitions/updateOrderConfirmRequest"
       tags:
-        - <XXX>
+        - W12
       responses:
         200:
           description: Successful completion; return key IDs
@@ -136,11 +147,15 @@ paths:
             $ref: '#/definitions/CommonErrorReturn'
 
 # W15 - getOrderDetails
-  /function:
+  /orders/{orderID}:
     get:
       summary: Docref W15 - getOrderDetails
       description: <dr>
       parameters:
+        - name: orderID
+          in: path
+          type: integer
+          description: Unique identifier for the active order
         - name: getOrderDetailsRequest
           in: body
           description: Incudes input parameters common to all invocations
@@ -148,7 +163,7 @@ paths:
           schema: 
             $ref: "#/definitions/getOrderDetailsRequest"
       tags:
-        - <XXX>
+        - W15
       responses:
         200:
           description: Successful completion; return key IDs
@@ -160,11 +175,14 @@ paths:
             $ref: '#/definitions/CommonErrorReturn'
 
 # W21 - cancelOrder
-  /function:
-    get:
+    post:
       summary: Docref W21 - cancelOrder
       description: <dr>
       parameters:
+        - name: orderID
+          in: path
+          type: integer
+          description: Unique identifier for the active order
         - name: cancelOrderRequest
           in: body
           description: Incudes input parameters common to all invocations
@@ -172,7 +190,7 @@ paths:
           schema: 
             $ref: "#/definitions/cancelOrderRequest"
       tags:
-        - <XXX>
+        - W21
       responses:
         200:
           description: Successful completion; return key IDs
@@ -184,11 +202,15 @@ paths:
             $ref: '#/definitions/CommonErrorReturn'
 
 # W22 - deleteTransferRecord
-  /function:
-    get:
+  /orders/{orderID}/cancelTransfer:
+    post:
       summary: Docref W22 - deleteTransferRecord
       description: <dr>
       parameters:
+        - name: orderID
+          in: path
+          type: integer
+          description: Unique identifier for the active order
         - name: deleteTransferRecordRequest
           in: body
           description: Incudes input parameters common to all invocations
@@ -196,7 +218,7 @@ paths:
           schema: 
             $ref: "#/definitions/deleteTransferRecordRequest"
       tags:
-        - <XXX>
+        - W22
       responses:
         200:
           description: Successful completion; return key IDs
@@ -259,7 +281,7 @@ definitions:
         $ref: '#/definitions/SubmitBillerOrderReturn'
         description: <dr>
 
-  requestNewScheduleWindowsRequest:
+  RequestNewScheduleWindowsRequest:
     properties:
       commonInputHeader:
         type: object
@@ -270,7 +292,7 @@ definitions:
         $ref: '#/definitions/requestNewScheduleWindowsInput'
         description: <dr>
                   
-  requestNewScheduleWindowsResponse:
+  RequestNewScheduleWindowsResponse:
     properties:
       commonReturn: 
         type: object
