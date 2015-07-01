@@ -535,9 +535,6 @@ definitions:
 
   requestNewScheduleWindowsInput:
     properties:
-      addressID:
-        type: integer
-        description: Unique identifier for address/location being queried
       orderID:
         type: integer
         description: Unique identifier for the active order being modified
@@ -551,12 +548,6 @@ definitions:
       orderActionType:
         type: string
         description: <dr>
-      addressID:
-        type: integer
-        description: Unique identifier for address/location being queried
-      orderID:
-        type: integer
-        description: Unique identifier for the active order being modified
       serviceDuration:
         type: integer
         description: Estimated duration required to complete the service call
@@ -567,25 +558,44 @@ definitions:
 
   updateOrderScheduleWindowInput:
     properties:
-      foo:
+      serviceWindowID:
+        type: integer
+        description: Unique identifier for the activeselected service window being allocated to the order
+      callFirstFlag:
+        type: boolean
+        description: <dr>
+      callFirstTN:
         type: string
         description: <dr>
-        
+      specialInstructionsforTechnician:
+        type: string
+        description: <dr>
+      specialInstructionsforDispatcher:
+        type: string
+        description: <dr>
+      disconnectComments:
+        type: string
+        description: <dr>
+      stopBillDate:
+        type: string
+        format: date
+        description: <dr>
+      
   updateOrderScheduleWindowReturn:
     properties:
-      foo:
+      orderStatus:
         type: string
         description: <dr>
 
   updateOrderConfirmInput:
     properties:
-      foo:
+      customerEmail:
         type: string
         description: <dr>
         
   updateOrderConfirmReturn:
     properties:
-      foo:
+      orderStatus:
         type: string
         description: <dr>
 
@@ -609,7 +619,7 @@ definitions:
         
   cancelOrderReturn:
     properties:
-      foo:
+      orderStatus:
         type: string
         description: <dr>
 
@@ -621,7 +631,7 @@ definitions:
         
   deleteTransferRecordReturn:
     properties:
-      foo:
+      orderStatus:
         type: string
         description: <dr>
 
@@ -629,7 +639,7 @@ definitions:
     properties:
       windowID:
         type: integer
-        description: Unique identifier for the schedule window as defined by teh scheduling system
+        description: Unique identifier for the schedule window as defined by the scheduling system
       windowDate:
         type: string
         format: date
@@ -677,6 +687,11 @@ definitions:
         items:
           $ref: '#/definitions/offerComponent'
         description: <dr>
+      offerAttributes:
+        type: array
+        items:
+          $ref: '#/definitions/componentAttribute'
+        description: <dr>
       
   offerComponent:
     properties:
@@ -690,6 +705,11 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/componentAttribute'
+        description: <dr>
+      subComponents:
+        type: array
+        items:
+          $ref: '#/definitions/offerComponent'
         description: <dr>
   
   componentAttribute:
