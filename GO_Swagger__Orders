@@ -31,7 +31,7 @@ paths:
         - W1
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; pending order flag set and date(s) available as appropriate
           schema:
             $ref: '#/definitions/GetPendingDisconnectResponse'
         default:
@@ -55,7 +55,7 @@ paths:
         - W8
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; order successfully submitted to biller
           schema:
             $ref: '#/definitions/SubmitBillerOrderResponse'
         default:
@@ -110,7 +110,7 @@ paths:
         - W10
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; order updated with select service window
           schema:
             $ref: '#/definitions/updateOrderScheduleWindowResponse'
         default:
@@ -138,7 +138,7 @@ paths:
         - W12
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; order is confirmed (whatever that means from a business perspective)
           schema:
             $ref: '#/definitions/updateOrderConfirmResponse'
         default:
@@ -166,7 +166,7 @@ paths:
         - W15
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; order details avialable for display
           schema:
             $ref: '#/definitions/getOrderDetailsResponse'
         default:
@@ -193,7 +193,7 @@ paths:
         - W21
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; order is cancelled (status updated to CANCEL)
           schema:
             $ref: '#/definitions/cancelOrderResponse'
         default:
@@ -221,7 +221,7 @@ paths:
         - W22
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; transfer record successfully deleted (soft-delete)
           schema:
             $ref: '#/definitions/deleteTransferRecordResponse'
         default:
@@ -535,9 +535,16 @@ definitions:
 
   requestNewScheduleWindowsInput:
     properties:
-      foo:
+      addressID:
+        type: integer
+        description: Unique identifier for address/location being queried
+      orderID:
+        type: integer
+        description: Unique identifier for the active order being modified
+      requestedDate:
         type: string
-        description: <dr>
+        format: date
+        description: Custoemr requested date for service window selection
         
   requestNewScheduleWindowsReturn:
     properties:
