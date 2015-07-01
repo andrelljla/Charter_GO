@@ -266,7 +266,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      FunctionInput:
+      GetAccountOrderHistoryInput:
         type: object
         $ref: '#/definitions/GetAccountOrderHistoryInput'
         description: <dr>
@@ -277,7 +277,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      FunctionReturn:
+      GetAccountOrderHistoryReturn:
         type: object
         $ref: '#/definitions/GetAccountOrderHistoryReturn'
         description: <dr>
@@ -288,7 +288,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      FunctionInput:
+      GetPendingDisconnectInput:
         type: object
         $ref: '#/definitions/GetPendingDisconnectInput'
         description: <dr>
@@ -299,7 +299,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      FunctionReturn:
+      GetPendingDisconnectReturn:
         type: object
         $ref: '#/definitions/GetPendingDisconnectReturn'
         description: <dr>
@@ -310,7 +310,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      FunctionInput:
+      SubmitBillerOrderInput:
         type: object
         $ref: '#/definitions/SubmitBillerOrderInput'
         description: <dr>
@@ -321,7 +321,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      FunctionReturn:
+      SubmitBillerOrderReturn:
         type: object
         $ref: '#/definitions/SubmitBillerOrderReturn'
         description: <dr>
@@ -332,7 +332,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      FunctionInput:
+      requestNewScheduleWindowsInput:
         type: object
         $ref: '#/definitions/requestNewScheduleWindowsInput'
         description: <dr>
@@ -343,7 +343,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      FunctionReturn:
+      requestNewScheduleWindowsReturn:
         type: object
         $ref: '#/definitions/requestNewScheduleWindowsReturn'
         description: <dr>
@@ -354,7 +354,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      FunctionInput:
+      updateOrderScheduleWindowInput:
         type: object
         $ref: '#/definitions/updateOrderScheduleWindowInput'
         description: <dr>
@@ -365,7 +365,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      FunctionReturn:
+      updateOrderScheduleWindowReturn:
         type: object
         $ref: '#/definitions/updateOrderScheduleWindowReturn'
         description: <dr>
@@ -376,7 +376,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      FunctionInput:
+      updateOrderConfirmInput:
         type: object
         $ref: '#/definitions/updateOrderConfirmInput'
         description: <dr>
@@ -387,7 +387,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      FunctionReturn:
+      updateOrderConfirmReturn:
         type: object
         $ref: '#/definitions/updateOrderConfirmReturn'
         description: <dr>
@@ -398,10 +398,6 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      FunctionInput:
-        type: object
-        $ref: '#/definitions/getOrderDetailsInput'
-        description: <dr>
                   
   getOrderDetailsResponse:
     properties:
@@ -409,9 +405,9 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      FunctionReturn:
+      getSingleOrderDetailsReturn:
         type: object
-        $ref: '#/definitions/getOrderDetailsReturn'
+        $ref: '#/definitions/getSingleOrderDetailsReturn'
         description: <dr>
 
   cancelOrderRequest:
@@ -420,7 +416,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      FunctionInput:
+      cancelOrderInput:
         type: object
         $ref: '#/definitions/cancelOrderInput'
         description: <dr>
@@ -431,7 +427,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      FunctionReturn:
+      cancelOrderReturn:
         type: object
         $ref: '#/definitions/cancelOrderReturn'
         description: <dr>
@@ -442,7 +438,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      FunctionInput:
+      deleteTransferRecordInput:
         type: object
         $ref: '#/definitions/deleteTransferRecordInput'
         description: <dr>
@@ -453,7 +449,7 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      FunctionReturn:
+      deleteTransferRecordReturn:
         type: object
         $ref: '#/definitions/deleteTransferRecordReturn'
         description: <dr>
@@ -667,17 +663,8 @@ definitions:
       orderStatus:
         type: string
         description: <dr>
-
-  getOrderDetailsInput:
-    properties:
-      accountID:
-        type: integer
-        description: <dr> 
-      accountNumber:
-        type: string
-        description: <dr>
         
-  getOrderDetailsReturn:
+  getSingleOrderDetailsReturn:
     properties:
       foo:
         type: string
@@ -685,7 +672,7 @@ definitions:
 
   cancelOrderInput:
     properties:
-      foo:
+      orderStatus:
         type: string
         description: <dr>
         
