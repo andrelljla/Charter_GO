@@ -126,8 +126,8 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /orders/orderEngine/{orderEnginerOrderID}:
-    put:
+  /orders/orderEngine/{orderEngineOrderID}:
+    post:
       summary: Docref W22 - Validate the Order against MEC rules
       description: The Product Configurations REST is called after the user finishes configuring all the products, and enables the user to validate the configuration and save it in the Ordering system for all the products.  The input of the Product Configurations REST includes all the active order actions in the order, and the configuration changes made for each product, to validate and save all products in the order via the Ordering system.
       parameters:
