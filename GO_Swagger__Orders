@@ -40,11 +40,14 @@ paths:
             $ref: '#/definitions/CommonErrorReturn'
 
 # W01 - checkForPendingDisconnectAtLocation
-  /orders/type='DISCONNECT':
+  /orders/type='DISCONNECT'/{LocationID}:
     get:
       summary: Docref W01 - checkForPendingDisconnectAtLocation
       description: Determines if a pending disconnect order has been submitted for a specific location and, if so, the date that order is scheduled for completion.  Required to support the business rule that a New Connection cannot be established at a location that already has existing service unless and until that service has been disconnected.
       parameters:
+        - name: LocationID
+          in: path
+          type: integer
         - name: GetPendingDisconnectRequest
           in: body
           description: Incudes input parameters common to all invocations
