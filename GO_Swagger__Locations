@@ -14,17 +14,43 @@ basePath: /v1
 produces:
   - application/json
 paths:
-  /serviceableLocations:
+  /Locations:
     get:
       summary: Docref W13, W18 precursor - Search for Location ID from within Gateway Ordering Application
-      description: Retrieves a specific location identifier (LocationID) based on a set of address parameters. Precursor to retrieving serviceability by location.  Overlaps with existing adaptive Search capability such that if adaptive capabilities can be referenced from within the Gateway Ordering application (with the appropriate data feeds) this function (and possibly the serviceabiltyAtLocation function as well) may be pre-empted. 
+      description: Retrieves a specific location identifier (LocationID) based on a set of address parameters. Precursor to retrieving serviceability by location.  Overlaps with existing adaptive Search capability such that if adaptive capabilities can be referenced from within the Gateway Ordering application (with the appropriate data feeds) this function (and possibly the serviceabiltyAtLocation function as well) may be pre-empted. Application will force collection of sufficient data to ensure a maximum of 1 location ID will be returned.
       parameters:
-        - name: ServiceabilityAtLocationRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/ServiceableLocationRequest"
+            $ref: "#/definitions/CommonInputHeader"
+        - name: addrStreetLine1
+          type: string
+          in: query
+          required: true
+          description: Line 1 of the street address component of the address lookup 
+        - name: addrStreetLine2
+          type: string
+          in: query
+          required: false
+          description: Line 2 of the street address component of the address lookup  
+        - name: addrCity
+          type: string
+          in: query
+          required: false
+          description: City component of the address lookup
+        - name: addrState
+          type: string
+          in: query
+          required: false
+          description: State component of the address lookup
+        - name: addrZIP
+          type: string
+          in: query
+          required: false
+          description: ZIP Code component of the address lookup
+          
       tags:
         - W13
         - W18
@@ -32,13 +58,13 @@ paths:
         200:
           description: Successful completion; return location serviceability
           schema:
-            $ref: '#/definitions/ServiceableLocationResponse'
+            $ref: '#/definitions/LocationIDLookupResponse'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /serviceableLocations/{LocationID}:
+  /serviceablity/{LocationID}:
     get:
       summary: Docref W13, W18 - Determine serviceability at location
       description: Determine the products and services eligible for sale at the requested address/location.  The same service will be used to determine both "New Connect" location service compatability as well as "Transfer-To" Location service compatability.  Boolean value for serviceability (is/is not serivceable) can be inferred from the existence of rows in the service return data set. 
@@ -48,12 +74,12 @@ paths:
           required: true
           type: integer
           description: Unique identifier for the address/location being queried for serviceability
-        - name: ServiceabilityAtLocationRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/ServiceabilityAtLocationRequest"
+           $ref: "#/definitions/CommonInputHeader"
       tags:
         - W13
         - W18
@@ -67,7 +93,7 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /serviceableLocations/{LocationID}/Active:
+  /serviceability/{LocationID}/Active:
     get:
       summary: Docref W16 - Get active services at location
       description: Retrieves the list of products and services currently active at the queried address/location.
@@ -77,12 +103,12 @@ paths:
           required: true
           type: integer
           description: <dr>
-        - name: locationServiceabilityRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/ActiveServicesAtLocationRequest"
+           $ref: "#/definitions/CommonInputHeader"
       tags:
         - W16
       responses:
@@ -104,18 +130,18 @@ definitions:
 #
 ##############################################
 
-  ServiceableLocationRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      commonAddress:
-        type: object
-        $ref: '#/definitions/locationLookupByAddress'
-        decription: <dr>
-                  
-  ServiceableLocationResponse:
+#  ServiceableLocationRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      commonAddress:
+#        type: object
+#        $ref: '#/definitions/locationLookupByAddress'
+#        decription: <dr>
+#                  
+  LocationIDLookupResponse:
     properties:
       commonReturn: 
         type: object
@@ -125,12 +151,12 @@ definitions:
         type: integer
         description: Unique identifier for the location.
 
-  ServiceabilityAtLocationRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#  ServiceabilityAtLocationRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
   
   ServiceabilityAtLocationResponse:
     properties:
@@ -143,12 +169,12 @@ definitions:
         $ref: '#/definitions/LocationServiceabilityDetail'
         description: <dr>
 
-  ActiveServicesAtLocationRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#  ActiveServicesAtLocationRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
   
   ActiveServicesAtLocationResponse:
     properties:
@@ -272,21 +298,21 @@ definitions:
         type: string
         description: Specific product within the LoB being referenced for serviceability
 
-  locationLookupByAddress:
-    properties:
-      addressLine1:
-        type: string
-        descriprtion: <dr>
-      addressLine2:
-        type: string
-        descriprtion: <dr>
-      addressCity:
-        type: string
-        descriprtion: <dr>
-      addressStateCode:
-        type: string
-        descriprtion: <dr>
-      addressZipCode:
-        type: string
-        descriprtion: <dr>
+#  locationLookupByAddress:
+#    properties:
+#      addressLine1:
+#        type: string
+#        descriprtion: <dr>
+#      addressLine2:
+#        type: string
+#        descriprtion: <dr>
+#      addressCity:
+#        type: string
+#        descriprtion: <dr>
+#      addressStateCode:
+#        type: string
+#        descriprtion: <dr>
+#      addressZipCode:
+#        type: string
+#        descriprtion: <dr>
       
