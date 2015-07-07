@@ -19,12 +19,49 @@ paths:
       summary: Docref W02 - Retrieve customer ID, account ID, and related account information
       description: Retrieves information on a person or entity previously known to Charter but who does not have a (readily previously identified) active account
       parameters:
-        - name: GetCustomerIDRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/GetCustomerIDRequest"
+            $ref: "#/definitions/CommonInputHeader"
+        - name: firstName
+          in: query
+          type: string
+          description: <dr>
+        - name: lastName
+          in: query
+          type: string
+          description: <dr>
+        - name: primaryTN
+          in: query
+          type: string
+          description: <dr>
+        - name: primaryTNType
+          in: query
+          type: string
+          description: <dr>
+        - name: alternateTN
+          in: query
+          type: string
+          description: <dr>
+        - name: alternateTNType
+          in: query
+          type: string
+          description: <dr>
+        - name: email
+          in: query
+          type: string
+          description: <dr>
+        - name: customerID
+          in: query
+          type: integer
+          description: <dr>
+        - name: addressID
+          in: query
+          type: integer
+          description: <dr>
+
       tags:
         - W02
       responses:
@@ -46,12 +83,12 @@ paths:
           in: path
           type: integer
           description: Unique identifier for the Customer being queried
-        - name: GetCustomerInformationRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/GetCustomerInformationRequest"
+            $ref: "#/definitions/CommonInputHeader"
       tags:
         - W17
       responses:
@@ -153,16 +190,16 @@ definitions:
 #
 ##############################################
 
-  GetCustomerIDRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      customerAccountLookupInput:
-        type: object
-        $ref: '#/definitions/customerAccountLookupInput'
-        description: <dr>
+#  GetCustomerIDRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      customerAccountLookupInput:
+#        type: object
+#        $ref: '#/definitions/customerAccountLookupInput'
+#        description: <dr>
                   
   GetCustomerIDResponse:
     properties:
@@ -171,16 +208,17 @@ definitions:
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
       customerAccountLookupReturn:
-        type: object
-        $ref: '#/definitions/customerAccountLookupReturn'
+        type: array
+        items:
+          $ref: '#/definitions/customerAccountLookupReturn'
         description: <dr>
 
-  GetCustomerInformationRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#  GetCustomerInformationRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
                   
   GetCustomerInformationResponse:
     properties:
@@ -312,35 +350,35 @@ definitions:
 #
 ##############################################
 
-  customerAccountLookupInput:
-    properties:
-      firstName:
-        type: string
-        description: <dr>
-      lastName:
-        type: string
-        description: <dr>
-      primaryTN:
-        type: string
-        description: <dr>
-      primaryTNType:
-        type: string
-        description: <dr>
-      alternateTN:
-        type: string
-        description: <dr>
-      alternateTNType:
-        type: string
-        description: <dr>
-      email:
-        type: string
-        description: <dr>
-      customerID:
-        type: integer
-        description: <dr>
-      addressID:
-        type: integer
-        description: <dr>
+#  customerAccountLookupInput:
+#    properties:
+#      firstName:
+#        type: string
+#        description: <dr>
+#      lastName:
+#        type: string
+#        description: <dr>
+#      primaryTN:
+#        type: string
+#        description: <dr>
+#      primaryTNType:
+#        type: string
+#        description: <dr>
+#      alternateTN:
+#        type: string
+#        description: <dr>
+#      alternateTNType:
+#        type: string
+#        description: <dr>
+#      email:
+#        type: string
+#        description: <dr>
+#      customerID:
+#        type: integer
+#        description: <dr>
+#      addressID:
+#        type: integer
+#        description: <dr>
         
   customerAccountLookupReturn:
     properties:
@@ -398,7 +436,7 @@ definitions:
       lastName:
         type: string
         description: <dr>
-      cuurentAddress:
+      currentAddress:
         type: object
         $ref: '#/definitions/postalAddress'
       orderActionType:
