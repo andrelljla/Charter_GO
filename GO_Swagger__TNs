@@ -20,12 +20,28 @@ paths:
       summary: Docref W06 - Get available TNs from TN adminstrator
       description: <dr>
       parameters:
-        - name: GetAvailableTNsRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/GetAvailableTNsRequest"
+           $ref: "#/definitions/CommonInputHeader"
+        - name: TNHostedNumberSearch
+          in: query
+          description: <dr>
+          type: boolean
+          required: true
+        - name: addressID
+          in: query
+          description: <dr>
+          type: integer
+          required: true
+        - name: requestCount
+          in: query
+          description: Number of available TNs to return.  Default is 5.
+          type: integer
+          required: true
+          
       tags:
         - W06
       responses:
@@ -45,15 +61,36 @@ paths:
       parameters:
         - name: TN
           in: path
-          description: TN being queried for restart eligibility
+          description: TN (including area code) being queried for restart eligibility
           required: true
           type: string
-        - name: VerifyTNRestartRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/VerifyTNRestartRequest"
+           $ref: "#/definitions/CommonInputHeader"
+        - name: accountID
+          in: query
+          description: <dr>
+          type: integer
+          required: true
+        - name: accountNumber
+          in: query
+          description: <dr>
+          type: string
+          required: true
+        - name: billerID
+          in: query
+          description: <dr>
+          type: integer
+          required: true
+        - name: requestCount
+          in: query
+          description: Number of available TNs to return.  Default is 5.
+          type: integer
+          required: true
+
       tags:
         - W19
       responses:
@@ -73,13 +110,14 @@ paths:
         - name: TN
           in: path
           type: string
-          description: TN to be returned to "Available" status 
-        - name: ReleaseUnusedTNsRequest
+          description: TN (including area code) to be returned to "Available" status
+          required: true
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/ReleaseUnusedTNsRequest"
+           $ref: "#/definitions/CommonInputHeader"
       tags:
         - W07
       responses:
@@ -101,12 +139,17 @@ paths:
           in: path
           type: string
           description: TN being queried for port-in eligibility
-        - name: TNPortabilityRequest
+        - name: addressID
+          in: query
+          description: <dr>
+          type: integer
+          required: true
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/TNPortabilityRequest"
+           $ref: "#/definitions/CommonInputHeader"
       tags:
         - W5
       responses:
@@ -128,12 +171,33 @@ paths:
           in: path
           type: string
           description: TN being queried for transfer eligibility
-        - name: TNPortabilityRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-           $ref: "#/definitions/TNTransferEligibilityRequest"
+           $ref: "#/definitions/CommonInputHeader"
+        - name: accountID
+          in: query
+          description: <dr>
+          type: integer
+          required: true
+        - name: accountNumber
+          in: query
+          description: <dr>
+          type: string
+          required: true
+        - name: billerID
+          in: query
+          description: <dr>
+          type: integer
+          required: true
+        - name: rateCenter
+          in: query
+          description: <dr>
+          type: string
+          required: true
+
       tags:
         - W20
       responses:
@@ -154,15 +218,15 @@ definitions:
 #
 ##############################################
 
-  GetAvailableTNsRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      AvailableTNsInput:
-        type: object
-        $ref: '#/definitions/AvailableTNsInput'
+#  GetAvailableTNsRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      AvailableTNsInput:
+#        type: object
+#        $ref: '#/definitions/AvailableTNsInput'
         
   GetAvailableTNsResponse:
     properties:
@@ -175,16 +239,16 @@ definitions:
         $ref: '#/definitions/AvailableTNsReturn'
         description: <dr>
 
-  VerifyTNRestartRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      TNRestartEligibilityInput:
-        type: object
-        $ref: '#/definitions/TNRestartEligibility'
-        description: <dr>
+#  VerifyTNRestartRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      TNRestartEligibilityInput:
+#        type: object
+#        $ref: '#/definitions/TNRestartEligibility'
+#        description: <dr>
   
   VerifyTNRestartReturn:
     properties:
@@ -200,16 +264,16 @@ definitions:
         type: boolean
         description: Flag indicating TN is/is not available for restart.
 
-  ReleaseUnusedTNsRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      ReleaseUnusedTNsInput:
-        type: object
-        $ref: '#/definitions/USTelephoneNumber'
-        description: <dr>      
+#  ReleaseUnusedTNsRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      ReleaseUnusedTNsInput:
+#        type: object
+#        $ref: '#/definitions/USTelephoneNumber'
+#        description: <dr>      
   
   ReleaseUnusedTNsResponse:
     properties:
@@ -218,16 +282,16 @@ definitions:
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
 
-  TNPortabilityRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      TNPortabilityInput:
-        type: object
-        $ref: '#/definitions/TNPortabilityInput'
-        description: <dr>      
+#  TNPortabilityRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      TNPortabilityInput:
+#        type: object
+#        $ref: '#/definitions/TNPortabilityInput'
+#        description: <dr>      
   
   TNPortabilityResponse:
     properties:
@@ -240,16 +304,16 @@ definitions:
         $ref: '#/definitions/TNPortabilityReturn'
         description: <dr>
 
-  TNTransferEligibilityRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      TNPortabilityInput:
-        type: object
-        $ref: '#/definitions/TNTransferEligibility'
-        description: <dr>      
+#  TNTransferEligibilityRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      TNPortabilityInput:
+#        type: object
+#        $ref: '#/definitions/TNTransferEligibility'
+#        description: <dr>      
   
   TNTransferEligibilityResponse:
     properties:
@@ -331,17 +395,17 @@ definitions:
 #
 ##############################################
 
-  AvailableTNsInput:
-    properties: 
-      addressID:
-        type: integer
-        description: Unique identifier for the location being queried
-      requestCount:
-        type: integer
-        description: Number of available TNs to be returned.  Default will be 5.
-      TNHostedNumberSearch:
-        type: boolean
-        description: <dr>
+#  AvailableTNsInput:
+#    properties: 
+#      addressID:
+#        type: integer
+#        description: Unique identifier for the location being queried
+#      requestCount:
+#        type: integer
+#        description: Number of available TNs to be returned.  Default will be 5.
+#      TNHostedNumberSearch:
+#        type: boolean
+#        description: <dr>
   
   AvailableTNsReturn:
     properties:
@@ -350,14 +414,14 @@ definitions:
         items:
           $ref: '#/definitions/USTelephoneNumber'
     
-  TNPortabilityInput:
-    properties:
-      addressID:
-        type: integer
-        description: Unique identifier for the location being queried
-      portedTN:
-        type: string
-        description: Telephone number (with area code) being requested for port-in
+#  TNPortabilityInput:
+#    properties:
+#      addressID:
+#        type: integer
+#        description: Unique identifier for the location being queried
+#      portedTN:
+#        type: string
+#        description: Telephone number (with area code) being requested for port-in
 
   TNPortabilityReturn:
     properties:
