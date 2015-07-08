@@ -99,7 +99,7 @@ paths:
           required: true
 
       tags:
-        - W1
+        - W01
       responses:
         200:
           description: Successful completion; pending order flag set and date(s) available as appropriate
@@ -123,7 +123,7 @@ paths:
           schema: 
             $ref: "#/definitions/SubmitBillerOrderRequest"
       tags:
-        - W8
+        - W08
       responses:
         200:
           description: Successful completion; order successfully submitted to biller
