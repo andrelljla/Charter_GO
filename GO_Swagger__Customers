@@ -513,7 +513,7 @@ definitions:
         description: <dr>
       nonPayDisconnectStatus:
         type: string
-        decription: <dr>
+        description: <dr>
       unreturnedEquipmentFlag:
         type: boolean
         description: <dr>
@@ -530,5 +530,5 @@ definitions:
   addressUpdate:
     properties:
       newAddress:
-        item: object
+        type: object
         $ref: '#/definitions/postalAddress'
