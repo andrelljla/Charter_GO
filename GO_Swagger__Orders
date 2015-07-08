@@ -773,6 +773,9 @@ definitions:
       requestedInstallDate:
         type: string
         description: <dr>
+      salesAgentID:
+        type: integer
+        description: <dr>
       configuredOffers:
         type: array
         items:
@@ -832,9 +835,6 @@ definitions:
   NewCustomerSetupData:
     properties:
       addressID:
-        type: integer
-        description: <dr>
-      salesAgentID:
         type: integer
         description: <dr>
       customerID:
