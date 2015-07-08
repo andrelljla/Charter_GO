@@ -16,17 +16,39 @@ produces:
 
 paths:
 # WXX - retrieve multiple orders for account
-  /orders:
+  /orders/history/{accountID}:
     get:
       summary: Docref WXX - GetAccountOrderHistory
       description: <dr>
       parameters:
-        - name: GetAccountOrderHistoryRequest
+        - name: commonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/GetAccountOrderHistoryRequest"
+            $ref: "#/definitions/CommonInputHeader"
+        - name: accountID
+          type: integer
+          description: <dr>
+          in: path
+          required: true
+        - name: accountNumber
+          type: string
+          description: <dr>
+          in: query
+          required: true
+        - name: billerID
+          type: integer
+          description: <dr>
+          in: query
+          required: true
+        - name: ordersAfter
+          type: string
+          format: date
+          description: <dr>
+          in: query
+          required: true
+          
       tags:
         - WXX
       responses:
@@ -48,12 +70,34 @@ paths:
         - name: LocationID
           in: path
           type: integer
-        - name: GetPendingDisconnectRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/GetPendingDisconnectRequest"
+            $ref: "#/definitions/CommonInputHeader"
+        - name: accountID
+          type: integer
+          description: <dr>
+          in: query
+          required: true
+        - name: accountNumber
+          type: string
+          description: <dr>
+          in: query
+          required: true
+        - name: billerID
+          type: integer
+          description: <dr>
+          in: query
+          required: true
+        - name: ordersAfter
+          type: string
+          format: date
+          description: <dr>
+          in: query
+          required: true
+
       tags:
         - W1
       responses:
@@ -100,12 +144,17 @@ paths:
           in: path
           type: integer
           description: Unique identifier for the active order
-        - name: requestNewScheduleWindowsRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/RequestNewScheduleWindowsRequest"
+            $ref: "#/definitions/CommonInputHeader"
+        - name: requestedServiceDate
+          in: query
+          type: string
+          format: date
+          description: <dr>
       tags:
         - W09
       responses:
@@ -155,12 +204,17 @@ paths:
           in: path
           type: integer
           description: Unique identifier for the active order
-        - name: updateOrderConfirmRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/updateOrderConfirmRequest"
+            $ref: "#/definitions/CommonInputHeader"
+        - name: customerEmail
+          in: query
+          type: string
+          description: <dr>
+          required: false
       tags:
         - W12
       responses:
@@ -183,12 +237,12 @@ paths:
           in: path
           type: integer
           description: Unique identifier for the active order
-        - name: getOrderDetailsRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/getOrderDetailsRequest"
+            $ref: "#/definitions/CommonInputHeader"
       tags:
         - W15
       responses:
