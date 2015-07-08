@@ -318,16 +318,16 @@ definitions:
 #
 ##############################################
 
-  GetAccountOrderHistoryRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      GetAccountOrderHistoryInput:
-        type: object
-        $ref: '#/definitions/GetAccountOrderHistoryInput'
-        description: <dr>
+#  GetAccountOrderHistoryRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      GetAccountOrderHistoryInput:
+#        type: object
+#        $ref: '#/definitions/GetAccountOrderHistoryInput'
+#        description: <dr>
                   
   GetAccountOrderHistoryResponse:
     properties:
@@ -340,16 +340,16 @@ definitions:
         $ref: '#/definitions/GetAccountOrderHistoryReturn'
         description: <dr>
 
-  GetPendingDisconnectRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      GetPendingDisconnectInput:
-        type: object
-        $ref: '#/definitions/GetPendingDisconnectInput'
-        description: <dr>
+#  GetPendingDisconnectRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      GetPendingDisconnectInput:
+#        type: object
+#        $ref: '#/definitions/GetPendingDisconnectInput'
+#        description: <dr>
                   
   GetPendingDisconnectResponse:
     properties:
@@ -384,16 +384,16 @@ definitions:
         $ref: '#/definitions/SubmitBillerOrderReturn'
         description: <dr>
 
-  RequestNewScheduleWindowsRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      requestNewScheduleWindowsInput:
-        type: object
-        $ref: '#/definitions/requestNewScheduleWindowsInput'
-        description: <dr>
+#  RequestNewScheduleWindowsRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      requestNewScheduleWindowsInput:
+#        type: object
+#        $ref: '#/definitions/requestNewScheduleWindowsInput'
+#        description: <dr>
                   
   RequestNewScheduleWindowsResponse:
     properties:
@@ -428,16 +428,16 @@ definitions:
         $ref: '#/definitions/updateOrderScheduleWindowReturn'
         description: <dr>
 
-  updateOrderConfirmRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      updateOrderConfirmInput:
-        type: object
-        $ref: '#/definitions/updateOrderConfirmInput'
-        description: <dr>
+#  updateOrderConfirmRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#      updateOrderConfirmInput:
+#        type: object
+#        $ref: '#/definitions/updateOrderConfirmInput'
+#        description: <dr>
                   
   updateOrderConfirmResponse:
     properties:
@@ -450,12 +450,12 @@ definitions:
         $ref: '#/definitions/updateOrderConfirmReturn'
         description: <dr>
 
-  getOrderDetailsRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#  getOrderDetailsRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
                   
   getOrderDetailsResponse:
     properties:
@@ -574,21 +574,21 @@ definitions:
 #
 ##############################################
 
-  GetAccountOrderHistoryInput:
-    properties:
-      accountID:
-        type: integer
-        description: <dr>
-      accountNumber: 
-        type: string
-        description: <dr>
-      billerID:
-        type: integer
-        description: Unique identifier which identifies the biller system
-      ordersAfter: 
-        type: string
-        format: Date
-        description: <dr>
+#  GetAccountOrderHistoryInput:
+#    properties:
+#      accountID:
+#        type: integer
+#        description: <dr>
+#      accountNumber: 
+#        type: string
+#        description: <dr>
+#      billerID:
+#        type: integer
+#        description: Unique identifier which identifies the biller system
+#      ordersAfter: 
+#        type: string
+#        format: Date
+#        description: <dr>
         
   GetAccountOrderHistoryReturn:
     properties:
@@ -598,20 +598,20 @@ definitions:
           $ref: '#/definitions/OrderHistoryItem'
         description: <dr>
 
-  GetPendingDisconnectInput:
-    properties:
-      addressID:
-        type: integer
-        description: Unique identifier for address/location being queried
-      accountID:
-        type: integer
-        description: Unique identifier for account being queried
-      accountNumber:
-        type: string
-        description: Unique identifier for account within the billing system
-      billerID:
-        type: integer
-        description: Unique identifier which identifies the biller system
+#  GetPendingDisconnectInput:
+#    properties:
+#      addressID:
+#        type: integer
+#        description: Unique identifier for address/location being queried
+#      accountID:
+#        type: integer
+#        description: Unique identifier for account being queried
+#      accountNumber:
+#        type: string
+#        description: Unique identifier for account within the billing system
+#      billerID:
+#        type: integer
+#        description: Unique identifier which identifies the biller system
         
   GetPendingDisconnectReturn:
     properties:
@@ -652,15 +652,15 @@ definitions:
         type: string
         description: <dr>
 
-  requestNewScheduleWindowsInput:
-    properties:
-      orderID:
-        type: integer
-        description: Unique identifier for the active order being modified
-      requestedDate:
-        type: string
-        format: date
-        description: Custoemr requested date for service window selection
+#  requestNewScheduleWindowsInput:
+#    properties:
+#      orderID:
+#        type: integer
+#        description: Unique identifier for the active order being modified
+#      requestedDate:
+#        type: string
+#        format: date
+#        description: Custoemr requested date for service window selection
         
   requestNewScheduleWindowsReturn:
     properties:
@@ -706,11 +706,11 @@ definitions:
         type: string
         description: <dr>
 
-  updateOrderConfirmInput:
-    properties:
-      customerEmail:
-        type: string
-        description: <dr>
+#  updateOrderConfirmInput:
+#    properties:
+#      customerEmail:
+#        type: string
+#        description: <dr>
         
   updateOrderConfirmReturn:
     properties:
