@@ -1680,7 +1680,7 @@ definitions:
         description: <dr> Constrained LoV (AC, CE, SU)
 
   mecProductConfigOptions:
-    parameters:
+    properties:
       productOrderItemID:
         type: string
         description: The ID of the ProductOrderItem
