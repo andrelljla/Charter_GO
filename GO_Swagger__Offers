@@ -15,21 +15,64 @@ produces:
   - application/json
 paths:
 
-  /eligibleOffers:
-    get:
+  /commerce/customer/{customer-id}/browsing-category-structure/{browsing-category-structure-id}/retrieve-catalog-items:
+    post:
       summary: Docref W3 - Retrieve the eligible offers for this customer and location
       description: |
         This REST service will enable the Charter Gateway system to retrieve the eligible offers for a customer, to display them on the screen to the user.  All the available offers will be defined in MEC and will be under a single category.  Having all the available offers defined under a single category by MEC, enables retrieving all the available eligible offers, which enables Charter Gateway to handle filtering and searching at the UI level, by using the offer attributes defined by MEC.
       parameters:
-        - name: implRetrieveCatalogItemsRequest
-          in: body
-          schema: 
-              $ref: '#/definitions/implRetrieveCatalogItemsRequest'
+#        - name: implRetrieveCatalogItemsRequest
+#          in: body
+#          schema: 
+#              $ref: '#/definitions/implRetrieveCatalogItemsRequest'
+#          required: true
+#          description: Additional information to support serviceability and eligibility determination
+        - name: customer-id
+          in: path
+          type: string
           required: true
-          description: Additional information to support serviceability and eligibility determination
-
+          description: Unique identifier for the customer; default to 0 for anonymous or new customers
+        - name: browsing-category-structure-id
+          in: path
+          type: string
+          required: true
+          description: Browsing category structure ID; default to 1 
+        - name: username
+          in: header
+          type: string
+          description: authentication username for proxy connection
+          required: true
+        - name: password
+          in: header
+          type: string
+          description: authentication password for proxy connection
+          required: true
+        - name: applicationID
+          in: header
+          type: string
+          description: Unique designation for the invoking application (e.g. GatewyOrdering)
+          required: true
+        - name: timestamp
+          in: header
+          type: string
+          description: time the REST call was invoked
+          required: true
+        - name: sc
+          required: true
+          in: query
+          type: string
+          description: Sales Channel identifier
+        - name: locale
+          required: true
+          in: query
+          type: string
+          description: Locale idenitifier, used for language translation
+        - name: pageSize
+          required: true
+          in: query
+          type: integer
+          description: Enables the consumer to retrieve a set quantity of results; default will be 10.
       tags:
-        - Offer
         - W3    
       responses:
         200:
@@ -41,18 +84,52 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /orders/orderEngine:
-    put:
+  /commerce/customer/{customer-id}/product-order/create-order:
+    post:
       summary: Docref W4_step1 - Create a base order in OrderEngine
       description: The REST enables order creation, by providing the selected eligible offer IDs as input.   The result of the Create Order for COP REST is the required order with a set of order actions (one order action per product in the offer) is created.  This service will return an order ID after the order and all included order actions were created successfully.
       parameters:
-        - name: createOrder
-          in: body
+        - name: customer-id
+          in: path
+          type: string
           required: true
-          schema:
-            $ref: '#/definitions/implCreateOrderRequest'
+          description: <dr>
+        - name: username
+          in: header
+          type: string
+          description: authentication username for proxy connection
+          required: true
+        - name: password
+          in: header
+          type: string
+          description: authentication password for proxy connection
+          required: true
+        - name: applicationID
+          in: header
+          type: string
+          description: Unique designation for the invoking application (e.g. GatewyOrdering)
+          required: true
+        - name: timestamp
+          in: header
+          type: string
+          description: time the REST call was invoked
+          required: true
+        - name: sc
+          required: true
+          in: query
+          type: string
+          description: Sales Channel identifier
+        - name: locale
+          required: true
+          in: query
+          type: string
+          description: Locale idenitifier, used for language translation
+#        - name: createOrder
+#          in: body
+#          required: true
+#          schema:
+#            $ref: '#/definitions/implCreateOrderRequest'
       tags:
-        - Order
         - W4_Step1
       responses:
         200:
@@ -64,24 +141,63 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /eligibleOffers/{offerID}/offerProducts:
+  /commerce/customer/{customer-id}/product-order/{product-order-id}/product-order-items:
     get:
       summary: Docref W4_step2 - retrieve Products for the selected offer(s) in the order.
       description: The Product Order Items REST service retrieves high level information of products and associated Order Actions which are included in the current order based on the OE Order ID provided as input. This information will be used later for retrieving the configuration per product. Must be called once separately for each offer selected for inclusion in the order. 
       parameters:
-        - 
-          name: offerID
+#        - 
+#          name: offerID
+#          in: path
+#          type: integer
+#          required: true
+#          description: Unique Identifier for the active OrderEngine order; returned in the result of the createOrder call (W4_Step1).
+#        - name: offerProducts
+#          in: body
+#          required: true
+#          schema:
+#            $ref: '#/definitions/implGetProductOrderItemsRequest'
+        - name: customer-id
           in: path
-          type: integer
+          type: string
           required: true
-          description: Unique Identifier for the active OrderEngine order; returned in the result of the createOrder call (W4_Step1).
-        - name: offerProducts
-          in: body
+          description: <dr>
+        - name: product-order-id
+          in: path
+          type: string
           required: true
-          schema:
-            $ref: '#/definitions/implGetProductOrderItemsRequest'
+          description: <dr>
+        - name: username
+          in: header
+          type: string
+          description: authentication username for proxy connection
+          required: true
+        - name: password
+          in: header
+          type: string
+          description: authentication password for proxy connection
+          required: true
+        - name: applicationID
+          in: header
+          type: string
+          description: Unique designation for the invoking application (e.g. GatewyOrdering)
+          required: true
+        - name: timestamp
+          in: header
+          type: string
+          description: time the REST call was invoked
+          required: true
+        - name: sc
+          required: true
+          in: query
+          type: string
+          description: Sales Channel identifier
+        - name: locale
+          required: true
+          in: query
+          type: string
+          description: Locale identifier, used for language translation
       tags:
-        - Offer
         - W4_Step2
       responses:
         200:
@@ -93,28 +209,53 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /eligibleOffers/{offerID}/offerProducts/{productID}/productCustomizationDetails:
-    get:
+  /commerce/customer/{customer-id}/product-order/{product-order-item-id}/product-configuration-options:
+    post:
       summary: Docref W4_step3 - Get customization details
       description: The Product Configuration Options REST retrieves the product configuration of a product in an order from Ordering system. The returned configuration includes the current implemented configuration and all the available changes that can be applied on the product within the order. This REST is expected to be called by Charter per each Order Action ID retrieves from Product Order Items REST.
       parameters:
-        - name: offerID
+        - name: customer-id
           in: path
-          type: integer
+          type: string
           required: true
           description: <dr>
-        - name: productID
+        - name: product-order-item-id
           in: path
-          type: integer
+          type: string
           required: true
           description: <dr>
-        - name: productConfigurationOptions
-          in: body
+        - name: username
+          in: header
+          type: string
+          description: authentication username for proxy connection
           required: true
-          schema:
-            $ref: '#/definitions/implRetrieveProductInOrderConfigurationRequest'
+        - name: password
+          in: header
+          type: string
+          description: authentication password for proxy connection
+          required: true
+        - name: applicationID
+          in: header
+          type: string
+          description: Unique designation for the invoking application (e.g. GatewyOrdering)
+          required: true
+        - name: timestamp
+          in: header
+          type: string
+          description: time the REST call was invoked
+          required: true
+        - name: sc
+          required: true
+          in: query
+          type: string
+          description: Sales Channel identifier
+        - name: locale
+          required: true
+          in: query
+          type: string
+          description: Locale idenitifier, used for language translation
+
       tags:
-        - Offer
         - W4_Step3
       responses:
         200:
@@ -141,7 +282,6 @@ paths:
           schema:
             $ref: '#/definitions/implProductConfigurationRequest'
       tags:
-        - Order
         - W22
       responses:
         200:
@@ -161,35 +301,35 @@ definitions:
 #      foo:
 #        type: integer
   
-  CommonInputHeader:
-    properties:
-      username:
-        type: string
-        description: Encrypted username for proxy user authentication
-      password:
-        type: string
-        description: Encrypted passaord for proxy user authentication
-      invokingUser:
-        type: string
-        description: User name for the actual user that invoked the call (for audit purpose)
-      applicationID:
-        type: string
-        description: Code identifying invoking application
-      lineageID:
-        type: integer
-        description: Unique transaction identifier; used for transactional error handling
-      timestamp:
-        type: string
-        description: Time that the service call was invoked
+#  CommonInputHeader:
+#    properties:
+#      username:
+#        type: string
+#        description: Encrypted username for proxy user authentication
+#      password:
+#        type: string
+#        description: Encrypted passaord for proxy user authentication
+#      invokingUser:
+#        type: string
+#        description: User name for the actual user that invoked the call (for audit purpose)
+#     applicationID:
+#        type: string
+#        description: Code identifying invoking application
+#      lineageID:
+#        type: integer
+#        description: Unique transaction identifier; used for transactional error handling
+#      timestamp:
+#        type: string
+#        description: Time that the service call was invoked
         
-  OrderEngineHeader:
-    properties:
-      locale: 
-        type: string
-        description: Localization variable identifying the language of the returned data set (default EN)
-      salesChannel:
-        type: string
-        description: Variable used to define the sales channel through which the invocation was made; likely a more detailed data around applicationID.
+#  OrderEngineHeader:
+#    properties:
+#      locale: 
+#        type: string
+#        description: Localization variable identifying the language of the returned data set (default EN)
+#      salesChannel:
+#        type: string
+#        description: Variable used to define the sales channel through which the invocation was made; likely a more detailed data around applicationID.
 
   CommonNoErrorReturn:
     properties:
@@ -224,46 +364,46 @@ definitions:
       errGUID:
         type: string
 
-  implRetrieveCatalogItemsRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        description: Encrypted username for proxy user authentication
-        $ref: '#/definitions/CommonInputHeader'
-      commonOEInput:
-        type: object
-        description: Encrypted username for proxy user authentication
-        $ref: '#/definitions/OrderEngineHeader'
-      sysPrinAgent:
-        type: string
-        description: <description required>
-      dwellType:
-        type: string
-        description: <description required>     
-      customerIsNew:
-        type: boolean
-        description: <description required>
-      customerHasActiveAccount:
-        type: boolean
-        description: <description required>
-      customerType:
-        type: string
-        description: <description required>
-      orderActionType:
-        type: string
-        description: <description required>
-      userRole:
-        type: string
-        description: <description required>
-      offerCode:
-        type: array
-        items: 
-          type: string
-        description: <description required>
-      additional attributes:
-        type: array
-        items:
-          $ref: '#/definitions/AdditionalAttribute'
+#  implRetrieveCatalogItemsRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        description: Encrypted username for proxy user authentication
+#        $ref: '#/definitions/CommonInputHeader'
+#      commonOEInput:
+#        type: object
+#        description: Encrypted username for proxy user authentication
+#        $ref: '#/definitions/OrderEngineHeader'
+#      sysPrinAgent:
+#        type: string
+#        description: <description required>
+#      dwellType:
+#        type: string
+#        description: <description required>     
+#      customerIsNew:
+#        type: boolean
+#        description: <description required>
+#      customerHasActiveAccount:
+#        type: boolean
+#        description: <description required>
+#      customerType:
+#        type: string
+#       description: <description required>
+#      orderActionType:
+#        type: string
+#        description: <description required>
+#      userRole:
+#        type: string
+#        description: <description required>
+#      offerCode:
+#        type: array
+#        items: 
+#          type: string
+#        description: <description required>
+#      additional attributes:
+#        type: array
+#        items:
+#          $ref: '#/definitions/AdditionalAttribute'
 
   implRetrieveCatalogItemsResponse:
     properties:
@@ -274,19 +414,19 @@ definitions:
         type: object
         $ref: '#/definitions/implSearchResults'
         
-  implCreateOrderRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        description: Encrypted username for proxy user authentication
-        $ref: '#/definitions/CommonInputHeader'
-      commonOEInput:
-        type: object
-        description: Encrypted username for proxy user authentication
-        $ref: '#/definitions/OrderEngineHeader'
-      implCreateOrderInput:
-        type: object
-        $ref: '#/definitions/implCreateOrderInput'
+#  implCreateOrderRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        description: Encrypted username for proxy user authentication
+#        $ref: '#/definitions/CommonInputHeader'
+#      commonOEInput:
+#        type: object
+#        description: Encrypted username for proxy user authentication
+#        $ref: '#/definitions/OrderEngineHeader'
+#      implCreateOrderInput:
+#        type: object
+#        $ref: '#/definitions/implCreateOrderInput'
 
 
   implCreateOrderResponse:
@@ -298,21 +438,21 @@ definitions:
         type: string
         description: Unique identifier (within Order Engine) used by Gateway Ordering for all communication with Order Engine during the transaction. 
         
-  implGetProductOrderItemsRequest:
-    properties:
-      commonHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-      orderEngineHeader:
-        type: object
-        $ref: '#/definitions/OrderEngineHeader'
-      customerID:
-        type: integer
-        format: int32
-        description: The customer identification ID; default 0 for new/anonymous customer
-      productOrderID:
-        type: string
-        description: Product Order ID related to Order Action(s).
+#  implGetProductOrderItemsRequest:
+#    properties:
+#      commonHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#      orderEngineHeader:
+#        type: object
+#        $ref: '#/definitions/OrderEngineHeader'
+#      customerID:
+#        type: integer
+#        format: int32
+#        description: The customer identification ID; default 0 for new/anonymous customer
+#      productOrderID:
+#        type: string
+#        description: Product Order ID related to Order Action(s).
   
   implGetProductOrderItemsResponse:
     properties:
@@ -323,29 +463,29 @@ definitions:
         type: object
         $ref: '#/definitions/implProductOrderItemHeaders'
 
-  implRetrieveProductInOrderConfigurationRequest:
-    properties:
-      commonHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-      orderEngineHeader:
-        type: object
-        $ref: '#/definitions/OrderEngineHeader'
-      poi:
-        type: string
-        description: <dr>
-      rp: 
-        type: boolean
-        description: <dr>
-      rpc: 
-        type: boolean
-        description: <dr>
-      id:
-        type: string
-        description: <dr>
-      product-order-item-id:
-        type: string
-        description: <dr>
+#  implRetrieveProductInOrderConfigurationRequest:
+#    properties:
+#      commonHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#      orderEngineHeader:
+#        type: object
+#        $ref: '#/definitions/OrderEngineHeader'
+#      poi:
+#        type: string
+#        description: <dr>
+#      rp: 
+#        type: boolean
+#        description: <dr>
+#      rpc: 
+#        type: boolean
+#        description: <dr>
+#      id:
+#        type: string
+#        description: <dr>
+#      product-order-item-id:
+#        type: string
+#        description: <dr>
   
   implRetrieveProductInOrderConfigurationResponse:
     properties:
@@ -391,14 +531,14 @@ definitions:
         $ref: '#/definitions/FlexAttributeValue'
         description: Custom attribute value
         
-  AdditionalAttribute:
-    properties:
-      name:
-        type: string
-        description: Custom attribute name
-      value: 
-        type: string
-        description: Custom attribute value
+#  AdditionalAttribute:
+#    properties:
+#      name:
+#        type: string
+#        description: Custom attribute name
+#      value: 
+#        type: string
+#        description: Custom attribute value
         
   ContainingOffering:
     properties:
@@ -414,26 +554,26 @@ definitions:
         items:
           type: string
   
-  implCreateOrderInput:
-    properties:
-      addressID:
-        type: string
-        description: <description required>
-      userID:
-        type: string
-        description: <description required>
-      offerIDs:
-        type: array
-        items:
-          type: string
-        description: <description required>
-      serviceRequiredDate:
-        type: string
-        format: date
-        description: <description required>
-      orderActionType:
-        type: string
-        description: <description required>
+#  implCreateOrderInput:
+#    properties:
+#      addressID:
+#        type: string
+#        description: <description required>
+#      userID:
+#        type: string
+#        description: <description required>
+#      offerIDs:
+#        type: array
+#        items:
+#          type: string
+#        description: <description required>
+#      serviceRequiredDate:
+#        type: string
+#        format: date
+#        description: <description required>
+#      orderActionType:
+#        type: string
+#        description: <description required>
 
   Attachment:
     properties:
