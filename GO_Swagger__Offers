@@ -15,6 +15,54 @@ produces:
   - application/json
 paths:
 
+  /commerce/browsing-category-structure:
+    get:
+      summary: Retrieve the browsing category structure from the catalog
+      description: Retrieve a list of browsing categories, sub-categories, and filters
+      parameters:
+        - name: username
+          in: header
+          type: string
+          description: authentication username for proxy connection
+          required: true
+        - name: password
+          in: header
+          type: string
+          description: authentication password for proxy connection
+          required: true
+        - name: applicationID
+          in: header
+          type: string
+          description: Unique designation for the invoking application (e.g. GatewayOrdering)
+          required: true
+        - name: timestamp
+          in: header
+          type: string
+          description: time the REST call was invoked
+          required: true
+        - name: sc
+          required: true
+          in: query
+          type: string
+          description: Sales Channel identifier
+        - name: locale
+          required: true
+          in: query
+          type: string
+          description: Locale identifier, used for language translation
+      tags:
+        - Engine Startup    
+      responses:
+        200:
+          description: Successful completion; return array of categories, subcategories & filters
+          schema:
+              $ref: '#/definitions/implBrowsingCategoriesStructureResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+      
+
   /commerce/customer/{customer-id}/browsing-category-structure/{browsing-category-structure-id}/retrieve-catalog-items:
     post:
       summary: Docref W3 - Retrieve the eligible offers for this customer and location
@@ -399,6 +447,15 @@ definitions:
         type: string
       errGUID:
         type: string
+
+  implBrowsingCategoriesStructureResponse:
+    properties:
+      implBaseReturn:
+        type: object 
+        $ref: "#/definitions/CommonNoErrorReturn"
+      items:
+        type: object
+        $ref: '#/definitions/implBrowsingCategoriesStructureOutput'
 
   implRetrieveCatalogItemsRequest:
     properties:
@@ -1871,3 +1928,89 @@ definitions:
       productOrderItemType:
         type: string
         description: Action that is taken on the product
+
+  implBrowsingCategoriesStructureOutput:
+    properties:
+      implBrowsingCetegory:
+        type: array
+        items:
+          $ref: '#/definitions/implBrowsingCategory'
+          
+  implBrowsingCategory:
+    properties:
+      Category:
+        type: object
+        $ref: '#/definitions/BrowsingCategory'
+        description: Category properties
+      childCategories:
+        type: array
+        items:
+          $ref: '#/definitions/BrowsingCategoryStructure'
+        description: Child Category Properties
+      id:
+        type: string
+        description: Category ID
+        
+  BrowsingCategory:
+    properties:
+      filterFacets:
+        type: array
+        items:
+          $ref: '#/definitions/FilterFacet'
+        description: Filter facets list
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/definitions/FlexAttr'
+      name:
+        type: string
+        description: Category name
+      type: 
+        type: string
+        description: Value will be NAVIGATION as this category is used for navigating the structure
+      id:
+        type: string
+        description: Category ID
+        
+  FilterFacet:
+    properties:
+      name: 
+        type: string
+        description: Free format short textual descrption
+      id:
+        type: string
+        description: A unique identifier for the facet
+      values:
+        type: array
+        items: 
+          $ref: '#/definitions/FilterFacetValue'
+      code:
+        type: string
+        description: A unique identifier for the facet that is human readable
+        
+  FilterFacetValue:
+    properties:
+      valueTo:
+        type: string
+        description: The upper value that a range-type item property can take on.
+      value:
+        type: string
+        description: A value that the item can take on.  In the case of a range value, this represents the lower value of the range.
+      id:
+        type: string
+        description: A unique identifier; provider write only.
+        
+  BrowsingCategoryStructure:
+    properties:
+      category:
+        type: object
+        $ref: '#/definitions/BrowsingCategory'
+        description: Category properties
+      childCategories:
+        type: array
+        items:
+          $ref: '#/definitions/BrowsingCategoryStructure'
+        description: Child Category Properties
+      id:
+        type: string
+        description: Category ID      
