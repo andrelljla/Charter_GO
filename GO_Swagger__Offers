@@ -453,7 +453,7 @@ definitions:
       implBaseReturn:
         type: object 
         $ref: "#/definitions/CommonNoErrorReturn"
-      items:
+      implBrowsingCategoriesStructureOutput:
         type: object
         $ref: '#/definitions/implBrowsingCategoriesStructureOutput'
 
