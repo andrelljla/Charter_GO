@@ -503,9 +503,10 @@ definitions:
       implBaseReturn:
         type: object 
         $ref: "#/definitions/CommonNoErrorReturn"
-      items:
+      implSearchResults:
         type: object
         $ref: '#/definitions/implSearchResults'
+      
         
   implCreateOrderRequest:
     properties:
