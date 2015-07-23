@@ -95,7 +95,7 @@ paths:
         200:
           description: Successful completion; return expanded customer information
           schema:
-            $ref: '#/definitions/GetCustomerInformationResponse'
+            $ref: '#/definitions/customerAccountDetail'
         default:
           description: Unexpected error
           schema:
@@ -163,13 +163,19 @@ paths:
         - name: accountID
           in: path
           type: integer
-          description: Unique identifier for the account being queried
-        - name: GetLandingPageRequest
+          description: Unique identifier for the account being queried (from SOLO)
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/GetLandingPageRequest"
+            $ref: "#/definitions/CommonInputHeader"
+#        - name: GetLandingPageRequest
+#          in: body
+#          description: Incudes input parameters common to all invocations
+#          required: true
+#          schema: 
+#            $ref: "#/definitions/GetLandingPageRequest"
       tags:
         - W14
       responses:
@@ -207,10 +213,10 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      customerAccountLookupReturn:
+      customerAccountStatus:
         type: array
         items:
-          $ref: '#/definitions/customerAccountLookupReturn'
+          $ref: '#/definitions/customerAccountStatus'
         description: <dr>
 
 #  GetCustomerInformationRequest:
@@ -220,15 +226,15 @@ definitions:
 #        $ref: '#/definitions/CommonInputHeader'
 #        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
                   
-  GetCustomerInformationResponse:
-    properties:
-      commonReturn: 
-        type: object
-        $ref: '#/definitions/CommonNoErrorReturnHeader'
-        description: <dr>
-      CustomerInformationResponse:
-        type: object
-        $ref: '#/definitions/customerInformationReturn'
+#  GetCustomerInformationResponse:
+#    properties:
+#      commonReturn: 
+#        type: object
+#        $ref: '#/definitions/CommonNoErrorReturnHeader'
+#        description: <dr>
+#      CustomerInformationResponse:
+#        type: object
+#        $ref: '#/definitions/customerInformationReturn'
             
   CustomerCreditCheckRequest:
     properties:
@@ -270,18 +276,34 @@ definitions:
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
 
-  GetLandingPageRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#  GetLandingPageRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
                   
   GetLandingPageResponse:
     properties:
       commonReturn: 
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      customerAccountStatus:
+        type: object
+        $ref: '#/definitions/customerAccountStatus'
+        description: <dr>
+      customerAccountDetail:
+        type: object
+        $ref: '#/definitions/customerAccountDetail'
+        description: <dr>
+      pastDueBalance:
+        type: object
+        $ref: '#/definitions/customerAccountStatus'
+        description: <dr>
+      orderHistory:
+        type: object
+        $ref: '#/definitions/customerAccountStatus'
         description: <dr>
 
 ##############################################
@@ -380,7 +402,7 @@ definitions:
 #        type: integer
 #        description: <dr>
         
-  customerAccountLookupReturn:
+  customerAccountStatus:
     properties:
       customerType:
         type: string
@@ -391,8 +413,8 @@ definitions:
       accountNumber: 
         type: string
         description: <dr>
-      billerID:
-        type: integer
+      billerDesignation:
+        type: string
         description: <dr>
       customerID:
         type: integer
@@ -400,8 +422,11 @@ definitions:
       addressID:
         type: integer
         description: <dr>
+      accountStatus:
+        type: string
+        description: <dr>
 
-  customerInformationReturn:
+  customerAccountDetail:
     properties:
       firstName:
         type: string
