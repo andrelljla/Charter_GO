@@ -518,9 +518,32 @@ definitions:
 #        type: object
 #        description: Encrypted username for proxy user authentication
 #        $ref: '#/definitions/OrderEngineHeader'
-      implCreateOrderInput:
-        type: object
-        $ref: '#/definitions/implCreateOrderInput'
+#      implCreateOrderInput:
+#        type: object
+#        $ref: '#/definitions/implCreateOrderInput'
+#          properties:
+      addressID:
+        type: string
+        description: <description required>
+      userID:
+        type: string
+        description: <description required>
+      ImplOfferID:
+        type: array
+        items:
+          $ref: '#/definitions/OrderOffer'
+        description: <description required>
+      serviceRequiredDate:
+        type: string
+        format: date
+        description: <description required>
+#      orderActionType:
+#        type: string
+#        description: <description required>
+      ImplAssignedProduct:
+        type: array
+        items:
+          $ref: '#/definitions/AssignedProduct'
 
   implCreateOrderResponse:
     properties:
@@ -590,6 +613,33 @@ definitions:
         $ref: '#/definitions/mecProductConfigOptions'
       
 #############
+  OrderOffer:
+    properties:
+      offerID:
+        type: string
+        description: Offer catalog ID
+      orderActionType:
+        type: string
+        description: Order action type for this offer
+        enum:
+          - PR
+          - PV
+        
+  AssignedProduct:
+    properties:
+      apID:
+        type: string
+        description: Assigned Product ID
+      orderActionType:
+        type: string
+        description: action type for this specific product
+        enum:
+         - CH
+         - CE
+         - SU
+         - HM
+         - RT
+         - CR
 
   FlexAttributeValue:
     properties:
@@ -647,26 +697,7 @@ definitions:
         items:
           type: string
   
-  implCreateOrderInput:
-    properties:
-      addressID:
-        type: string
-        description: <description required>
-      userID:
-        type: string
-        description: <description required>
-      offerIDs:
-        type: array
-        items:
-          type: string
-        description: <description required>
-      serviceRequiredDate:
-        type: string
-        format: date
-        description: <description required>
-      orderActionType:
-        type: string
-        description: <description required>
+#  implCreateOrderInput:
 
   Attachment:
     properties:
