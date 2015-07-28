@@ -128,7 +128,8 @@ paths:
           required: true
           type: integer
       tags:
-        - W02
+        - W02-GW
+        - W02-GO
       responses:
         200:
           description: An array of `Accounts` matching the specified criteria, sorted in descending order of search rank
@@ -176,6 +177,14 @@ paths:
           in: query
           type: string
           description: <dr>
+        - name: otherTN
+          in: query
+          type: string
+          description: <dr>
+        - name: otherTNType
+          in: query
+          type: string
+          description: <dr>
         - name: email
           in: query
           type: string
@@ -190,7 +199,7 @@ paths:
           description: <dr>
 
       tags:
-        - W02
+        - W02-GO
       responses:
         200:
           description: Successful completion; return key IDs
