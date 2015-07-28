@@ -300,12 +300,12 @@ paths:
           in: path
           type: integer
           description: Unique identifier for the account being queried
-        - name: GetLandingPageRequest
+        - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
           required: true
           schema: 
-            $ref: "#/definitions/GetLandingPageRequest"
+            $ref: "#/definitions/CommonInputHeader"
       tags:
         - W14
       responses:
@@ -418,6 +418,22 @@ definitions:
       commonReturn: 
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      customerAccountStatus:
+        type: object
+        $ref: '#/definitions/customerAccountLookupReturn'
+        description: <dr>
+      customerAccountDetails:
+        type: object
+        $ref: '#/definitions/Account'
+        description: <dr>
+      customerPastDueBalance:
+        type: object
+        $ref: '#/definitions/customerCreditCheckReturn'
+        description: <dr>
+      customerOrderHistory:
+        type: object
+        $ref: '#/definitions/customerOrderHistory'
         description: <dr>
 
 ##############################################
@@ -541,22 +557,28 @@ definitions:
     properties:
       firstName:
         type: string
-        description: <dr>
+        description: Given name
       lastName:
         type: string
-        description: <dr>
+        description: Family name
       primaryTN:
         type: string
-        description: <dr>
+        description: Primary telephone number
       primaryTNType:
         type: string
-        description: <dr>
+        description: Primary telephone number type designation (home, work, cell, etc)
       alternateTN:
         type: string
-        description: <dr>
+        description: Alternate telephone number
       alternateTNType:
         type: string
-        description: <dr>
+        description: Alternate telephone number type designation (home, work, cell, etc)
+      OtherTN:
+        type: string
+        description: Other alternate telephone number
+      OtherTNType:
+        type: string
+        description: Other alternate telephone number type designation (home, work, cell, etc)
       email:
         type: string
         description: <dr>
@@ -662,6 +684,47 @@ definitions:
       prepayAmountUnreturnedEquipment:
         type: number
         format: double
+
+  customerOrderHistory:
+    properties:
+      orderHistory:
+        type: array
+        items:
+          $ref: '#/definitions/orderHeader'
+          
+  orderHeader:
+    properties:
+      orderID:
+        type: number
+        format: int32
+        description: Unique order identifier in biller isolation/SOLO
+      orderNumber:
+        type: string
+        description: Order number as set in the billing system
+      orderStatus:
+        type: string
+        description: Status of the order
+      orderActionType:
+        type: string
+        description: <dr>
+      orderCreationDate:
+        type: string
+        format: date
+        description: <dr>
+      salesAgentName:
+        type: string
+        description: <dr>
+      salesAgentID:
+        type: string
+        description: <dr>
+      orderAmount:
+        type: number
+        description: <dr>
+      disconnectType:
+        type: string
+        description: <dr>
+      
+
         
   addressUpdate:
     properties:
@@ -697,6 +760,9 @@ definitions:
         $ref: "#/definitions/TelephoneNumber"
       alternatePhone:
         $ref: "#/definitions/TelephoneNumber"
+      otherPhone:
+        $ref: "#/definitions/TelephoneNumber"
+        description: Added by GO
       emailAddress:
         $ref: "#/definitions/EmailAddress"
       ppvLimit:
