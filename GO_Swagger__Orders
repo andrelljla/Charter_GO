@@ -19,7 +19,7 @@ paths:
   /orders/history/{accountID}:
     get:
       summary: Docref WXX - GetAccountOrderHistory
-      description: <dr>
+      description: Invoked as part of the W.14 Get Landing Page Information
       parameters:
         - name: commonInputHeader
           in: body
@@ -282,10 +282,10 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-# W22 - deleteTransferRecord
+# W24 - deleteTransferRecord
   /orders/{orderID}/cancelTransfer:
     post:
-      summary: Docref W22 - deleteTransferRecord
+      summary: Docref W24 - deleteTransferRecord
       description: <dr>
       parameters:
         - name: orderID
@@ -299,7 +299,7 @@ paths:
           schema: 
             $ref: "#/definitions/deleteTransferRecordRequest"
       tags:
-        - W22
+        - W24
       responses:
         200:
           description: Successful completion; transfer record successfully deleted (soft-delete)
