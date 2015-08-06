@@ -161,6 +161,18 @@ paths:
           in: query
           type: string
           description: <dr>
+        - name: middleInitial
+          in: query
+          type: string
+          description: <dr>
+        - name: namePrefix
+          in: query
+          type: string
+          description: <dr>
+        - name: nameSuffix
+          in: query
+          type: string
+          description: <dr>
         - name: primaryTN
           in: query
           type: string
@@ -189,6 +201,10 @@ paths:
           in: query
           type: string
           description: <dr>
+        - name: customerNumber
+          in: query
+          type: integer
+          description: <dr>
         - name: customerID
           in: query
           type: integer
@@ -205,33 +221,6 @@ paths:
           description: Successful completion; return key IDs
           schema:
             $ref: '#/definitions/GetCustomerIDResponse'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/CommonErrorReturn'
-
-  /customers/{customerID}:
-    get:
-      summary: Docref W17 - Retrieve key customer information
-      description: <dr>
-      parameters:
-        - name: customerID
-          in: path
-          type: integer
-          description: Unique identifier for the Customer being queried
-        - name: CommonInputHeader
-          in: body
-          description: Incudes input parameters common to all invocations
-          required: true
-          schema: 
-            $ref: "#/definitions/CommonInputHeader"
-      tags:
-        - W17
-      responses:
-        200:
-          description: Successful completion; return expanded customer information
-          schema:
-            $ref: '#/definitions/GetCustomerInformationResponse'
         default:
           description: Unexpected error
           schema:
@@ -264,33 +253,6 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /customers/account/{accountID}/billAddress:
-    post:
-      summary: Docref W23 - update account billing address
-      description: <dr>
-      parameters:
-        - name: accountID
-          in: path
-          type: integer
-          description: Unique identifier for the Customer's account being updated
-        - name: BillingAddressUpdateRequest
-          in: body
-          description: Incudes input parameters common to all invocations
-          required: true
-          schema: 
-            $ref: "#/definitions/BillingAddressUpdateRequest"
-      tags:
-        - W23
-      responses:
-        200:
-          description: Successful completion; return updated account information
-          schema:
-            $ref: '#/definitions/BillingAddressUpdateResponse'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/CommonErrorReturn'
-
   /customers/account/{accountID}:
     get:
       summary: Docref W14 - Get Landing Page Info
@@ -313,6 +275,60 @@ paths:
           description: Successful completion; return expanded customer information
           schema:
             $ref: '#/definitions/GetLandingPageResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /customers/{customerID}:
+    get:
+      summary: Docref W17 - Retrieve key customer information
+      description: <dr>
+      parameters:
+        - name: customerID
+          in: path
+          type: integer
+          description: Unique identifier for the Customer being queried
+        - name: CommonInputHeader
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/CommonInputHeader"
+      tags:
+        - W17
+      responses:
+        200:
+          description: Successful completion; return expanded customer information
+          schema:
+            $ref: '#/definitions/GetCustomerInformationResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /customers/account/{accountID}/billAddress:
+    post:
+      summary: Docref W23 - update account billing address
+      description: <dr>
+      parameters:
+        - name: accountID
+          in: path
+          type: integer
+          description: Unique identifier for the Customer's account being updated
+        - name: BillingAddressUpdateRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/BillingAddressUpdateRequest"
+      tags:
+        - W23
+      responses:
+        200:
+          description: Successful completion; return updated account information
+          schema:
+            $ref: '#/definitions/BillingAddressUpdateResponse'
         default:
           description: Unexpected error
           schema:
@@ -406,12 +422,12 @@ definitions:
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
 
-  GetLandingPageRequest:
-    properties:
-      commonInputHeader:
-        type: object
-        $ref: '#/definitions/CommonInputHeader'
-        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+#  GetLandingPageRequest:
+#    properties:
+#      commonInputHeader:
+#        type: object
+#        $ref: '#/definitions/CommonInputHeader'
+#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
                   
   GetLandingPageResponse:
     properties:
@@ -543,6 +559,9 @@ definitions:
       accountNumber: 
         type: string
         description: <dr>
+      accountStatus:
+        type: string
+        description: <dr>
       billerID:
         type: integer
         description: <dr>
@@ -594,15 +613,39 @@ definitions:
       lastName:
         type: string
         description: <dr>
+      namePrefix:
+        type: string
+        description: <dr>
+      middleInitial:
+        type: string
+        description: <dr>
+      nameSuffix:
+        type: string
+        description: <dr>
+      primaryTN:
+        type: string
+        description: <dr>
+      primaryTNType:
+        type: string
+        description: <dr>
+      alternateTN:
+        type: string
+        description: <dr>
+      alternateTNType:
+        type: string
+        description: <dr>
+      otherTN:
+        type: string
+        description: <dr>
+      otherTNType:
+        type: string
+        description: <dr>
+      eMail:
+        type: string
+        description: <dr>
       currentAddress:
         type: object
         $ref: '#/definitions/postalAddress'
-      orderActionType:
-        type: string
-        description: <dr>
-      orderAmount:
-        type: number
-        description: <dr>
       previousAddress:
         type: object
         $ref: '#/definitions/postalAddress'
@@ -711,15 +754,15 @@ definitions:
         type: string
         format: date
         description: <dr>
-      salesAgentName:
-        type: string
-        description: <dr>
+#      salesAgentName:
+#        type: string
+#        description: <dr>
       salesAgentID:
         type: string
         description: <dr>
-      orderAmount:
-        type: number
-        description: <dr>
+#      orderAmount:
+#        type: number
+#        description: <dr>
       disconnectType:
         type: string
         description: <dr>
