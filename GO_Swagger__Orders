@@ -62,12 +62,12 @@ paths:
             $ref: '#/definitions/CommonErrorReturn'
 
 # W01 - checkForPendingDisconnectAtLocation
-  /orders/type='DISCONNECT'/{LocationID}:
+  /orders/action='DISCONNECT'/{AddressID}:
     get:
       summary: Docref W01 - checkForPendingDisconnectAtLocation
-      description: Determines if a pending disconnect order has been submitted for a specific location and, if so, the date that order is scheduled for completion.  Required to support the business rule that a New Connection cannot be established at a location that already has existing service unless and until that service has been disconnected.
+      description: Determines if a pending disconnect order has been submitted for a specific location and, if so, the date that order is scheduled for completion.
       parameters:
-        - name: LocationID
+        - name: AddressID
           in: path
           type: integer
         - name: CommonInputHeader
@@ -80,23 +80,17 @@ paths:
           type: integer
           description: <dr>
           in: query
-          required: true
+          required: false
         - name: accountNumber
           type: string
           description: <dr>
           in: query
-          required: true
+          required: false
         - name: billerID
           type: integer
           description: <dr>
           in: query
-          required: true
-        - name: ordersAfter
-          type: string
-          format: date
-          description: <dr>
-          in: query
-          required: true
+          required: false
 
       tags:
         - W01
@@ -210,11 +204,28 @@ paths:
           required: true
           schema: 
             $ref: "#/definitions/CommonInputHeader"
-        - name: customerEmail
+#        - name: customerEmail
+#          in: query
+#          type: string
+#          description: <dr>
+#          required: false
+        - name: callFirstFlag
+          in: query
+          type: boolean
+          description: <dr>
+        - name: callFirstTN
           in: query
           type: string
           description: <dr>
-          required: false
+        - name: specialInstructionsforTechnician
+          in: query
+          type: string
+          description: <dr>
+        - name: specialInstructionsforDispatcher
+          in: query
+          type: string
+          description: <dr>
+
       tags:
         - W12
       responses:
@@ -335,10 +346,14 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      GetAccountOrderHistoryReturn:
-        type: object
-        $ref: '#/definitions/GetAccountOrderHistoryReturn'
-        description: <dr>
+      orderHistory:
+        type: array
+        items: 
+          $ref: '#/definitions/OrderHistoryItem'
+#      GetAccountOrderHistoryReturn:
+#        type: object
+#        $ref: '#/definitions/GetAccountOrderHistoryReturn'
+#        description: <dr>
 
 #  GetPendingDisconnectRequest:
 #    properties:
@@ -357,10 +372,20 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      GetPendingDisconnectReturn:
-        type: object
-        $ref: '#/definitions/GetPendingDisconnectReturn'
-        description: <dr>
+      addressID:
+        type: integer
+        description: Unique identifier for address/location being queried
+      pendingDisconnectFlag:
+        type: boolean
+        description: Flag indicating if a disconnect order has been submitted and scheduled
+      pendingDisconnectDate:
+        type: string
+        format: date
+        description: Date existing service is schedueled for disconnect
+#      GetPendingDisconnectReturn:
+#        type: object
+#        $ref: '#/definitions/GetPendingDisconnectReturn'
+#        description: <dr>
 
   SubmitBillerOrderRequest:
     properties:
@@ -379,10 +404,16 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      SubmitBillerOrderReturn:
-        type: object
-        $ref: '#/definitions/SubmitBillerOrderReturn'
+      orderID:
+        type: integer
         description: <dr>
+      scheduledServiceWindow:
+        type: object
+        $ref: '#/definitions/ScheduleServiceWindow'
+#      SubmitBillerOrderReturn:
+#        type: object
+#        $ref: '#/definitions/SubmitBillerOrderReturn'
+#        description: <dr>
 
 #  RequestNewScheduleWindowsRequest:
 #    properties:
@@ -401,10 +432,20 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      requestNewScheduleWindowsReturn:
-        type: object
-        $ref: '#/definitions/requestNewScheduleWindowsReturn'
+      orderActionType:
+        type: string
         description: <dr>
+      serviceDuration:
+        type: integer
+        description: Estimated duration required to complete the service call
+      availableServiceWindows:
+        type: array
+        items:
+          $ref: '#/definitions/ScheduleServiceWindow'
+#      requestNewScheduleWindowsReturn:
+#        type: object
+#        $ref: '#/definitions/requestNewScheduleWindowsReturn'
+#        description: <dr>
 
   updateOrderScheduleWindowRequest:
     properties:
@@ -412,10 +453,32 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      updateOrderScheduleWindowInput:
-        type: object
-        $ref: '#/definitions/updateOrderScheduleWindowInput'
+      serviceWindowID:
+        type: integer
+        description: Unique identifier for the activeselected service window being allocated to the order
+      callFirstFlag:
+        type: boolean
         description: <dr>
+      callFirstTN:
+        type: string
+        description: <dr>
+      specialInstructionsforTechnician:
+        type: string
+        description: <dr>
+      specialInstructionsforDispatcher:
+        type: string
+        description: <dr>
+      disconnectComments:
+        type: string
+        description: <dr>
+      stopBillDate:
+        type: string
+        format: date
+        description: <dr>
+#      updateOrderScheduleWindowInput:
+#        type: object
+#        $ref: '#/definitions/updateOrderScheduleWindowInput'
+#        description: <dr>
                   
   updateOrderScheduleWindowResponse:
     properties:
@@ -423,10 +486,13 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      updateOrderScheduleWindowReturn:
-        type: object
-        $ref: '#/definitions/updateOrderScheduleWindowReturn'
+      orderStatus:
+        type: string
         description: <dr>
+#      updateOrderScheduleWindowReturn:
+#        type: object
+#        $ref: '#/definitions/updateOrderScheduleWindowReturn'
+#        description: <dr>
 
 #  updateOrderConfirmRequest:
 #    properties:
@@ -445,10 +511,13 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      updateOrderConfirmReturn:
-        type: object
-        $ref: '#/definitions/updateOrderConfirmReturn'
+      orderStatus:
+        type: string
         description: <dr>
+#      updateOrderConfirmReturn:
+#        type: object
+#        $ref: '#/definitions/updateOrderConfirmReturn'
+#        description: <dr>
 
 #  getOrderDetailsRequest:
 #    properties:
@@ -474,10 +543,13 @@ definitions:
         type: object
         $ref: '#/definitions/CommonInputHeader'
         description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-      cancelOrderInput:
-        type: object
-        $ref: '#/definitions/cancelOrderInput'
+      orderStatus:
+        type: string
         description: <dr>
+#      cancelOrderInput:
+#        type: object
+#        $ref: '#/definitions/cancelOrderInput'
+#        description: <dr>
                   
   cancelOrderResponse:
     properties:
@@ -485,10 +557,13 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      cancelOrderReturn:
-        type: object
-        $ref: '#/definitions/cancelOrderReturn'
+      orderStatus:
+        type: string
         description: <dr>
+#      cancelOrderReturn:
+#        type: object
+#        $ref: '#/definitions/cancelOrderReturn'
+#        description: <dr>
 
   deleteTransferRecordRequest:
     properties:
@@ -503,10 +578,13 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      deleteTransferRecordReturn:
-        type: object
-        $ref: '#/definitions/deleteTransferRecordReturn'
+      orderStatus:
+        type: string
         description: <dr>
+#      deleteTransferRecordReturn:
+#        type: object
+#        $ref: '#/definitions/deleteTransferRecordReturn'
+#        description: <dr>
 
 ##############################################
 #
@@ -641,16 +719,7 @@ definitions:
       orderID:
         type: integer
         description: Unique identifier for the order, as generated by the biller isolation system
-      installationRequiredFlag:
-        type: boolean
-        description: Indicator if physical installation by technician is required 
-      availableInstallWindows:
-        type: array
-        items:
-          $ref: '#/definitions/ScheduleInstallWindow'
-      orderReasonCode:
-        type: string
-        description: <dr>
+
 
 #  requestNewScheduleWindowsInput:
 #    properties:
@@ -670,10 +739,10 @@ definitions:
       serviceDuration:
         type: integer
         description: Estimated duration required to complete the service call
-      availableInstallWindows:
+      availableServiceWindows:
         type: array
         items:
-          $ref: '#/definitions/ScheduleInstallWindow'
+          $ref: '#/definitions/ScheduleServiceWindow'
 
   updateOrderScheduleWindowInput:
     properties:
@@ -743,7 +812,7 @@ definitions:
         type: string
         description: <dr>
 
-  ScheduleInstallWindow:
+  ScheduleServiceWindow:
     properties:
       windowID:
         type: integer
