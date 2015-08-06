@@ -56,7 +56,7 @@ paths:
 
   /TN_Admin/AvailableTNs/{TN}:
     get:
-      summary: Docref W19 - Verify that the specified TN is available for resetart/reconnect
+      summary: Docref W19 - Verify that the specified TN is available for restart/reconnect
       description: <dr>
       parameters:
         - name: TN
@@ -74,22 +74,17 @@ paths:
           in: query
           description: <dr>
           type: integer
-          required: true
+          required: false
         - name: accountNumber
           in: query
           description: <dr>
           type: string
-          required: true
+          required: false
         - name: billerID
           in: query
           description: <dr>
           type: integer
-          required: true
-        - name: requestCount
-          in: query
-          description: Number of available TNs to return.  Default is 5.
-          type: integer
-          required: true
+          required: false
 
       tags:
         - W19
@@ -151,7 +146,7 @@ paths:
           schema: 
            $ref: "#/definitions/CommonInputHeader"
       tags:
-        - W5
+        - W05
       responses:
         200:
           description: Successful completion; return boolean indicating TN can/cannot be ported/transferred
