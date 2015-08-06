@@ -14,62 +14,13 @@ basePath: /v1
 produces:
   - application/json
 paths:
-  /Locations:
-    get:
-      summary: Docref W13, W18 precursor - Search for Location ID from within Gateway Ordering Application
-      description: Retrieves a specific location identifier (LocationID) based on a set of address parameters. Precursor to retrieving serviceability by location.  Overlaps with existing adaptive Search capability such that if adaptive capabilities can be referenced from within the Gateway Ordering application (with the appropriate data feeds) this function (and possibly the serviceabiltyAtLocation function as well) may be pre-empted. Application will force collection of sufficient data to ensure a maximum of 1 location ID will be returned.
-      parameters:
-        - name: CommonInputHeader
-          in: body
-          description: Incudes input parameters common to all invocations
-          required: true
-          schema: 
-            $ref: "#/definitions/CommonInputHeader"
-        - name: addrStreetLine1
-          type: string
-          in: query
-          required: true
-          description: Line 1 of the street address component of the address lookup 
-        - name: addrStreetLine2
-          type: string
-          in: query
-          required: false
-          description: Line 2 of the street address component of the address lookup  
-        - name: addrCity
-          type: string
-          in: query
-          required: false
-          description: City component of the address lookup
-        - name: addrState
-          type: string
-          in: query
-          required: false
-          description: State component of the address lookup
-        - name: addrZIP
-          type: string
-          in: query
-          required: false
-          description: ZIP Code component of the address lookup
-          
-      tags:
-        - W13
-        - W18
-      responses:
-        200:
-          description: Successful completion; return location serviceability
-          schema:
-            $ref: '#/definitions/LocationIDLookupResponse'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/CommonErrorReturn'
 
-  /serviceablity/{LocationID}:
+  /serviceablity/{AddressID}:
     get:
-      summary: Docref W13, W18 - Determine serviceability at location
+      summary: Docref W13, W18 - Determine serviceability at location/address
       description: Determine the products and services eligible for sale at the requested address/location.  The same service will be used to determine both "New Connect" location service compatability as well as "Transfer-To" Location service compatability.  Boolean value for serviceability (is/is not serivceable) can be inferred from the existence of rows in the service return data set. 
       parameters:
-        - name: LocationID
+        - name: AddressID
           in: path
           required: true
           type: integer
@@ -121,6 +72,54 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
        		      
+  /Locations:
+    get:
+      summary: Docref W13, W18 precursor - Search for Location ID from within Gateway Ordering Application
+      description: Retrieves a specific location identifier (LocationID) based on a set of address parameters. Precursor to retrieving serviceability by location.  Overlaps with existing adaptive Search capability such that if adaptive capabilities can be referenced from within the Gateway Ordering application (with the appropriate data feeds) this function (and possibly the serviceabiltyAtLocation function as well) may be pre-empted. Application will force collection of sufficient data to ensure a maximum of 1 location ID will be returned.
+      parameters:
+        - name: CommonInputHeader
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/CommonInputHeader"
+        - name: addrStreetLine1
+          type: string
+          in: query
+          required: true
+          description: Line 1 of the street address component of the address lookup 
+        - name: addrStreetLine2
+          type: string
+          in: query
+          required: false
+          description: Line 2 of the street address component of the address lookup  
+        - name: addrCity
+          type: string
+          in: query
+          required: false
+          description: City component of the address lookup
+        - name: addrState
+          type: string
+          in: query
+          required: false
+          description: State component of the address lookup
+        - name: addrZIP
+          type: string
+          in: query
+          required: false
+          description: ZIP Code component of the address lookup
+          
+      tags:
+        - W18
+      responses:
+        200:
+          description: Successful completion; return location serviceability
+          schema:
+            $ref: '#/definitions/LocationIDLookupResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
 
 definitions:
 
