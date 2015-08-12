@@ -334,6 +334,33 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
+  /customers/account/{accountID}/eMailAddress:
+    post:
+      summary: Docref W23 - update account email address
+      description: <dr>
+      parameters:
+        - name: accountID
+          in: path
+          type: integer
+          description: Unique identifier for the Customer's account being updated
+        - name: BillingAddressUpdateRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/eMailAddressUpdateRequest"
+      tags:
+        - W27
+      responses:
+        200:
+          description: Successful completion; return updated account information
+          schema:
+            $ref: '#/definitions/eMailAddressUpdateResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
 definitions:
 
 ##############################################
@@ -414,6 +441,23 @@ definitions:
         type: object
         $ref: '#/definitions/addressUpdate'
         description: <dr>
+                  
+  eMailAddressUpdateResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+
+  eMailAddressUpdateRequest:
+    properties:
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      neweMailAddress :
+        type: string
+        description: New email address
                   
   BillingAddressUpdateResponse:
     properties:
