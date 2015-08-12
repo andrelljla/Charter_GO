@@ -44,16 +44,16 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
-  /serviceability/{LocationID}/Active:
+  /serviceability/{AddressID}/Active:
     get:
       summary: Docref W16 - Get active services at location
       description: Retrieves the list of products and services currently active at the queried address/location.
       parameters:
-        - name: LocationID
+        - name: AddressID
           in: path
           required: true
           type: integer
-          description: <dr>
+          description: Unique identifier for the address being checked
         - name: CommonInputHeader
           in: body
           description: Incudes input parameters common to all invocations
@@ -75,7 +75,7 @@ paths:
   /Locations:
     get:
       summary: Docref W13, W18 precursor - Search for Location ID from within Gateway Ordering Application
-      description: Retrieves a specific location identifier (LocationID) based on a set of address parameters. Precursor to retrieving serviceability by location.  Overlaps with existing adaptive Search capability such that if adaptive capabilities can be referenced from within the Gateway Ordering application (with the appropriate data feeds) this function (and possibly the serviceabiltyAtLocation function as well) may be pre-empted. Application will force collection of sufficient data to ensure a maximum of 1 location ID will be returned.
+      description: Retrieves a specific location identifier (AddressID) based on a set of address parameters. Precursor to retrieving serviceability by location.  Overlaps with existing adaptive Search capability such that if adaptive capabilities can be referenced from within the Gateway Ordering application (with the appropriate data feeds) this function (and possibly the serviceabiltyAtLocation function as well) may be pre-empted. Application will force collection of sufficient data to ensure a maximum of 1 location ID will be returned.
       parameters:
         - name: CommonInputHeader
           in: body
@@ -163,10 +163,35 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      locationServiceabilityDetail: 
-        type: object
-        $ref: '#/definitions/LocationServiceabilityDetail'
-        description: <dr>
+#      locationServiceabilityDetail: 
+#        type: object
+#        $ref: '#/definitions/LocationServiceabilityDetail'
+#        description: <dr>
+      addressID:
+        description: Address/location identifier being queried for serviceability
+      dwellingType:
+        type: string
+        description: Code describing the type of dwelling present at the location.
+      managementArea:
+        type: string
+        description: Telephone number management area.
+      rateCenter:
+        type: string
+        description: Rate center associated with the location.
+      market:
+        type: string
+        description: Market associated with the location.
+      FTA:
+        type: string
+        description: Franchise tax area associated with the location.
+      lobProductServiceability:
+        type: array
+        items:
+          $ref: '#/definitions/LoBProductServiceability'
+      overbuilderIndicator:
+        type: array
+        items:
+          type: string
 
 #  ActiveServicesAtLocationRequest:
 #    properties:
@@ -252,29 +277,29 @@ definitions:
 #
 ##############################################
 
-  LocationServiceabilityDetail:
-    properties:
-      addressID:
-        description: Address/location identifier being queried for serviceability
-      dwellingType:
-        type: string
-        description: Code describing the type of dwelling present at the location.
-      managementArea:
-        type: string
-        description: Telephone number management area.
-      rateCenter:
-        type: string
-        description: Rate center associated with the location.
-      market:
-        type: string
-        description: Market associated with the location.
-      FTA:
-        type: string
-        description: Franchise tax area associated with the location.
-      lobProductServiceability:
-        type: array
-        items:
-          $ref: '#/definitions/LoBProductServiceability'
+#  LocationServiceabilityDetail:
+#    properties:
+#      addressID:
+#        description: Address/location identifier being queried for serviceability
+#      dwellingType:
+#        type: string
+#        description: Code describing the type of dwelling present at the location.
+#      managementArea:
+#        type: string
+#        description: Telephone number management area.
+#      rateCenter:
+#        type: string
+#        description: Rate center associated with the location.
+#      market:
+#        type: string
+#        description: Market associated with the location.
+#      FTA:
+#        type: string
+#        description: Franchise tax area associated with the location.
+#      lobProductServiceability:
+#        type: array
+#        items:
+#          $ref: '#/definitions/LoBProductServiceability'
 
   LoBProductServiceability:
     properties:
@@ -296,6 +321,9 @@ definitions:
       lobProduct:
         type: string
         description: Specific product within the LoB being referenced for serviceability
+      biller:
+        type: string
+        description: Designator for which billing system serves the particular address in question 
 
 #  locationLookupByAddress:
 #    properties:
