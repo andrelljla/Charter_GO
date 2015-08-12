@@ -119,7 +119,7 @@ paths:
         200:
           description: Successful completion; return <function>
           schema:
-            $ref: '#/definitions/ReleaseUnusedTNsResponse'
+            $ref: '#/definitions/CommonNoErrorReturnHeader'
         default:
           description: Unexpected error
           schema:
@@ -205,6 +205,81 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
 
+  /TN_Admin/TNPortability/{TN}/PIN:
+    get:
+      summary: Docref W25 - Get TPV PIN.  Designed for separate PINs for each TN, while spec is set for one PIN per account.  Setting the PIN at the account level poses several challenges - sending multiple TNs for porting at a single time changes the dynamics of TN porting.
+      description: <dr>  
+      parameters:
+        - name: TN
+          in: path
+          type: string
+          description: TN for which PIN is being requested
+        - name: CommonInputHeader
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/CommonInputHeader"
+      tags:
+        - W25
+      responses:
+        200:
+          description: Successful completion; return boolean indicating TN can/cannot be ported/transferred
+          schema:
+            $ref: '#/definitions/TPVPINResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /TN_Admin/VerifyTNs:
+    post:
+      summary: Docref W29 - Verify Valid TNs
+      description: <dr>
+      parameters:
+        - name: VerifyValidTNsRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/VerifyValidTNsRequest"
+
+      tags:
+        - W29
+      responses:
+        200:
+          description: Successful completion; return location serviceability
+          schema:
+            $ref: '#/definitions/VerifyValidTNsResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /TN_Admin/InitiateTPVPinRequest:
+    put:
+      summary: Docref W30 - Initiate TPV Pin Request
+      description: <dr>
+      parameters:
+        - name: InitateTPVPinRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+           $ref: "#/definitions/InitiateTPVPINRequest"
+
+      tags:
+        - W29
+      responses:
+        200:
+          description: Successful completion; return location serviceability
+          schema:
+            $ref: '#/definitions/InitiateTPVPINResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+            
 definitions:
 
 ##############################################
@@ -229,10 +304,43 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      AvailableTNsReturn: 
+#      AvailableTNsReturn: 
+#        type: object
+#        $ref: '#/definitions/AvailableTNsReturn'
+#        description: <dr>
+      availableTNs:
+        type: array
+        items:
+          $ref: '#/definitions/USTelephoneNumber'
+
+  InitiateTPVPINRequest:
+    properties:
+      commoninputHeader: 
         type: object
-        $ref: '#/definitions/AvailableTNsReturn'
+        $ref: '#/definitions/CommonInputHeader'
         description: <dr>
+      orderID:
+        type: string
+        description: Order being initiated for TPV
+      carrier:
+        type: string
+        description: Provider from which TN is being ported
+      hostedTN:
+        type: array
+        items:
+          $ref: '#/definitions/USTelephoneNumber'
+      
+
+  InitiateTPVPINResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      status:
+        type: string
+        description: Acknowledgement that the request has been initiated
+
 
 #  VerifyTNRestartRequest:
 #    properties:
@@ -251,10 +359,22 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      TNRestartEligibilityReturn:
-        type: object
-        $ref: '#/definitions/TNRestartEligibility'
+      accountID:
+        type: integer
         description: <dr>
+      accountNumber:
+        type: integer
+        description: <dr>
+      billertID:
+        type: integer
+        description: <dr>
+      phoneNumber:
+        type: string
+        description: <dr>
+#      TNRestartEligibilityReturn:
+#        type: object
+#        $ref: '#/definitions/TNRestartEligibility'
+#        description: <dr>
       restartEligibilityFlag:
         type: boolean
         description: Flag indicating TN is/is not available for restart.
@@ -270,33 +390,58 @@ definitions:
 #        $ref: '#/definitions/USTelephoneNumber'
 #        description: <dr>      
   
-  ReleaseUnusedTNsResponse:
+#  ReleaseUnusedTNsResponse:
+#    properties:
+#      commonReturn: 
+#        type: object
+#        $ref: '#/definitions/CommonNoErrorReturnHeader'
+#        description: <dr>
+
+  VerifyValidTNsRequest:
     properties:
-      commonReturn: 
+      commonInputHeader:
+        type: object
+        $ref: '#/definitions/CommonInputHeader'
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      TNsToValidate:
+        type: array
+        items:
+          $ref: '#/definitions/USTelephoneNumber'
+        description: List of TNs to validate       
+ 
+  VerifyValidTNsResponse:
+    properties:
+      commonInputHeader:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
-        description: <dr>
-
-#  TNPortabilityRequest:
-#    properties:
-#      commonInputHeader:
-#        type: object
-#        $ref: '#/definitions/CommonInputHeader'
-#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-#      TNPortabilityInput:
-#        type: object
-#        $ref: '#/definitions/TNPortabilityInput'
-#        description: <dr>      
-  
+        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
+      validTNs:
+        type: array
+        items:
+          $ref: '#/definitions/USTelephoneNumber'
+        description: <dr> 
+        
   TNPortabilityResponse:
     properties:
       commonReturn: 
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      TNPortabilityReturn:
-        type: object
-        $ref: '#/definitions/TNPortabilityReturn'
+#      TNPortabilityReturn:
+#        type: object
+#        $ref: '#/definitions/TNPortabilityReturn'
+        description: <dr>
+      portedCarrier:
+        type: string
+        description: <dr>
+      portedAccountNumberRequiredFlag:
+        type: boolean
+        description: <dr>
+      portedAccountPINRequiredFlag:
+        type: boolean
+        description: <dr>
+      LSRValidationStatus:
+        type: string
         description: <dr>
 
 #  TNTransferEligibilityRequest:
@@ -316,10 +461,25 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      TNPortabilityReturn:
-        type: object
-        $ref: '#/definitions/TNTransferEligibility'
-        description: <dr>      
+#      TNPortabilityReturn:
+#        type: object
+#        $ref: '#/definitions/TNTransferEligibility'
+#        description: <dr>      
+      accountID:
+        type: integer
+        description: <dr>
+      accountNumber:
+        type: integer
+        description: <dr>
+      billertID:
+        type: integer
+        description: <dr>
+      phoneNumber:
+        type: string
+        description: <dr>
+      rateCenter:
+        type: string
+        description: <dr>
       transferabilityEligibilityFlag:
         type: boolean
         description: Flag indicating TN is/is not available for transfer.
@@ -402,12 +562,12 @@ definitions:
 #        type: boolean
 #        description: <dr>
   
-  AvailableTNsReturn:
-    properties:
-      availableTNs:
-        type: array
-        items:
-          $ref: '#/definitions/USTelephoneNumber'
+#  AvailableTNsReturn:
+#    properties:
+#      availableTNs:
+#        type: array
+#        items:
+#          $ref: '#/definitions/USTelephoneNumber'
     
 #  TNPortabilityInput:
 #    properties:
@@ -418,53 +578,53 @@ definitions:
 #        type: string
 #        description: Telephone number (with area code) being requested for port-in
 
-  TNPortabilityReturn:
-    properties:
-      portedCarrier:
-        type: string
-        description: <dr>
-      portedAccountNumberRequiredFlag:
-        type: boolean
-        description: <dr>
-      portedAccountPINRequiredFlag:
-        type: boolean
-        description: <dr>
-      LSRValidationStatus:
-        type: string
-        description: <dr>
+#  TNPortabilityReturn:
+#    properties:
+#      portedCarrier:
+#        type: string
+#        description: <dr>
+#      portedAccountNumberRequiredFlag:
+#        type: boolean
+#        description: <dr>
+#      portedAccountPINRequiredFlag:
+#        type: boolean
+#        description: <dr>
+#      LSRValidationStatus:
+#        type: string
+#        description: <dr>
         
-  TNRestartEligibility:
-    properties:
-      accountID:
-        type: integer
-        description: <dr>
-      accountNumber:
-        type: integer
-        description: <dr>
-      billertID:
-        type: integer
-        description: <dr>
-      phoneNumber:
-        type: string
-        description: <dr>
+#  TNRestartEligibility:
+#    properties:
+#      accountID:
+#        type: integer
+#        description: <dr>
+#      accountNumber:
+#        type: integer
+#        description: <dr>
+#      billertID:
+#        type: integer
+#        description: <dr>
+#      phoneNumber:
+#        type: string
+#        description: <dr>
         
-  TNTransferEligibility:
-    properties:
-      accountID:
-        type: integer
-        description: <dr>
-      accountNumber:
-        type: integer
-        description: <dr>
-      billertID:
-        type: integer
-        description: <dr>
-      phoneNumber:
-        type: string
-        description: <dr>
-      rateCenter:
-        type: string
-        description: <dr>
+#  TNTransferEligibility:
+#    properties:
+#      accountID:
+#        type: integer
+#        description: <dr>
+#      accountNumber:
+#        type: integer
+#        description: <dr>
+#      billertID:
+#        type: integer
+#        description: <dr>
+#      phoneNumber:
+#        type: string
+#        description: <dr>
+#      rateCenter:
+#        type: string
+#        description: <dr>
 
   USTelephoneNumber:
     properties:
@@ -474,3 +634,13 @@ definitions:
       phoneNumber:
         type: string
         description: <dr>
+
+  TPVPINResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      TPVPIN:
+        type: string
+        description: TPV PIN associated with the number
