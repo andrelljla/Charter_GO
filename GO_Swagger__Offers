@@ -56,7 +56,7 @@ paths:
         200:
           description: Successful completion; return array of categories, subcategories & filters
           schema:
-              $ref: '#/definitions/implBrowsingCategoriesStructureResponse'
+              $ref: '#/definitions/implBrowsingCategoriesStructureOutput'
         default:
           description: Unexpected error
           schema:
@@ -142,10 +142,10 @@ paths:
           in: query
           type: integer
           description: Enables the consumer to retrieve a set quantity of results; default will be 10.
-        - name: implRetrieveCatalogItemsRequest
+        - name: implCategoryItemsInput
           in: body
           schema: 
-              $ref: '#/definitions/implRetrieveCatalogItemsRequest'
+              $ref: '#/definitions/implCategoryItemsInput'
           required: true
           description: Additional information to support serviceability and eligibility determination
       tags:
@@ -476,16 +476,16 @@ definitions:
       errGUID:
         type: string
 
-  implBrowsingCategoriesStructureResponse:
-    properties:
-      implBaseReturn:
-        type: object 
-        $ref: "#/definitions/CommonNoErrorReturn"
-      implBrowsingCategoriesStructureOutput:
-        type: object
-        $ref: '#/definitions/implBrowsingCategoriesStructureOutput'
+#  implBrowsingCategoriesStructureResponse:
+#    properties:
+#      implBaseReturn:
+#        type: object 
+#        $ref: "#/definitions/CommonNoErrorReturn"
+#      implBrowsingCategoriesStructureOutput:
+#        type: object
+#        $ref: '#/definitions/implBrowsingCategoriesStructureOutput'
 
-  implRetrieveCatalogItemsRequest:
+  implCategoryItemsInput:
     properties:
 #      commonInputHeader:
 #        type: object
@@ -495,9 +495,41 @@ definitions:
 #        type: object
 #        description: Encrypted username for proxy user authentication
 #        $ref: '#/definitions/OrderEngineHeader'
+      sortType:
+        type: string
+        description: Sorting will be done according to the value that will be sent
+      includeExpiredOfferings:
+        type: boolean
+        description: If value is TRUE, return expired ProductOfferings and PriceSchemas according to the requested, in addition to the not expired entities.  If no value is sent, will default to FALSE.
+      sortAscending:
+        type: boolean
+        description: Default will be ascending order (TRUE).  If false, sort in descending order.
+      customerID:
+        type: string
+        description: ID of the customer.  In the case of a new customer, default to 0.  JLA - Duplicate of path variable?
+      includeEligibleOfferingOnly:
+        type: boolean
+        description: If True, return only elible offers.  If False, return all offers.
+      includeAtLeastInputLOBs:
+        type: boolean
+        description: If the value is TRUE, return all the eligible and sellable PRoductOfferings having at least those lines of business specified in the ProductOfferingFilterInfo.lineOfBusiness that contains the matching result
+      text:
+        type: string
+        description: A free text string input based on which the search criteria is performed on the ProductOfferings and ProductSpecification data
+      serviceabilityObject:
+        type: object
+        description:  Additional information to support serviceability and offer eligbility
+        $ref: '#/definitions/serviceabilityObject'
+        
+  serviceabilityObject:
+    properties:
       sysPrinAgent:
         type: string
         description: <description required>
+      LOBServiceability:
+        type: array
+        items:
+          $ref: '#/definitions/LOBServiceability'
       dwellType:
         type: string
         description: <description required>     
@@ -520,11 +552,21 @@ definitions:
         type: array
         items: 
           type: string
-        description: <description required>
+        description: list of specific offer codes or IDs
       additional attributes:
         type: array
         items:
           $ref: '#/definitions/AdditionalAttribute'
+        description: If some of the parameters for eligibility rules/serviceability are necessary (and were not in the initial list) can be added here
+
+  LOBServiceability:
+    properties:
+      LOBName:
+        type: string
+        description: Line Of Business name
+      LOBServiceStatus:
+        type: string
+        description: An indication if the LOB is serviceable or not
 
   implRetrieveCatalogItemsResponse:
     properties:
@@ -1020,13 +1062,13 @@ definitions:
       categories:
         type: array
         items:
-          $ref: '#/definitions/implSearchResultsCategory'
+          $ref: '#/definitions/SearchResultsCategory'
       flexAttr:
         type: array
         items:
           $ref: '#/definitions/FlexAttr'
         
-  implSearchResultsCategory:
+  SearchResultsCategory:
     properties:
       categoryName:
         type: string
@@ -1056,8 +1098,127 @@ definitions:
       results:
         type: array
         items: 
-         $ref: '#/definitions/SearchResult'
+         $ref: '#/definitions/CatalogSearchResult'
         description: Defined offers that meet the eligibility criteria      
+  
+  CatalogSearchResult:
+    properties:
+      RecurringPrice:
+        type: object
+        $ref: '#/definitions/CommonPrice'
+        description: Recurring Price
+      OneTimePrice:
+        type: object
+        $ref: '#/definitions/CommonPrice'
+        description: Recurring Price
+      lobs:
+        type: array
+        items:
+          type: string
+        description: Line(s) of business which apply
+      catalogItemID:
+        type: string
+        description: Item's ID from the Master Enterprise Catalog
+      catalogItemName:
+        type: string
+        description: Item's name from the Master Enterprise Catalog
+      businessType:
+        type: string
+        description: Will hold the item business type as per one of the valid values
+        enum:
+          - ACCESSORY
+          - BUNDLE_PLAN
+          - DEVICE
+          - F_N_F SERVICE
+          - OFFERING
+          - PLAN
+          - PRICE_PACKAGE
+          - TV_CHANNEL
+          - TV_PACKAGE
+      catalogItemDescription:
+        type: string
+        description: Item's description from the Master Enterprise Catalog
+      catalogItemImage:
+        type: string
+        description: URL of image
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
+      parentAssignedID:
+        type: string
+        description: Contains the assigned product ID of a parent service for a PRICE_PACKAGE
+      parentCatalogItemID:
+        type: string
+        description: Contains the catalog ID of a parent service for a PRICE_PACKAGE
+      parentCatalogItemName:
+        type: string
+        description: Contains name of the parent service for a PRICE_PACKAGE
+      parentCurrentStatus:
+        type: string
+        description: Contains status of perent service for a PRICE_PACKAGE.
+      relationID:
+        type: string
+        description: Relation ID
+      containingOfferings:
+        type: array
+        items:
+          $ref: '#/definitions/ContainingOffering'
+      eligibilityReason:
+        type: string
+        description: Description of eligibility status reason.  For eligibility rules, there is an option to define a message with a reason why the ofer is not eligbile, i.e. This Product Offering is for new customers only.
+      eligibilityStatus:
+        type: string
+        description: Wheher eligibility status is Eligible
+      expiredIndication:
+        type: boolean
+        description: Indication of expired item
+      type:
+        type: string
+        description: Distinguishes between PRODUCT_OFFERING and PRODUCT_SPECIFICATION
+      currency:
+        type: string
+        description: Reflects catalog prices, if defined in multiple currencies
+      flexAttr:
+        type: array
+        items:
+          $ref: '#/definitions/FlexAttr'
+        description: List of additional properties that are assigned to the ProductOffering      
+      
+  CommonPrice:
+    properties:
+      originalAmount:
+        type: number
+        description: The original amount of the price before any discounts
+      discountPercentage:
+        type: number
+        description: Percentage discount to be applied to the original price
+      finalAmount:
+        type: number
+        description: The final amount of the price after any discounts and override/waive
+      finalAmountWithTax:
+        type: number
+        description: Final Amount + Final Tax Amount
+      finalTaxAmount:
+        type: number
+        description: The final tax amount of the price after any discounts
+      originalTaxAmount:
+        type: number
+        description: The original tax amount of the price before any discounts
+      maxAmount:
+        type: number
+        description: Maximum price that can be applied
+      minAmount:
+        type: number
+        description: Minimum price that can be applied
+      description:
+        type: string
+        description: Description of the charge
+      currency:
+        type: string
+        description: Currency for the price representation. Default is USD.
+      
+        
   
   implProductOrderItemHeaders:
     properties:
@@ -2126,7 +2287,7 @@ definitions:
 
   implBrowsingCategoriesStructureOutput:
     properties:
-      implBrowsingCetegory:
+      categories:
         type: array
         items:
           $ref: '#/definitions/implBrowsingCategory'
@@ -2162,6 +2323,8 @@ definitions:
         description: Category name
       type: 
         type: string
+        enum:
+          - NAVIGATION
         description: Value will be NAVIGATION as this category is used for navigating the structure
       id:
         type: string
