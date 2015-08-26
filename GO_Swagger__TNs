@@ -357,7 +357,7 @@ paths:
             $ref: '#/definitions/CommonErrorReturn'
 
   /TN_Admin/VerifyTNs:
-    post:
+    put:
       summary: Docref W29 - Verify Valid TNs
       description: <dr>
       parameters:
