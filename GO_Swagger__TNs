@@ -195,13 +195,9 @@ paths:
       parameters:
         - name: TN
           in: path
-          type: string
-          description: TN being queried for port-in eligibility
-        - name: addressID
-          in: query
-          description: <dr>
-          type: integer
+          description: TN (including area code) being queried for restart eligibility
           required: true
+          type: string
         - name: lineageID
           in: header
           required: true
@@ -248,8 +244,9 @@ paths:
       parameters:
         - name: TN
           in: path
+          description: TN (including area code) being queried for restart eligibility
+          required: true
           type: string
-          description: TN being queried for transfer eligibility
         - name: lineageID
           in: header
           required: true
@@ -317,8 +314,9 @@ paths:
       parameters:
         - name: TN
           in: path
+          description: TN (including area code) being queried for restart eligibility
+          required: true
           type: string
-          description: TN for which PIN is being requested
         - name: lineageID
           in: header
           required: true
