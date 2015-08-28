@@ -1,0 +1,127 @@
+# this is draft #1 of the TN_ADMIN component of the WebAPI specification for Gateway Ordering
+swagger: '2.0'
+info:
+  title: Gateway Ordering API / In-Process Ordering Collection
+  description: Gateway Ordering Order Management Stuff
+  version: "1.0.0"
+# the domain of the service
+host: gateway.chartercom.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+
+  /InProcessOrder:
+    post:
+      summary: Add a new item to the In-Process Order collection
+      description: <dr>
+      parameters:
+
+#####   Header Parameters
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+
+#####   Path Parameters
+
+#####   Query Parameters
+
+#####   Body Structure
+
+          
+      tags:
+        - XXX
+      responses:
+        200:
+          description: Successful completion; return location serviceability
+          schema:
+            $ref: '#/definitions/InProcessOrderResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+definitions:
+
+##############################################
+#
+#	Request/Response definitions
+#
+##############################################
+
+  InProcessOrderResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      orderID:
+        type: string
+
+##############################################
+#
+#	Common Object definitions
+#
+##############################################
+
+  CommonNoErrorReturnHeader:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+        
+  CommonErrorReturn:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+      errorInfo:
+        type: array
+        items:
+          $ref: "#/definitions/CommonErrors"
+  
+  CommonErrors:
+    properties:
+      errCode:
+        type: string
+      errMessage:
+        type: string
+      errDescription:
+        type: string
+      errGUID:
+        type: string
+
+  USTelephoneNumber:
+    properties:
+      areaCode:
+        type: string
+        description: <dr>
+      phoneNumber:
+        type: string
+        description: <dr>
+
+##############################################
+#
+#	Function-Specific Object definitions
+#
+##############################################
+
