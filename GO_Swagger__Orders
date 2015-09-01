@@ -249,11 +249,16 @@ paths:
 #          required: true
 #          type: string
 #          description: User name for the actual user that invoked the call (for audit purpose)
-        - name: requestedServiceDate
+        - name: requestedWindowStartDate
           in: query
           type: string
           format: date
-          description: <dr>
+          description: Date from which service windows are requested
+        - name: requestedWindowEndDate
+          in: query
+          type: string
+          format: date
+          description: Date until service windows are requested
       tags:
         - W09
       responses:
@@ -710,16 +715,46 @@ definitions:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      orderID:
-        type: integer
-        description: <dr>
-      scheduledServiceWindow:
+      orderReferenceIDs:
         type: object
-        $ref: '#/definitions/ScheduleServiceWindow'
+        $ref: '#/definitions/OrderReferenceIDs'
+#      scheduledServiceWindow:
+#        type: object
+#        $ref: '#/definitions/ScheduleServiceWindow'
 #      SubmitBillerOrderReturn:
 #        type: object
 #        $ref: '#/definitions/SubmitBillerOrderReturn'
 #        description: <dr>
+
+  OrderReferenceIDs:
+    properties:
+      prodOrderID:
+        type: integer
+        description: Unique identifier for the Product Order generated in SOLO
+      workOrderID:
+        type: integer
+        description: Unique identifier for the Work Order generated in SOLO.  Note - Gateway does not allow generating multiple work orders per Prod order (yet).
+      accountID:
+        type: integer
+        description: Unique identifier (SOLO) for the Account for which the Order is generated
+      customerID:
+        type: integer
+        description: Unique identifier (SOLO) for the Customer/Party for which the Order is generated
+      MECOrderID:
+        type: integer
+        description: Unique identifier (SOLO) for the MEC Order generated
+      billerSystemDesignation:
+        type: string
+        description: Designator for the billing system in chich the order was generated
+      prodOrderNumber:
+        type: string
+        description: Unique identifier for the Product Order generated in biller
+      workOrderNumber:
+        type: string
+        description: Unique identifier for the Work Order generated in biller. Note - Gateway does not allow generating multiple work orders per Prod order (yet). 
+      accountNumber:
+        type: string
+        description: Unique identifier (biller) for the Account for which the Order is generated
 
 #  RequestNewScheduleWindowsRequest:
 #    properties:
