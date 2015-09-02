@@ -233,36 +233,36 @@ definitions:
       postalCode:
         type: string
         
-  scheduledWorkOrder:
-    properties:
-      workOrderID:
-        type: integer
-        description: Unique identifier of the work order 
-      specialInstructionsTech:
-        type: string
-        description: <dr>
-      specialInstructionsDispatch:
-        type: string
-        description: <dr>
-      woCallFirstFlag:
-        type: string
-        description: <dr>
-      woCallFirstTN:
-        type: string
-        description: <dr>
-      serviceWindowID:
-        type: string
-        description: ID of the schedule window assigned in the schedule and quota management system for this work order
-      scheduleDate:
-        type: string
-        format: date
-        description: The date on which the work order is scheduled to be performed
-      scheduleStartTime:
-        type: string
-        description: Time the work is scheduled to begin
-      scheduledEndTime:
-        type: string
-        description: Time the work is schedueld to be complete
+#  scheduledWorkOrder:
+#    properties:
+#      workOrderID:
+#        type: integer
+#        description: Unique identifier of the work order 
+#      specialInstructionsTech:
+#        type: string
+#        description: <dr>
+#      specialInstructionsDispatch:
+#        type: string
+#        description: <dr>
+#      woCallFirstFlag:
+#        type: string
+#        description: <dr>
+#      woCallFirstTN:
+#        type: string
+#        description: <dr>
+#      serviceWindowID:
+#        type: string
+#        description: ID of the schedule window assigned in the schedule and quota management system for this work order
+#    scheduleDate:
+#       type: string
+#       format: date
+#       description: The date on which the work order is scheduled to be performed
+#      scheduleStartTime:
+#        type: string
+#        description: Time the work is scheduled to begin
+#      scheduledEndTime:
+#        type: string
+#        description: Time the work is schedueld to be complete
         
   Party:
     properties:
@@ -780,14 +780,14 @@ definitions:
 #        description: Time the work is schedueld to be complete
 
       
-  WorkOrderCollection:
-    description: Standard HATEOAS wrapper for a collection, including the array of `Work Orders` and an array of links definining possible operations on the collection
-    properties:
-      content:
-        type: array
-        items:
-          $ref: "#/definitions/WorkOrder"
-      links:
-        type: array
-        items:
-          $ref: "#/definitions/Link"
+#  WorkOrderCollection:
+#    description: Standard HATEOAS wrapper for a collection, including the array of `Work Orders` and an array of links definining possible operations on the collection
+#    properties:
+#      content:
+#        type: array
+#        items:
+#          $ref: "#/definitions/WorkOrder"
+#      links:
+#        type: array
+#        items:
+#          $ref: "#/definitions/Link"
