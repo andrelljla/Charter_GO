@@ -20,32 +20,35 @@ paths:
       summary: Docref W13, W18 - Determine serviceability at location/address
       description: Determine the products and services eligible for sale at the requested address/location.  The same service will be used to determine both "New Connect" location service compatability as well as "Transfer-To" Location service compatability.  Boolean value for serviceability (is/is not serivceable) can be inferred from the existence of rows in the service return data set. 
       parameters:
-        - name: AddressID
+        - 
+          name: AddressID
           in: path
           required: true
           type: integer
           description: Unique identifier for the address/location being queried for serviceability
-        - name: lineageID
+        - 
+          name: X-Charter-Transaction-ID
           in: header
           required: true
           type: string
           description: Unique transaction identifier; used for transactional error handling
-        - name: timestamp
-          in: header
-          required: true
-          type: string
-          format: date-time
-          description: Time that the service call was invoked
-        - name: invokingUser
-          in: header
-          required: true
-          type: string
-          description: User name for the actual user that invoked the call (for audit purpose)
-        - name: applicationID
+        - 
+          name: X-Charter-Application-ID
           in: header
           required: true
           type: string
           description: Code identifying invoking application or sales channel
+#        - name: timestamp
+#          in: header
+#          required: true
+#          type: string
+#          format: date-time
+#          description: Time that the service call was invoked
+#        - name: invokingUser
+#          in: header
+#          required: true
+#          type: string
+#          description: User name for the actual user that invoked the call (for audit purpose)
       tags:
         - W13
         - W18
@@ -69,27 +72,29 @@ paths:
           required: true
           type: integer
           description: Unique identifier for the address being checked
-        - name: lineageID
+        - 
+          name: X-Charter-Transaction-ID
           in: header
           required: true
           type: string
           description: Unique transaction identifier; used for transactional error handling
-        - name: timestamp
-          in: header
-          required: true
-          type: string
-          format: date-time
-          description: Time that the service call was invoked
-        - name: invokingUser
-          in: header
-          required: true
-          type: string
-          description: User name for the actual user that invoked the call (for audit purpose)
-        - name: applicationID
+        - 
+          name: X-Charter-Application-ID
           in: header
           required: true
           type: string
           description: Code identifying invoking application or sales channel
+#        - name: timestamp
+#          in: header
+#          required: true
+#          type: string
+#          format: date-time
+#          description: Time that the service call was invoked
+#        - name: invokingUser
+#          in: header
+#          required: true
+#          type: string
+#          description: User name for the actual user that invoked the call (for audit purpose)
 
       tags:
         - W16
@@ -108,48 +113,55 @@ paths:
       summary: Docref W13, W18 precursor - Search for Location ID from within Gateway Ordering Application
       description: Retrieves a specific location identifier (AddressID) based on a set of address parameters. Precursor to retrieving serviceability by location.  Overlaps with existing adaptive Search capability such that if adaptive capabilities can be referenced from within the Gateway Ordering application (with the appropriate data feeds) this function (and possibly the serviceabiltyAtLocation function as well) may be pre-empted. Application will force collection of sufficient data to ensure a maximum of 1 location ID will be returned.
       parameters:
-        - name: lineageID
+        - 
+          name: X-Charter-Transaction-ID
           in: header
           required: true
           type: string
           description: Unique transaction identifier; used for transactional error handling
-        - name: timestamp
-          in: header
-          required: true
-          type: string
-          format: date-time
-          description: Time that the service call was invoked
-        - name: invokingUser
-          in: header
-          required: true
-          type: string
-          description: User name for the actual user that invoked the call (for audit purpose)
-        - name: applicationID
+        - 
+          name: X-Charter-Application-ID
           in: header
           required: true
           type: string
           description: Code identifying invoking application or sales channel
-        - name: addrStreetLine1
+#        - name: timestamp
+#          in: header
+#          required: true
+#          type: string
+#          format: date-time
+#          description: Time that the service call was invoked
+#        - name: invokingUser
+#          in: header
+#          required: true
+#          type: string
+#          description: User name for the actual user that invoked the call (for audit purpose)
+        - 
+          name: addrStreetLine1
           type: string
           in: query
           required: true
           description: Line 1 of the street address component of the address lookup 
-        - name: addrStreetLine2
+        - 
+          name: addrStreetLine2
           type: string
           in: query
           required: false
           description: Line 2 of the street address component of the address lookup  
-        - name: addrCity
+        - 
+          name: addrCity
           type: string
           in: query
           required: false
           description: City component of the address lookup
-        - name: addrState
+        - 
+          name: addrState
           type: string
           in: query
           required: false
           description: State component of the address lookup
-        - name: addrZIP
+        - 
+          name: addrZIP
           type: string
           in: query
           required: false
