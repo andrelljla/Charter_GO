@@ -11,7 +11,7 @@ paths:
   /orders/v1:
     post:
       summary: create In-Process Order
-      description: When entering the Gateway Ordering process, we create a new In-Process Order given what we know (person/location, account, etc) from the Gateway buy-flow.  Invoking this procedure creates an instance of the In-Process Order structure with limited information populated.  Remaining sections of this order will be populated as the application progresses.
+      description: When entering the Gateway Ordering process, we create a new In-Process Order given what we know (person/location, account, etc) from the Gateway buy-flow.  Invoking this procedure creates an instance of the In-Process Order structure with limited information populated.  Remaining sections of this order will be populated as the application or buying process progresses.
       parameters:
         - 
           name: X-Charter-Transaction-ID
@@ -27,7 +27,7 @@ paths:
           description: Code identifying invoking application or sales channel
         - 
           name: OrderInitialization
-          description: Basic parameters required to create an (empty) order structure
+          description: Basic parameters required to create an (empty) order structure.  Depedning on how this process is being initialized, the call will require (a) an accountID [existing customer]; (b) an addressID and a PartyID [existing party at new location]; or (c) an addressID and the Party name attributes [full new connect].
           in: body
           required: true
           schema: 
@@ -44,7 +44,7 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
     
-  /orders/v1/{id}:
+  /orders/v1/{inProcessOrderID}:
     get:
       description: |
         Searches for `inProcessOrder` characteristics for the `order` whose ID is specified in the URI.
@@ -62,7 +62,7 @@ paths:
           type: string
           description: Code identifying invoking application or sales channel
         -
-          name: id
+          name: inProcessOrderID
           in: path
           description: Unique identifier for an `inProcessOrder`
           required: true
@@ -109,7 +109,8 @@ definitions:
       scheduledWorkOrder:
         type: array
         items:
-          $ref: '#/definitions/scheduledWorkOrder'
+#          $ref: '#/definitions/scheduledWorkOrder'
+          $ref: '#/definitions/WorkOrder'
         description: Array of work orders resulting from the submitted order
       transferToAddress:
         type: object
@@ -652,24 +653,39 @@ definitions:
       partyID:
         type: integer
         description: Existing partyID (SOLO) for which a new account will be generated and an order placed.
-      partyFirstName:
+      individualNamePrefix:
+        type: string
+        description: Prefix to the name (e.g. Mr, Mrs, Dr, etc)
+      individualFirstName:
         type: string
         description: First name of an individual for which a new Party record will be created, a new account will be generated and an order placed.
-      partyLastName:
+      middleInitial:
+        type: string
+        description: Individual's middle initial
+      individualLastName:
         type: string
         description: Last name of an individual for which a new Party record will be created, a new account will be generated and an order placed.
+      individualNameSuffix:
+        type: string
+        description: Suffix to the individual's name, usually indicating professional certification  (e.g. DVM, DDS, PMP) or generational characteristics (e.g. Jr, III, IV).
+      partyBusinessName:
+        type: string
+        description: Name of the business, if service is not being provided for and individual
+        
 
   CommonNoErrorReturnHeader:
     properties:
-      X-Charter-Transaction-ID:
-        type: integer
-        description: Unique transaction identifier; used for transactional error handling
+#      X-Charter-Transaction-ID:
+      lineageID:
+        type: string
+        description: Unique transaction identifier; used for transactional error handling.  Mapped from X-Charter-Transaction-ID.
 
   CommonErrorReturn:
     properties:
-      X-Charter-Transaction-ID:
-        type: integer
-        description: Unique transaction identifier; used for transactional error handling
+#      X-Charter-Transaction-ID:
+      lineageID:
+        type: string
+        description: Unique transaction identifier; used for transactional error handling  Mapped from X-Charter-Transaction-ID.
       errorInfo:
         type: array
         items:
@@ -688,7 +704,90 @@ definitions:
         
   inProcessOrderCreation:
     properties:
-      commonNoErrorreturnHeader:
+      commonNoErrorReturnHeader:
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
+      inProcessOrderID:
+        type: integer
+        description: Unique identifier for the in-Proces order
+        
+  WorkOrder:
+    properties:
+      id:
+        type: integer
+        description: Unique identifier for a `Work Order`
+      jobId:
+        type: string
+        description: Unique identifier for the actual job scheduled and performed as a result of a `Work Order`
+      scheduledDate:
+        type: string
+        format: date
+        description: Date that the ordered work is to be performed
+      scheduledTimeRange:
+        type: string
+        description: Window of time that the ordered work could be performed
+      status:
+        type: string
+        enum:
+          - Open
+          - Cancelled
+          - Completed
+      description:
+        type: string
+      estimatedDuration:
+        type: string
+        description: Text of the form '1 hr 30 min'
+      technicianId:
+        type: string
+        description: Identifier of the person performing the job
+      orderTimestamp:
+        type: string
+        format: date-time
+        description: When the order was taken
+      class:
+        type: string
+        enum:
+          - Service Request
+          - Special Request
+          - Trouble Call
+#      workOrderID:
+#        type: integer
+#        description: Unique identifier of the work order 
+      specialInstructionsTech:
+        type: string
+        description: <dr>
+      specialInstructionsDispatch:
+        type: string
+        description: <dr>
+#      woCallFirstFlag:
+#        type: string
+#        description: <dr>
+      woCallFirstTN:
+        type: string
+        description: <dr>
+      serviceWindowID:
+        type: string
+        description: ID of the schedule window assigned in the schedule and quota management system for this work order
+#      scheduleDate:
+#        type: string
+#        format: date
+#        description: The date on which the work order is scheduled to be performed
+#      scheduleStartTime:
+#        type: string
+#        description: Time the work is scheduled to begin
+#      scheduledEndTime:
+#        type: string
+#        description: Time the work is schedueld to be complete
+
       
+  WorkOrderCollection:
+    description: Standard HATEOAS wrapper for a collection, including the array of `Work Orders` and an array of links definining possible operations on the collection
+    properties:
+      content:
+        type: array
+        items:
+          $ref: "#/definitions/WorkOrder"
+      links:
+        type: array
+        items:
+          $ref: "#/definitions/Link"
