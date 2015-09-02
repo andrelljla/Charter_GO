@@ -791,3 +791,55 @@ definitions:
 #        type: array
 #        items:
 #          $ref: "#/definitions/Link"
+
+  CustomerCreditCheckResponse:
+    properties:
+      commonReturn: 
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        description: <dr>
+      customerCreditCheckReturn:
+        type: object
+        $ref: '#/definitions/customerCreditCheckReturn'
+        description: <dr>
+
+  customerCreditCheckReturn:
+    properties:
+      experianPIN:
+        type: string
+        description: <dr>
+      BadAccountInformation:
+        type: array
+        items:
+          $ref: '#/definitions/DerogatoryCreditInformation'
+      FTAPrepaymentRequiredFlag:
+        type: boolean
+        description: <dr>
+      creditHistoryRankingAssessment:
+        type: string
+        description: <dr>
+      
+  DerogatoryCreditInformation:    
+    properties:
+      accountNumber:
+        type: string
+        description: <dr>
+      outstandingBalance:
+        type: number
+        format: double
+        description: <dr>
+      nonPayDisconnectStatus:
+        type: string
+        description: <dr>
+      unreturnedEquipmentFlag:
+        type: boolean
+        description: <dr>
+      prepayRequired:
+        type: boolean
+        description: <dr>
+      prepayAmountBadDebt:
+        type: number
+        format: double
+      prepayAmountUnreturnedEquipment:
+        type: number
+        format: double
