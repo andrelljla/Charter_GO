@@ -52,8 +52,8 @@ paths:
         - 
           name: TelephoneNumberHostedNumberSearch
           in: query
-          description: <dr>
-          type: boolean
+          description: A specific area code, exchange, or full telephone number queried to determine if it is available from the provider
+          type: string
           required: true
         - 
           name: addressID
