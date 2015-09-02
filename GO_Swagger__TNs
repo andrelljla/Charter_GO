@@ -50,15 +50,9 @@ paths:
 #          type: string
 #          description: User name for the actual user that invoked the call (for audit purpose)
         - 
-          name: TelephoneNumberHostedNumberSearch
-          in: query
-          description: A specific area code, exchange, or full telephone number queried to determine if it is available from the provider
-          type: string
-          required: true
-        - 
           name: addressID
           in: query
-          description: <dr>
+          description: Unique identfier (SOLO) for the address being queried for TN service
           type: integer
           required: true
         - 
@@ -67,6 +61,24 @@ paths:
           description: Number of available TNs to return.  Default is 5.
           type: integer
           required: true
+        - 
+          name: HostedNumberSearch-AreaCode
+          in: query
+          description: A specific area code number queried to limit available TNs from the provider
+          type: string
+          required: false
+        - 
+          name: HostedNumberSearch-Exchange
+          in: query
+          description: A specific exchange number queried to limit available TNs from the provider
+          type: string
+          required: false
+        - 
+          name: HostedNumberSearch-Line
+          in: query
+          description: A specific line number queried to determine if it is available from the provider
+          type: string
+          required: false
           
       tags:
         - W06
