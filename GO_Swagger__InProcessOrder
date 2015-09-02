@@ -8,11 +8,59 @@ produces:
  - application/json
 
 paths:
+  /orders/v1:
+    post:
+      summary: create In-Process Order
+      description: When entering the Gateway Ordering process, we create a new In-Process Order given what we know (person/location, account, etc) from the Gateway buy-flow.  Invoking this procedure creates an instance of the In-Process Order structure with limited information populated.  Remaining sections of this order will be populated as the application progresses.
+      parameters:
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        - 
+          name: OrderInitialization
+          description: Basic parameters required to create an (empty) order structure
+          in: body
+          required: true
+          schema: 
+            $ref: "#/definitions/OrderInitialization"
+
+      responses:
+        200:
+          description: inProcessOrder successfully created; return inProcessOrderID
+          schema:
+            $ref: '#/definitions/inProcessOrderCreation'
+
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+    
   /orders/v1/{id}:
     get:
       description: |
         Searches for `inProcessOrder` characteristics for the `order` whose ID is specified in the URI.
       parameters:
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
         -
           name: id
           in: path
@@ -170,7 +218,7 @@ definitions:
   USPostalAddress:
     description: common structure for address-based location
     properties:
-      addressID:
+      ID:
         type: integer
         description: Unique identifier of the address (sourced from SOLO)
       streetLine1:
@@ -179,9 +227,9 @@ definitions:
         type: string
       city:
         type: string
-      state:
+      territory:
         type: string
-      zipCode:
+      postalCode:
         type: string
         
   scheduledWorkOrder:
@@ -245,7 +293,7 @@ definitions:
       telephoneNumbers:
         type: array
         items:
-          $ref: '#/definitions/PartyTN'
+          $ref: '#/definitions/PartyTelephoneNumber'
       eMail:
         type: array
         items:
@@ -289,9 +337,9 @@ definitions:
       sourceStreetAddress:
         $ref: "#/definitions/USPostalAddress"
       primaryPhone:
-        $ref: "#/definitions/USTelephone"
+        $ref: "#/definitions/TelephoneNumber"
       alternatePhone:
-        $ref: "#/definitions/USTelephone"
+        $ref: "#/definitions/TelephoneNumber"
       emailAddress:
         $ref: "#/definitions/EmailAddress"
       securityCode:
@@ -335,29 +383,38 @@ definitions:
         type: object
         $ref: '#/definitions/USPostalAddress'
         
-  PartyTN:
+  PartyTelephoneNumber:
     properties:
-      TNType: 
+      TelephoneNumberType: 
         type: string
         description: Type of address (e.g. 'Home', 'work') as identified by the responsible party
-      TN:
+      TelephoneNumber:
         type: object
-        $ref: '#/definitions/USTelephone'
+        $ref: '#/definitions/TelephoneNumber'
         
-  USTelephone:
+  TelephoneNumber:
     properties:
+      id:
+        type: integer
+        description: Unique identifier for a `TelephoneNumber`, potentially allowing for independent updates
       countryCode:
         type: string
         description: Always '+1' in US; often omitted
       areaCode: 
-        type: integer
+        type: string
+        description: Telephone Number area code. NPA component of TN
       exchange:
-        type: integer
+        type: string
+        description: Telephone Exchange; first 3 digits of 7-digit TN. NXX component of TN
       lineNumber:
-        type: integer
+        type: string
+        description: last 4 digits of TN
   
   eMail:
     properties:
+      id:
+        type: integer
+        description: Unique identifier for the eMail address
       eMailType:
         type: string
         description: Type of eMail (e.g. 'Home', 'Work') as identified by the responsible party      
@@ -408,29 +465,29 @@ definitions:
         type: string
         description: Traditionally, another unique identifier for an `Account`, although this will no longer be guaranteed as new billing systems are introduced. This number is published on customer correspondence
   
-  Address:
-    properties:
-      id:
-        type: integer
-        description: Unique identifier for an `Address`, potentially allowing for independent updates
-      line1:
-        type: string
-      line2:
-        type: string
-      city:
-        type: string
-      territoryCode:
-        type: string
-      postalCode:
-        type: string
+#  Address:
+#    properties:
+#      id:
+#        type: integer
+#        description: Unique identifier for an `Address`, potentially allowing for independent updates
+#      line1:
+#        type: string
+#      line2:
+#        type: string
+#      city:
+#        type: string
+#      territoryCode:
+#        type: string
+#      postalCode:
+#        type: string
   
-  TelephoneNumber:
-    properties:
-      id:
-        type: integer
-        description: Unique identifier for a `TelephoneNumber`, potentially allowing for independent updates
-      number:
-        type: string
+#  TelephoneNumber:
+#    properties:
+#      id:
+#        type: integer
+#        description: Unique identifier for a `TelephoneNumber`, potentially allowing for independent updates
+#      number:
+#        type: string
   
   EmailAddress:
     properties:
@@ -573,14 +630,65 @@ definitions:
       hard:
         type: string
   
-  AccountCollection:
-    description: Standard HATEOAS wrapper for a collection, including the array of `Accounts` and an array of links definining possible operations on the collection
+#  AccountCollection:
+#    description: Standard HATEOAS wrapper for a collection, including the array of `Accounts` and an array of links definining possible operations on the collection
+#    properties:
+#      content:
+#        type: array
+#        items:
+#          $ref: "#/definitions/Account"
+#      links:
+#        type: array
+#        items:
+#          $ref: "#/definitions/Link"
+  OrderInitialization:
     properties:
-      content:
+      accountID:
+        type: integer
+        description: Account for which order is being created.  Will not be populated for new-connect orders.
+      addressID:
+        type: integer
+        description: Existing addressID (SOLO) for which a new account will be generated and an order placed.
+      partyID:
+        type: integer
+        description: Existing partyID (SOLO) for which a new account will be generated and an order placed.
+      partyFirstName:
+        type: string
+        description: First name of an individual for which a new Party record will be created, a new account will be generated and an order placed.
+      partyLastName:
+        type: string
+        description: Last name of an individual for which a new Party record will be created, a new account will be generated and an order placed.
+
+  CommonNoErrorReturnHeader:
+    properties:
+      X-Charter-Transaction-ID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+
+  CommonErrorReturn:
+    properties:
+      X-Charter-Transaction-ID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      errorInfo:
         type: array
         items:
-          $ref: "#/definitions/Account"
-      links:
-        type: array
-        items:
-          $ref: "#/definitions/Link"
+          $ref: "#/definitions/CommonErrors"
+
+  CommonErrors:
+    properties:
+      errCode:
+        type: string
+      errMessage:
+        type: string
+      errDescription:
+        type: string
+      errGUID:
+        type: string
+        
+  inProcessOrderCreation:
+    properties:
+      commonNoErrorreturnHeader:
+        type: object
+        $ref: '#/definitions/CommonNoErrorReturnHeader'
+      
