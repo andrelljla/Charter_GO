@@ -302,6 +302,9 @@ definitions:
       personalIdentifyingInfo:
         type: object
         $ref: '#/definitions/PII'
+      prePayRequirement:
+        type: object
+        $ref: '#/definitions/customerVerification'
         
   Account:
     description: An order will either be tied to an existing account or will have sufficient information collected to create an account.  An account is defined as a combination of a Service Address and a Responsbile Party and an effective date; active accounts will not have an end date in the past.
@@ -792,18 +795,18 @@ definitions:
 #        items:
 #          $ref: "#/definitions/Link"
 
-  CustomerCreditCheckResponse:
-    properties:
-      commonReturn: 
-        type: object
-        $ref: '#/definitions/CommonNoErrorReturnHeader'
-        description: <dr>
-      customerCreditCheckReturn:
-        type: object
-        $ref: '#/definitions/customerCreditCheckReturn'
-        description: <dr>
+#  CustomerCreditCheckResponse:
+#    properties:
+#      commonReturn: 
+#        type: object
+#        $ref: '#/definitions/CommonNoErrorReturnHeader'
+#        description: <dr>
+#      customerCreditCheckReturn:
+#        type: object
+#        $ref: '#/definitions/customerVerification'
+#        description: <dr>
 
-  customerCreditCheckReturn:
+  customerVerification:
     properties:
       experianPIN:
         type: string
