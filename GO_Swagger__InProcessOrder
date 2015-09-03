@@ -8,7 +8,7 @@ produces:
  - application/json
 
 paths:
-  /orders/v1:
+  /inProcessOrders/v1:
     post:
       summary: create In-Process Order
       description: When entering the Gateway Ordering process, we create a new In-Process Order given what we know (person/location, account, etc) from the Gateway buy-flow.  Invoking this procedure creates an instance of the In-Process Order structure with limited information populated.  Remaining sections of this order will be populated as the application or buying process progresses.
@@ -44,7 +44,7 @@ paths:
           schema:
             $ref: '#/definitions/CommonErrorReturn'
     
-  /orders/v1/{inProcessOrderID}:
+  /inProcessOrders/v1/{inProcessOrderID}:
     get:
       description: |
         Searches for `inProcessOrder` characteristics for the `order` whose ID is specified in the URI.
@@ -77,8 +77,229 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /inProcessOrders/v1/{inProcessOrderID}/opcOrderHeader:
+    put:
+      summary: Add the Order Header (metadata) Information
+      description: <dr>
+      parameters:
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        -
+          name: inProcessOrderID
+          in: path
+          description: Unique identifier for an `inProcessOrder`
+          required: true
+          type: integer
+      
+        - 
+          name: OrderHeader
+          in: body
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/OrderHeader' 
+          description: Line items (in offer/product/component form) to be added to the in-Process Order
+
+      responses:
+        200:
+          description: Items successfully added; return number of lines added
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/orderItemsResponse'
+    
+  /inProcessOrders/v1/{inProcessOrderID}/opcOrderItems:
+    put:
+      summary: Add the Order Items to the specified order
+      description: <dr>
+      parameters:
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        -
+          name: inProcessOrderID
+          in: path
+          description: Unique identifier for an `inProcessOrder`
+          required: true
+          type: integer
+
+        - 
+          name: OrderItems
+          in: body
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/OrderItems' 
+          description: Line items (in offer/product/component form) to be added to the in-Process Order.  Supports simultaneous addition of attributes.
+
+      responses:
+        200:
+          description: Items successfully added; return number of lines added
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/orderItemsResponse'
+
+  /inProcessOrders/v1/{inProcessOrderID}/opcOrderItems/{itemNumber}/attributes:
+    post:
+      summary: Assign an attribute or set of attributes for the specified order item
+      description: <dr>
+      parameters:
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        -
+          name: inProcessOrderID
+          in: path
+          description: Unique identifier for an `inProcessOrder`
+          required: true
+          type: integer
+
+        -
+          name: itemNumber
+          in: path
+          description: Unique identifier, when combined with OrderID for a specifiec item in an `inProcessOrder`
+          required: true
+          type: integer
+
+        - 
+          name: Attributes
+          in: body
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/Attributes' 
+          description: Attribute value details
+
+      responses:
+        200:
+          description: Items successfully added; return number of attributes created/assigned
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/orderItemsResponse'
+
+  /inProcessOrders/v1/{inProcessOrderID}/opcOrderItems/{itemNumber}/attributes/{attributeID}:
+    put:
+      summary: Update an attribute value for the specified order item line
+      description: <dr>
+      parameters:
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        -
+          name: inProcessOrderID
+          in: path
+          description: Unique identifier for an `inProcessOrder`
+          required: true
+          type: integer
+
+        -
+          name: itemNumber
+          in: path
+          description: Unique identifier, when combined with OrderID for a specifiec item in an `inProcessOrder`
+          required: true
+          type: integer
+
+        -
+          name: attributeID
+          in: path
+          description: Unique identifier, when combined with OrderID and itemNumber for a specifiec attribute of an item in an `inProcessOrder`
+          required: true
+          type: integer
+
+        - 
+          name: Attribute
+          in: body
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/Attribute' 
+          description: Attribute value details
+
+      responses:
+        200:
+          description: Items successfully added; return updated attribute
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/orderItemsResponse'
+
+  /inProcessOrders/v1/{inProcessOrderID}/orderVerification:
+    put:
+      summary: Add 'V&V' information to the specified order
+      description: Certain items in an order will have additional Verification and Validation ('V&V') criteria associated with them (e.g. TPV for ported TNs).  While generated because of specific items, 'V&V' will be maintained at the order (header) level; a single set of 'V&V' data will cover the entire order.
+      parameters:
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        -
+          name: inProcessOrderID
+          in: path
+          description: Unique identifier for an `inProcessOrder`
+          required: true
+          type: integer
+
+        - 
+          name: OrderValidationVerification
+          in: body
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/OrderValidationVerification' 
+          description: Line items (in offer/product/component form) to be added to the in-Process Order.  Supports simultaneous addition of attributes.
+
+      responses:
+        200:
+          description: Items successfully added; return number of lines added
+          schema:
+            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/orderItemsResponse'
+
 definitions:
 
+  Placeholder:
+    properties:
+      foo:
+        type: integer
+        
   inProcessOrder:
     properties:
       account:
@@ -674,6 +895,12 @@ definitions:
       partyBusinessName:
         type: string
         description: Name of the business, if service is not being provided for and individual
+      contactTelephoneNumber:
+        type: string
+        description: Contact/callback telephone number for the individual regarding the order
+      contactEMail:
+        type: string
+        description: Contact/callback eMail address for the individual regarding the order
         
 
   CommonNoErrorReturnHeader:
@@ -846,3 +1073,4 @@ definitions:
       prepayAmountUnreturnedEquipment:
         type: number
         format: double
+
