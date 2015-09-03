@@ -348,19 +348,17 @@ definitions:
         $ref: '#/definitions/opcOrderHeader'
         description: Details that apply to the entirety of the order.  Analogous to 'order header' in a typical procurement system.
       opcOrderItems:
-        type: array
-        items:
-          $ref: "#/definitions/opcOrderItem"
+        type: object
+        $ref: "#/definitions/opcOrderItems"
         description: Specific line items in the order.  Ties to Offer/Product/Component structure as defined in Master Enterprise Catalog (MEC).
       opcItemVerification:
         type: object
         $ref: '#/definitions/orderVerification'
         description: Certain items in the order will require supplemental verification and validation (e.g. TPV for telephone number transfers).  A single verification will cover all items (of a specific type) in an order.
       scheduledWorkOrder:
-        type: array
-        items:
+        type: object
 #          $ref: '#/definitions/scheduledWorkOrder'
-          $ref: '#/definitions/WorkOrder'
+        $ref: '#/definitions/WorkOrders'
         description: Array of work orders resulting from the submitted order
       transferToAddress:
         type: object
@@ -976,6 +974,13 @@ definitions:
         type: integer
         description: Unique identifier for the in-Proces order
         
+  WorkOrders:
+    properties:
+      WorkOrders:
+        type: array
+        items:
+          $ref: '#/definitions/WorkOrder'
+          
   WorkOrder:
     properties:
       id:
