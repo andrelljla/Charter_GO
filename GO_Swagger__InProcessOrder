@@ -33,6 +33,9 @@ paths:
           schema: 
             $ref: "#/definitions/OrderInitialization"
 
+      tags:
+        - IPO_FullStructure
+
       responses:
         200:
           description: inProcessOrder successfully created; return inProcessOrderID
@@ -67,6 +70,10 @@ paths:
           description: Unique identifier for an `inProcessOrder`
           required: true
           type: integer
+
+      tags:
+        - IPO_FullStructure
+
       responses:
         200:
           description: Details about the `Order`
@@ -80,7 +87,7 @@ paths:
   /inProcessOrders/v1/{inProcessOrderID}/opcOrderHeader:
     put:
       summary: Add the Order Header (metadata) Information
-      description: <dr>
+      description: The order header information describes some general information that applies to all items in the order (e.g. Reason, Sales Agent, Service Requested Date, etc.).
       parameters:
         - 
           name: X-Charter-Transaction-ID
@@ -105,9 +112,12 @@ paths:
           name: OrderHeader
           in: body
           schema:
-            $ref: '#/definitions/Placeholder' 
-#            $ref: '#/definitions/OrderHeader' 
+#            $ref: '#/definitions/Placeholder' 
+            $ref: '#/definitions/opcOrderHeader' 
           description: Line items (in offer/product/component form) to be added to the in-Process Order
+
+      tags:
+        - IPO_Header
 
       responses:
         200:
@@ -119,7 +129,7 @@ paths:
   /inProcessOrders/v1/{inProcessOrderID}/opcOrderItems:
     put:
       summary: Add the Order Items to the specified order
-      description: <dr>
+      description: The Order Items set contains all the offer/product/component services to be included with the order.
       parameters:
         - 
           name: X-Charter-Transaction-ID
@@ -143,10 +153,13 @@ paths:
         - 
           name: OrderItems
           in: body
-          schema:
-            $ref: '#/definitions/Placeholder' 
-#            $ref: '#/definitions/OrderItems' 
+#            $ref: '#/definitions/Placeholder' 
+          schema: 
+            $ref: '#/definitions/opcOrderItems' 
           description: Line items (in offer/product/component form) to be added to the in-Process Order.  Supports simultaneous addition of attributes.
+
+      tags:
+        - IPO_Items
 
       responses:
         200:
@@ -193,6 +206,9 @@ paths:
             $ref: '#/definitions/Placeholder' 
 #            $ref: '#/definitions/Attributes' 
           description: Attribute value details
+
+      tags:
+        - IPO_Attributes
 
       responses:
         200:
@@ -247,6 +263,9 @@ paths:
 #            $ref: '#/definitions/Attribute' 
           description: Attribute value details
 
+      tags:
+        - IPO_Attributes
+
       responses:
         200:
           description: Items successfully added; return updated attribute
@@ -282,9 +301,12 @@ paths:
           name: OrderValidationVerification
           in: body
           schema:
-            $ref: '#/definitions/Placeholder' 
-#            $ref: '#/definitions/OrderValidationVerification' 
+#            $ref: '#/definitions/Placeholder' 
+            $ref: '#/definitions/orderVerification' 
           description: Line items (in offer/product/component form) to be added to the in-Process Order.  Supports simultaneous addition of attributes.
+
+      tags:
+        - IPO_Verification
 
       responses:
         200:
@@ -302,6 +324,9 @@ definitions:
         
   inProcessOrder:
     properties:
+      inProcessOrderID:
+        type: integer
+        description: Unique identifier (TIBCO  BW) for the in-Process Order structure
       account:
         type: object
         $ref: '#/definitions/Account'
@@ -327,6 +352,10 @@ definitions:
         items:
           $ref: "#/definitions/opcOrderItem"
         description: Specific line items in the order.  Ties to Offer/Product/Component structure as defined in Master Enterprise Catalog (MEC).
+      opcItemVerification:
+        type: object
+        $ref: '#/definitions/orderVerification'
+        description: Certain items in the order will require supplemental verification and validation (e.g. TPV for telephone number transfers).  A single verification will cover all items (of a specific type) in an order.
       scheduledWorkOrder:
         type: array
         items:
@@ -342,16 +371,16 @@ definitions:
     properties:
       salesAgentID:
         type: string
-        description: <dr>
+        description: Unique identfier for the individual responsible for selling the order (for commission purposes).  Also drives user (business) role information which can drive offer eligibility.
       mecOEOrderID:
         type: string
-        description: <dr>
+        description: Unique ID of the order as configured in MEC.  Only valid for the current session.
       billerOrderID:
         type: integer
-        description: <dr>
+        description: Unique ID of the order as creted in the Billing System
       billerSystemDesignation:
         type: string
-        description: <dr>
+        description: Code identifying the billing system in which the order is created
       reasonCd:
         type: string
         description: Code assigned as the basis for the order as configured
@@ -362,10 +391,13 @@ definitions:
       transferRecordID:
         type: integer
         description: <dr>
-      itemVerification:
-        type: object
-        $ref: '#/definitions/itemVerification'
-        description: Certain items in the order will require supplemental verification and validation (e.g. TPV for telephone number transfers).  A single verification will cover all items (of a specific type) in an order.
+      
+  opcOrderItems:
+    properties:
+      opcOrderItems:
+        type: array
+        items:
+          $ref: '#/definitions/opcOrderItem'
       
   opcOrderItem:
     properties:
@@ -417,6 +449,9 @@ definitions:
   
   opcItemAttribute:
     properties:
+      ID:
+        type: integer
+        description: Unique identifier (TIBCO BW) for the item attribute
       name:
         type: string
         description: Short, textual description of a `Serviceability` characteristic
@@ -487,7 +522,7 @@ definitions:
         
   Party:
     properties:
-      partyID:
+      id:
         type: integer
         description: unique identifier for the party responsible for an account
       businessName:
@@ -673,10 +708,10 @@ definitions:
         type: string
         description: State which issued the individual's driver license.  Required if driverLicenseNumber or otherStateID is provided
 
-  itemVerification:
-    description: item Verification structure needs to be built-out
+  orderVerification:
+    description: Order Verification structure needs to be built-out
     properties:
-      verificationID:
+      id:
         type: string
         description: Unique idnetifier for the order verification
         
