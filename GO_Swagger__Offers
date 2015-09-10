@@ -882,6 +882,13 @@ definitions:
       amount:
         type: integer
         description: <description required>
+      quantity:
+        type: integer
+        description: <dr>
+      provisioningDate:
+        type: string
+        format: date
+        description: <dr>
       
   SearchResult:
     properties:
