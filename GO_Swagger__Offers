@@ -867,7 +867,13 @@ definitions:
         description: Boolean Value
       valueType: 
         type: string
-        description: Data type for the defined attribute; only the corresponding value should be referenced.  Constrained LoV (BOOLEAN, DATE, DECIMAL, INTEGER, STRING).
+        description: Data type for the defined attribute; only the corresponding value should be referenced.
+        enum:
+          - BOOLEAN
+          - DATE
+          - DECIMAL
+          - INTEGER
+          - STRING
         
   FlexAttr:
     properties:
@@ -1258,7 +1264,20 @@ definitions:
         type: array
         items:
           type: string
-        description: Constrained LoV (AMEND, CANCEL, CANCEL_OFFER, CANCEL_PARTIAL, CANCEL_REPLACE_OFFER, CREATE, DISCONTINUE, EDIT, RESUME_NEGOTIATION, TAKEOVER, WITHDRAW_AMEND, WITHDRAW_CANCEL)
+        description: Constrained of allowed actions
+        enum:
+          - AMEND
+          - CANCEL
+          - CANCEL_OFFER
+          - CANCEL_PARTIAL
+          - CANCEL_REPLACE_OFFER
+          - CREATE
+          - DISCONTINUE
+          - EDIT
+          - RESUME_NEGOTIATION
+          - TAKEOVER
+          - WITHDRAW_AMEND
+          - WITHDRAW_CANCEL
       createdBy:
         type: string
         description: <dr>
@@ -1297,7 +1316,11 @@ definitions:
         description: Contains products and Characteristic Values that are defined as related to this Configuration Group
       compatabilityStatus:
         type: string
-        description: Constrained LoV (BLOCKING, COMPATIBLE, NOT_CHECKED)
+        description: Constrained compatability status
+        enum:
+          - BLOCKING
+          - COMPATIBLE
+          - NOT_CHECKED
       productID:
         type: string
         description: The ID of the Product
@@ -1390,7 +1413,12 @@ definitions:
         description: <dr>
       businessType:
         type: string
-        description: <dr> Constrained LoV (DEVICE, FRIENDS_AND_FAMILY, TV_CHANNEL, TV_PACKAGE)
+        description: Constrained LoV for valid business types
+        enum:
+          - DEVICE
+          - FRIENDS_AND_FAMILY
+          - TV_CHANNEL
+          - TV_PACKAGE
       serviceID:
         type: string
         description: <dr>
@@ -1399,13 +1427,24 @@ definitions:
         description: <dr>
       action:
         type: string
-        description: <dr> Constrained LoV (Add, Remove, Reestablish, Resume, Suspend, Change
+        description: Constrained LoV for action
+        enum:
+          - Add
+          - Remove
+          - Reestablish
+          - Resume
+          - Suspend
+          - Change
       status:
 #        type: object
 #        $ref: '#/definitions/ProductActivationStatus'
 #        description: <dr>
         type: string
-        description: <dr> Constrained LoV (ACTIVE, CEASED, SUSPENDED)
+        description: Constrained LoV for status
+        enum:
+          - ACTIVE
+          - CEASED
+          - SUSPENDED
 
   RuleExceptionMessage:
     properties:
@@ -1422,7 +1461,10 @@ definitions:
 #        type: object
 #        $ref: '#/definitions/ConfigurationRuleLevel'
         type: string
-        description: <dr> Constrained LoV (A, P, S)
+        description: Constrained LoV for rule level
+          - A
+          - P
+          - S
       objectName:
         type: string
         description: <dr>
@@ -1570,7 +1612,20 @@ definitions:
         type: array
         items:
           type: string
-        description: Constrained LoV (AMEND, CANCEL, CANCEL_OFFER, CANCEL_PARTIAL, CANCEL_REPLACE_OFFER, CREATE, DISCONTINUE, EDIT, RESUME_NEGOTIATION, TAKEOVER, WITHDRAW_AMEND, WITHDRAW_CANCEL)
+        description: Constrained LoV for allowed actions
+        enum:
+          - AMEND
+          - CANCEL
+          - CANCEL_OFFER
+          - CANCEL_PARTIAL
+          - CANCEL_REPLACE_OFFER
+          - CREATE
+          - DISCONTINUE
+          - EDIT
+          - RESUME_NEGOTIATION
+          - TAKEOVER
+          - WITHDRAW_AMEND
+          - WITHDRAW_CANCEL
       selected:
         type: boolean
         description: <dr>
@@ -1602,7 +1657,11 @@ definitions:
 #        $ref: '#/definitions/ProductActivationStatus'
 #        description: <dr>
         type: string
-        description: <dr> Constrained LoV (ACTIVE, CEASED, SUSPENDED)
+        description: Constrained LoV for status
+        enum:
+          - ACTIVE
+          - CEASED
+          - SUSPENDED
 
   CharacteristicValueDisplay:
     properties:
