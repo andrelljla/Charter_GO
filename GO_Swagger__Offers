@@ -1218,7 +1218,6 @@ definitions:
         type: string
         description: Currency for the price representation. Default is USD.
       
-        
   
   implProductOrderItemHeaders:
     properties:
@@ -1235,6 +1234,10 @@ definitions:
       productOfferingName:
         type: string
         description: <dr>
+      implCalculatedPrices:
+        type: array
+        items:
+          $ref: '#/definitions/implCalculatedPrice'
       referenceNumber:
         type: string
         description: <dr>
