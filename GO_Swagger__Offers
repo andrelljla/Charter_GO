@@ -330,6 +330,12 @@ paths:
           in: query
           type: string
           description: Locale identifier, used for language translation
+        - name: getProductConfigurationOptions
+          in: body
+          schema:
+            $ref: '#/definitions/implProductConfigurationOptionsRequest'
+          required: true
+          description: <dr>
 
       tags:
         - W4_Step3
@@ -337,7 +343,7 @@ paths:
         200:
           description: Succesful operation; return products associated with selected offers
           schema:
-            $ref: '#/definitions/implRetrieveProductInOrderConfigurationResponse'
+            $ref: '#/definitions/implRetrieveProductOrderConfigurationResponse'
         default:
           description: Unexpected error
           schema:
@@ -739,7 +745,7 @@ definitions:
         type: object
         $ref: '#/definitions/implProductOrderItemHeaders'
 
-  implRetrieveProductInOrderConfigurationResponse:
+  implProductOrderItemHeaders:
     properties:
       implBaseReturn:
         type: object 
@@ -747,7 +753,16 @@ definitions:
       mecProductConfigOptions:
         type: object
         $ref: '#/definitions/mecProductConfigOptions'
-      
+  
+  implProductConfigurationOptionsResponse:
+    properties:
+      implBaseReturn:
+        type: object 
+        $ref: "#/definitions/CommonNoErrorReturn"
+      implRetrieveProductOrderConfigurationResponse:
+        type: object
+        $ref: "#/definitions/implRetrieveProductOrderConfigurationResponse"
+        
 #############
   OrderOffer:
     properties:
