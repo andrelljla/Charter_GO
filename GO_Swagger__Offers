@@ -1367,7 +1367,20 @@ definitions:
         type: array
         items:
           type: string
-        description: Constrained LoV (AMEND, CANCEL, CANCEL_OFFER, CANCEL_PARTIAL, CANCEL_REPLACE_OFFER, CREATE, DISCONTINUE, EDIT, RESUME_NEGOTIATION, TAKEOVER, WITHDRAW_AMEND, WITHDRAW_CANCEL)
+        description: Constrained LoV of allowed actions
+        enum:
+          - AMEND
+          - CANCEL
+          - CANCEL_OFFER
+          - CANCEL_PARTIAL
+          - CANCEL_REPLACE_OFFER
+          - CREATE
+          - DISCONTINUE
+          - EDIT
+          - RESUME_NEGOTIATION
+          - TAKEOVER
+          - WITHDRAW_AMEND
+          - WITHDRAW_CANCEL
       totalDeposit:
         type: object
         $ref: '#/definitions/TotalDepositCalculationResult'
