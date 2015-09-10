@@ -476,25 +476,8 @@ definitions:
       errGUID:
         type: string
 
-#  implBrowsingCategoriesStructureResponse:
-#    properties:
-#      implBaseReturn:
-#        type: object 
-#        $ref: "#/definitions/CommonNoErrorReturn"
-#      implBrowsingCategoriesStructureOutput:
-#        type: object
-#        $ref: '#/definitions/implBrowsingCategoriesStructureOutput'
-
   implCategoryItemsInput:
     properties:
-#      commonInputHeader:
-#        type: object
-#        description: Encrypted username for proxy user authentication
-#        $ref: '#/definitions/CommonInputHeader'
-#      commonOEInput:
-#        type: object
-#        description: Encrypted username for proxy user authentication
-#        $ref: '#/definitions/OrderEngineHeader'
       sortType:
         type: string
         description: Sorting will be done according to the value that will be sent
@@ -611,18 +594,6 @@ definitions:
         
   implCreateOrderRequest:
     properties:
-#      commonInputHeader:
-#        type: object
-#        description: Encrypted username for proxy user authentication
-#        $ref: '#/definitions/CommonInputHeader'
-#      commonOEInput:
-#        type: object
-#        description: Encrypted username for proxy user authentication
-#        $ref: '#/definitions/OrderEngineHeader'
-#      implCreateOrderInput:
-#        type: object
-#        $ref: '#/definitions/implCreateOrderInput'
-#          properties:
       addressID:
         type: string
         description: <description required>
@@ -759,22 +730,6 @@ definitions:
         type: string
         description: <dr>
       
-#  implGetProductOrderItemsRequest:
-#    properties:
-#      commonHeader:
-#        type: object
-#        $ref: '#/definitions/CommonInputHeader'
-#      orderEngineHeader:
-#        type: object
-#        $ref: '#/definitions/OrderEngineHeader'
-#      customerID:
-#        type: integer
-#        format: int32
-#        description: The customer identification ID; default 0 for new/anonymous customer
-#      productOrderID:
-#        type: string
-#        description: Product Order ID related to Order Action(s).
-  
   implGetProductOrderItemsResponse:
     properties:
       implBaseReturn:
@@ -784,30 +739,6 @@ definitions:
         type: object
         $ref: '#/definitions/implProductOrderItemHeaders'
 
-#  implRetrieveProductInOrderConfigurationRequest:
-#    properties:
-#      commonHeader:
-#        type: object
-#        $ref: '#/definitions/CommonInputHeader'
-#      orderEngineHeader:
-#        type: object
-#        $ref: '#/definitions/OrderEngineHeader'
-#      poi:
-#        type: string
-#        description: <dr>
-#      rp: 
-#        type: boolean
-#        description: <dr>
-#      rpc: 
-#        type: boolean
-#        description: <dr>
-#      id:
-#        type: string
-#        description: <dr>
-#      product-order-item-id:
-#        type: string
-#        description: <dr>
-  
   implRetrieveProductInOrderConfigurationResponse:
     properties:
       implBaseReturn:
@@ -1712,7 +1643,14 @@ definitions:
     properties:
       value:
         type: string
-        description: <dr> Constrained LoV (Add, Remove, Reestablish, Resume, Suspend, Change)
+        description: Constrained LoV for configuration Action type
+        enum:
+          - Add
+          - Remove
+          - Reestablish
+          - Resume
+          - Suspend
+          - Change
 
 #  ProductActivationStatus:
 #    properties:
@@ -1737,7 +1675,11 @@ definitions:
           $ref: '#/definitions/FlexAttr'
       includeByDefault:
         type: string
-        description: <dr> Constrained LoV (INCLUDED_BY_DEFAULT, MANDATORY, NOT_INCLUDED_BY_DEFAULT)
+        description: Constrained LoV for included by default
+        enum:
+          - INCLUDED_BY_DEFAULT
+          - MANDATORY
+          - NOT_INCLUDED_BY_DEFAULT
       childPricingSchema:
         type: object
         $ref: '#/definitions/PriceSchema'
@@ -1770,7 +1712,12 @@ definitions:
 #        type: object
 #        $ref: '#/definitions/PriceSchemaType'
         type: string
-        description: <dr> Constrained LoV (ADDITIONAL, BASIC, PRIMARY, DISCOUNT)
+        description: Constrained LoV for Price Schema Type 
+        enum:
+          - ADDITIONAL
+          - BASIC
+          - PRIMARY
+          - DISCOUNT
       level:
         type: string
         description: <dr>
@@ -1823,10 +1770,21 @@ definitions:
         description: <dr>
       valueBasicType:
         type: string
-        description: <dr> Constrained LoV (BL, CH, CX, DB, DT, NU)
+        description: Constrained LoV for Value Basic Type 
+        enum:
+          - BL
+          - CH
+          - CX
+          - DB
+          - DT
+          - NU
       valueRestriction:
         type: string
-        description: <dr> Constrained LoV (DI, GE, RA)
+        description: Constrained LoV for Value Restriction
+        enum:
+          - DI
+          - GE
+          - RA
       dynamicProperties:
         type: array
         items:
@@ -1900,7 +1858,11 @@ definitions:
 #        type: object
 #        $ref: '#/defintiions/CharacteristicValueRestrictionType'
         type: string
-        description: <dr> Constrained LoV (DI, GE, RA)
+        description: Constrained LoV for Value Restriction
+        enum:
+          - DI
+          - GE
+          - RA
       additionalProperties:
         type: array
         items:
@@ -1910,7 +1872,14 @@ definitions:
 #        type: object
 #        $ref: '#/defintiions/CharacteristicValueBasicType'
         type: string
-        description: <dr> Constrained LoV (BL, CH, CX, DB, DT, NU)
+        description: Constrained LoV for Value Type 
+        enum:
+          - BL
+          - CH
+          - CX
+          - DB
+          - DT
+          - NU
       name:
         type: string
         description: <dr> 
@@ -1964,7 +1933,10 @@ definitions:
 #        type: object
 #        $ref: '#/definitions/SettingsViewFilter'
         type: string
-        description: <dr> Constrained LoV (FULL, QUICK_SETTINGS)
+        description: Constrained LoV for Settings View
+        enum:
+          - FULL
+          - QUICK_SETTINGS
       retrieveSchemaPricing:
         type: boolean
         description: <dr>
@@ -2135,7 +2107,12 @@ definitions:
 #        type: object
 #        $ref: '#/definitions/ProductBusinessType'
         type: string
-        description: <dr> Constrained LoV (DEVICE, FRIENDS_AND_FAMILIY, TV_CHANNEL, TV_PACKAGE)
+        description: Constrained LoV for Business Type
+        enum:
+          - DEVICE
+          - FRIENDS_AND_FAMILIY
+          - TV_CHANNEL
+          - TV_PACKAGE
       simpleProductSpecID:
         type: string
         description: <dr>
@@ -2312,7 +2289,20 @@ definitions:
         type: array
         items:
           type: string
-        description: <dr> Constrained LoV (AMEND, CANCEL, CANCEL_OFFER, CANCEL_PARTIAL, CANCEL_REPLACE_OFFER, CREATE, DISCONTINUE, EDIT, RESUME_NEGOTIATION, TAKEOVER, WITHDRAW_AMEND, WITHDRAW_CANCEL)
+        description: Constrained LoV for allowed actions
+        enum:
+          - AMEND
+          - CANCEL
+          - CANCEL_OFFER
+          - CANCEL_PARTIAL
+          - CANCEL_REPLACE_OFFER
+          - CREATE
+          - DISCONTINUE
+          - EDIT
+          - RESUME_NEGOTIATION
+          - TAKEOVER
+          - WITHDRAW_AMEND
+          - WITHDRAW_CANCEL
       selected:
         type: boolean
         description: <dr>
@@ -2337,10 +2327,21 @@ definitions:
         description: <dr>
       action:
         type: string
-        description: <dr> Constrained LoV (AD, ES, RM, RS, SU, UP)
+        description: <dr> Constrained LoV for action 
+        enum:
+        - AD
+        - ES
+        - RM
+        - RS
+        - SU
+        - UP
       status:
         type: string
-        description: <dr> Constrained LoV (AC, CE, SU)
+        description: <dr> Constrained LoV for status 
+        enum:
+        - AC
+        - CE
+        - SU
 
   mecProductConfigOptions:
     properties:
