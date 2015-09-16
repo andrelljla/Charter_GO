@@ -333,7 +333,7 @@ paths:
         - name: getProductConfigurationOptions
           in: body
           schema:
-            $ref: '#/definitions/implProductConfigurationOptionsRequest'
+            $ref: '#/definitions/implRetrieveProductInOrderConfigurationRequest'
           required: true
           description: <dr>
 
@@ -343,7 +343,7 @@ paths:
         200:
           description: Succesful operation; return products associated with selected offers
           schema:
-            $ref: '#/definitions/implRetrieveProductOrderConfigurationResponse'
+            $ref: '#/definitions/implProductConfigurationOptionsResponse'
         default:
           description: Unexpected error
           schema:
@@ -512,31 +512,54 @@ definitions:
         
   serviceabilityObject:
     properties:
-      sysPrinAgent:
+      sys:
         type: string
-        description: <description required>
+        description: Value of SYS
+      prin:
+        type: string
+        description: Value of PRIN
+      agent:
+        type: string
+        description: Value of AGENT
       LOBServiceability:
         type: array
         items:
           $ref: '#/definitions/LOBServiceability'
+      availabilityGroup:
+        type: string
+        description: Parameter used for phone
       dwellType:
         type: string
-        description: <description required>     
+        description: Type used for competitive area     
       customerIsNew:
         type: boolean
-        description: <description required>
+        description: Indicator to indicate whether this is a new (TRUE) or existing (FALSE) customer
       customerHasActiveAccount:
         type: boolean
-        description: <description required>
+        description: Indicator to indicate whether the customer has n active account (TRUE) or not (FALSE)
       customerType:
         type: string
-        description: <description required>
+        description: Business or Residential - all Residential in current release
+        enum:
+        - Business
+        - Residential
       orderActionType:
         type: string
-        description: <description required>
+        description: Constrained LoV for Action Type (CH - Change, CE - Cease, SU - Suspend, HM - Change Move, RT - Restart, CR - Cease Restart, PR - Provide)
+        enum:
+        - CH
+        - CE
+        - SU
+        - HM
+        - RT
+        - CR
+        - PR
       userRole:
         type: string
-        description: <description required>
+        description: User Role (CSR or manager)
+        enum: 
+        - manager
+        - CSR
       offerCode:
         type: array
         items: 
@@ -761,7 +784,7 @@ definitions:
         $ref: "#/definitions/CommonNoErrorReturn"
       implRetrieveProductOrderConfigurationResponse:
         type: object
-        $ref: "#/definitions/implRetrieveProductOrderConfigurationResponse"
+        $ref: "#/definitions/ImplRetrieveProductInOrderConfigurationResponse"
         
 #############
   OrderOffer:
@@ -2365,23 +2388,23 @@ definitions:
         - CE
         - SU
 
-  mecProductConfigOptions:
-    properties:
-      productOrderItemID:
-        type: string
-        description: The ID of the ProductOrderItem
-      productOrderItemReferenceNumber:
-        type: string
-        description: Reference number of the ProductOrderItem
-      productConfiguration:
-        type: object
-        $ref: '#/definitions/TopLevelConfiguration'
-      productID:
-        type: string
-        description: ID of the product
-      productOrderItemType:
-        type: string
-        description: Action that is taken on the product
+#  mecProductConfigOptions:
+#    properties:
+#      productOrderItemID:
+#        type: string
+#        description: The ID of the ProductOrderItem
+#      productOrderItemReferenceNumber:
+#        type: string
+#        description: Reference number of the ProductOrderItem
+#      productConfiguration:
+#        type: object
+#        $ref: '#/definitions/TopLevelConfiguration'
+#      productID:
+#        type: string
+#        description: ID of the product
+#      productOrderItemType:
+#        type: string
+#        description: Action that is taken on the product
 
   implBrowsingCategoriesStructureOutput:
     properties:
@@ -2469,4 +2492,67 @@ definitions:
         description: Child Category Properties
       id:
         type: string
-        description: Category ID      
+        description: Category ID
+        
+  implRetrieveProductInOrderConfigurationRequest:
+    properties:
+      activityForConfiguration:
+        type: string
+        description: The parameter used to filter the Product Catalog rules and the Activity Designer display information.  The activity name can have any value that represents the action performed by the client and does not necessarily have to map to an activity (step) in the ordering process.
+#        required: true
+      serviceRequiredDate:
+        type: number
+        description: Charter must send system date.  Expects date as LONG.
+#        required: true
+      configurationLevel:
+        type: string
+        description: The level of configuration to be returned.  Charter must always send FULL.
+#        required: true
+        enum:
+        - FULL
+        - NOT_SELECTED
+      settingsView:
+        type: string
+        description: Need description
+#        required: true
+        enum:
+        - FULL
+        - QUICK_SETTINGS
+      returnConfigurationData:
+        type: object
+        $ref: '#/definitions/ReturnConfigurationData'
+#        required: false
+        description: Configuration Data
+        
+  ReturnConfigurationData:
+    properties:
+      productConfigurationInd:
+        type: boolean
+        description: Indicates that the entire configuration of the requested product/offer/bundle, the existing and the available options must be returned.  Mandatory - always send TRUE
+      catalogDataInd:
+        type: boolean
+        description: Indicates that the returned information includes the detailed catalog information of the requested product/offer/bundle.  Does not include prices.  Mandatory - always send TRUE.
+      quotedPricesInd:
+        type: boolean
+        description: Indicates that the returned information includes the quoted prices of the requested product/offer/bundle.  Prices do not include tax information.  Mandatory - always send TRUE.
+      summaryInd:
+        type: boolean
+        description: Indicates that the summary information of the requested product/offer/bundle must be returned.  The summary details include information of the catalog data and the instance information.  Summary details do not include pricing details.  Mandatory - always send TRUE.
+  
+  ImplRetrieveProductInOrderConfigurationResponse:
+    properties:
+      productOrderItemID:
+        type: string
+        description: The ID of the ProductOrderItem
+      productOrderItemReferenceNumber:
+        type: string
+        description: Reference number of the ProductOrderItem
+      productConfiguration:
+        type: object
+        $ref: '#/definitions/TopLevelConfiguration'
+      productID:
+        type: string
+        description: ID of the product
+      productOrderItemType:
+        type: string
+        description: Action that is taken on the product  
