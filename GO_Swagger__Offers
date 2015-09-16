@@ -1281,7 +1281,7 @@ definitions:
 
   TopLevelConfiguration:
     properties:
-      calculatedPrice: 
+      implCalculatedPrices: 
         type: array
         items:
           $ref: '#/definitions/implCalculatedPrice'
@@ -1325,7 +1325,7 @@ definitions:
       
   ProductDisplay:
     properties:
-      calculatedPrices:
+      implCalculatedPrices:
         type: array
         items:
           $ref: '#/definitions/implCalculatedPrice'
