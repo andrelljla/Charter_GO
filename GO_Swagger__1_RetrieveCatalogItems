@@ -48,8 +48,9 @@ paths:
           required: true
         - name: timestamp
           in: header
-          type: string
-          description: time the REST call was invoked
+          type: integer
+          format: int64
+          description: time the REST call was invoked, in EpochTime format
           required: true
         - name: sc
           required: true
@@ -86,38 +87,34 @@ paths:
 
 definitions:
 
-  CommonNoErrorReturn:
-    properties:
-      lineageID:
-        type: integer
-        description: Unique transaction identifier; used for transactional error handling
-      timestamp:
-        type: string
-        description: Time that the service call was returned
-
   CommonErrorReturn:
     properties:
       lineageID:
         type: integer
         description: Unique transaction identifier; used for transactional error handling
       timestamp:
-        type: string
-        description: Time that the service call was returned
+          type: integer
+          format: int64
+          description: time the REST call was returned, in EpochTime format
       errorInfo:
         type: array
         items:
-          $ref: "#/definitions/CommonErrors"
+          $ref: "#/definitions/ImplErrorInfo"
   
-  CommonErrors:
+  ImplErrorInfo:
     properties:
-      errCode:
+      errorCode:
         type: string
-      errMessage:
+        description: Error code, single string
+      errorMessage:
         type: string
-      errDescription:
+        description: Error message
+      Description:
         type: string
-      errGUID:
+        description: Description of the error in human-readable terms
+      errorUUID:
         type: string
+        description: Unique number to identify the error instance
 
   implRetrieveCatalogItemsRequest:
     properties:
@@ -240,13 +237,21 @@ definitions:
         
   implRetrieveCatalogItemsResponse:
     properties:
-      implBaseReturn:
-        type: object 
-        $ref: "#/definitions/CommonNoErrorReturn"
       implSearchResults:
         type: object
         $ref: '#/definitions/implSearchResults'
-        
+      transactionID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+          type: integer
+          format: int64
+          description: time the REST call was returned, in EpochTime format
+      implErrorInfo:
+        type: array
+        items:
+          $ref: '#/definitions/ImplErrorInfo'
+          
   implSearchResults:
     properties:
       items:
