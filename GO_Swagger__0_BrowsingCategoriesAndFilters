@@ -44,12 +44,13 @@ paths:
           required: true
           in: query
           type: string
-          description: Sales Channel identifier
+          description: Sales Channel identifier (default = CC)
         - name: locale
           required: true
           in: query
           type: string
-          description: Locale identifier, used for language translation
+          description: Locale identifier, used for language translation (default = en_US)
+          
       tags:
         - Engine Startup    
       responses:
@@ -171,6 +172,9 @@ definitions:
       id:
         type: string
         description: Category ID
+      description: 
+        type: string
+        description: Category description
         
   FilterFacet:
     properties:
