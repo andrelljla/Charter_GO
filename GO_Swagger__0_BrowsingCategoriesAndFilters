@@ -37,8 +37,9 @@ paths:
           required: true
         - name: timestamp
           in: header
-          type: string
-          description: time the REST call was invoked
+          type: integer
+          format: int64
+          description: time the REST call was invoked, in EpochTime format
           required: true
         - name: sc
           required: true
@@ -71,8 +72,9 @@ definitions:
         type: integer
         description: Unique transaction identifier; used for transactional error handling
       timestamp:
-        type: string
-        description: Time that the service call was returned
+          type: integer
+          format: int64
+          description: time the REST call was returned, in EpochTime format
       errorInfo:
         type: array
         items:
@@ -98,9 +100,9 @@ definitions:
         type: string
         description: String Value
       dateValue:
-        type: string
-        format: date
-        description: Date Value
+        type: integer
+        format: int64
+        description: Date Value, in EpochTime format
       decimalValue:
         type: number
         format: double
