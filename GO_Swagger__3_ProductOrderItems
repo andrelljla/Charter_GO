@@ -1,0 +1,248 @@
+# this is draft #1 of the comprehensive WebAPI specification for interfacing with the AMDOCS Order Engine
+swagger: '2.0'
+info:
+  title: Gateway Ordering API - AMDOCS Interface (ProductOrderItems)
+  description: This specification defines the interface between WebAPI and the AMDOCS Ordering Engine.
+  version: "1.0.0"
+# the domain of the service
+host: gateway.chartercom.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /commerce/customer/{customer-id}/product-order/{product-order-id}/product-order-items:
+    get:
+      summary: Docref W4_step2 - retrieve Products for the selected offer(s) in the order.
+      description: The Product Order Items REST service retrieves high level information of products and associated Order Actions which are included in the current order based on the OE Order ID provided as input. This information will be used later for retrieving the configuration per product. Must be called once separately for each offer selected for inclusion in the order. 
+      parameters:
+        - 
+        	name: customer-id
+          in: path
+          type: string
+          required: true
+          description: <dr>
+        - 
+        	name: product-order-id
+          in: path
+          type: string
+          required: true
+          description: <dr>
+        - 
+        	name: username
+          in: header
+          type: string
+          description: authentication username for proxy connection
+          required: true
+        - 
+        	name: password
+          in: header
+          type: string
+          description: authentication password for proxy connection
+          required: true
+        - 
+        	name: applicationID
+          in: header
+          type: string
+          description: Unique designation for the invoking application (e.g. GatewayOrdering)
+          required: true
+        - 
+        	name: timestamp
+          in: header
+          type: string
+          description: time the REST call was invoked
+          required: true
+        - 
+        	name: sc
+          required: true
+          in: query
+          type: string
+          description: Sales Channel identifier
+        - 
+        	name: locale
+          required: true
+          in: query
+          type: string
+          description: Locale identifier, used for language translation
+      tags:
+        - W4_Step2
+      responses:
+        200:
+          description: Succesful operation; return products associated with selected offers
+          schema:
+            $ref: '#/definitions/implGetProductOrderItemsResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+definitions:
+
+  CommonNoErrorReturn:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+
+  CommonErrorReturn:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+      errorInfo:
+        type: array
+        items:
+          $ref: "#/definitions/CommonErrors"
+  
+  CommonErrors:
+    properties:
+      errCode:
+        type: string
+      errMessage:
+        type: string
+      errDescription:
+        type: string
+      errGUID:
+        type: string
+
+  implGetProductOrderItemsResponse:
+    properties:
+      implBaseReturn:
+        type: object 
+        $ref: "#/definitions/CommonNoErrorReturn"
+      implProductOrderItemHeaders:
+        type: object
+        $ref: '#/definitions/implProductOrderItemHeaders'
+
+  implProductOrderItemHeaders:
+    properties:
+      implBaseReturn:
+        type: object 
+        $ref: "#/definitions/CommonNoErrorReturn"
+      mecProductConfigOptions:
+        type: object
+        $ref: '#/definitions/mecProductConfigOptions'
+
+  implCalculatedPrice:
+    properties:
+      ppCID:
+        type: string
+        description: <description required>
+      ppType:
+        type: string
+        description: <description required>
+      tierFrom:
+        type: string
+        description: <description required>
+      tierTo:
+        type: string
+        description: <description required>
+      quantityAtt:
+        type: string
+        description: <description required>
+      quantityFrom:
+        type: integer
+        description: <description required>
+      quantityTo:
+        type: integer
+        description: <description required>
+      amountType:
+        type: string
+        description: <description required>
+      amount:
+        type: integer
+        description: <description required>
+      quantity:
+        type: integer
+        description: <dr>
+      provisioningDate:
+        type: string
+        format: date
+        description: <dr>
+      
+  implProductOrderItemHeaders:
+    properties:
+      ProductOrderItemHeaders:
+        type: array
+        items:
+          $ref: '#/definitions/OrderItemHeader'
+  
+  OrderItemHeader:
+    properties:
+      productOfferingInstanceID:
+        type: string
+        description: Assigned Product ID 
+      productOfferingName:
+        type: string
+        description: <dr>
+      implCalculatedPrices:
+        type: array
+        items:
+          $ref: '#/definitions/implCalculatedPrice'
+      referenceNumber:
+        type: string
+        description: <dr>
+      productID:
+        type: string
+        description: <dr>
+      serviceRequiredDate:
+        type: string
+        format: date
+        description: <dr>
+      productServiceID:
+        type: string
+        description: <dr>
+      productName:
+        type: string
+        description: <dr>
+      allowedActions:
+        type: array
+        items:
+          type: string
+        description: Constrained of allowed actions
+        enum:
+          - AMEND
+          - CANCEL
+          - CANCEL_OFFER
+          - CANCEL_PARTIAL
+          - CANCEL_REPLACE_OFFER
+          - CREATE
+          - DISCONTINUE
+          - EDIT
+          - RESUME_NEGOTIATION
+          - TAKEOVER
+          - WITHDRAW_AMEND
+          - WITHDRAW_CANCEL
+      createdBy:
+        type: string
+        description: <dr>
+      ActionType:
+        type: string
+        description: Constrained LoV ()
+      productCatalogID:
+        type: string
+        description: <dr>
+      lineOfBusiness:
+        type: string
+        description: <dr>
+      isPartOfBundle:
+        type: boolean
+        description: <dr>
+      productLevel:
+        type: string
+        description: <dr>
+      ID:
+        type: string
+        description: Order Action ID
+      status:
+        type: string
+        description: Constrained LoV ()
