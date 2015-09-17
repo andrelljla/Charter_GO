@@ -40,10 +40,16 @@ paths:
           type: string
           description: Unique designation for the invoking application (e.g. GatewayOrdering)
           required: true
-        - name: timestamp
+        - name: transactionId
           in: header
           type: string
-          description: time the REST call was invoked
+          required: true
+          description: A unique ID for a certain REST call
+        - name: timestamp
+          in: header
+          type: integer
+          format: int64
+          description: time the REST call was invoked, in EpochTime format
           required: true
         - name: sc
           required: true
@@ -74,40 +80,38 @@ paths:
 
 definitions:
 
-  CommonNoErrorReturn:
-    properties:
-      lineageID:
-        type: integer
-        description: Unique transaction identifier; used for transactional error handling
-      timestamp:
-        type: string
-        description: Time that the service call was returned
-
   CommonErrorReturn:
     properties:
-      lineageID:
-        type: integer
+      transactionId:
+        type: string
         description: Unique transaction identifier; used for transactional error handling
       timestamp:
-        type: string
-        description: Time that the service call was returned
+        type: integer
+        format: int64
+        description: Time that the service call was returned in EpochTime format
       errorInfo:
         type: array
         items:
-          $ref: "#/definitions/CommonErrors"
+          $ref: "#/definitions/ImplErrorInfo"
   
-  CommonErrors:
+  ImplErrorInfo:
     properties:
-      errCode:
+      errorCode:
         type: string
-      errMessage:
+      errorMessage:
         type: string
-      errDescription:
+      Description:
         type: string
-      errGUID:
+      errorUUID:
         type: string
 
   implCreateOrderRequest:
+    properties:
+      implCreateOrderInput:
+        type: object
+        $ref: '#/definitions/implCreateOrderInput'
+
+  implCreateOrderInput:
     properties:
       addressID:
         type: string
@@ -129,16 +133,6 @@ definitions:
         items:
           $ref: '#/definitions/AssignedProduct'
 
-  implCreateOrderResponse:
-    properties:
-      implBaseReturn:
-        type: object 
-        $ref: "#/definitions/CommonNoErrorReturn"    
-      orderID:
-        type: string
-        description: Unique identifier (within Order Engine) used by Gateway Ordering for all communication with Order Engine during the transaction. 
-
-#############
   OrderOffer:
     properties:
       offerID:
@@ -167,3 +161,23 @@ definitions:
          - RT
          - CR
          - PR
+
+  implCreateOrderResponse:
+    properties:
+      implCreateOrderOutput:
+        type: object
+        $ref: '#/definitions/implCreateOrderOutput'
+      transactionID:
+        type: string
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: integer
+        format: int64
+        description: Time that the service call was returned, in EpochTime format
+
+  implCreateOrderOutput:
+    properties:
+      orderID:
+        type: string
+        description: Unique identifier (within Order Engine) used by Gateway Ordering for all communication with Order Engine during the transaction. 
+        
