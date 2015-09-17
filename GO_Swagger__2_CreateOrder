@@ -111,19 +111,19 @@ definitions:
     properties:
       addressID:
         type: string
-        description: <description required>
+        description: SOLO ID of the location
       userID:
         type: string
-        description: <description required>
+        description: User ID (for role-based eligibility determination)
       ImplOfferID:
         type: array
         items:
           $ref: '#/definitions/OrderOffer'
         description: <description required>
       serviceRequiredDate:
-        type: string
-        format: date
-        description: <description required>
+        type: integer
+        format: int64
+        description: Date service is being requested; submitted in EpochTime format (milliseconds since 1/1/1970 00:00 GMT)
       ImplAssignedProduct:
         type: array
         items:
@@ -146,7 +146,7 @@ definitions:
         description: Offer catalog ID
       orderActionType:
         type: string
-        description: Order action type for this offer
+        description: Order action type for this offer (PR-Provide, PV-Provide Move)
         enum:
           - PR
           - PV
@@ -158,7 +158,7 @@ definitions:
         description: Assigned Product ID
       orderActionType:
         type: string
-        description: action type for this specific product
+        description: action type for this specific product (CH-Change, CE-Cease, SU-Suspend, HM-Change Move, RT-Restart, CR-Cease Restart, PR-Provide)
         enum:
          - CH
          - CE
@@ -166,3 +166,4 @@ definitions:
          - HM
          - RT
          - CR
+         - PR
