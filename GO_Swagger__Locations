@@ -38,17 +38,7 @@ paths:
           required: true
           type: string
           description: Code identifying invoking application or sales channel
-#        - name: timestamp
-#          in: header
-#          required: true
-#          type: string
-#          format: date-time
-#          description: Time that the service call was invoked
-#        - name: invokingUser
-#          in: header
-#          required: true
-#          type: string
-#          description: User name for the actual user that invoked the call (for audit purpose)
+
       tags:
         - W13
         - W18
@@ -84,17 +74,6 @@ paths:
           required: true
           type: string
           description: Code identifying invoking application or sales channel
-#        - name: timestamp
-#          in: header
-#          required: true
-#          type: string
-#          format: date-time
-#          description: Time that the service call was invoked
-#        - name: invokingUser
-#          in: header
-#          required: true
-#          type: string
-#          description: User name for the actual user that invoked the call (for audit purpose)
 
       tags:
         - W16
@@ -125,17 +104,6 @@ paths:
           required: true
           type: string
           description: Code identifying invoking application or sales channel
-#        - name: timestamp
-#          in: header
-#          required: true
-#          type: string
-#          format: date-time
-#          description: Time that the service call was invoked
-#        - name: invokingUser
-#          in: header
-#          required: true
-#          type: string
-#          description: User name for the actual user that invoked the call (for audit purpose)
         - 
           name: addrStreetLine1
           type: string
@@ -171,7 +139,7 @@ paths:
         - W18
       responses:
         200:
-          description: Successful completion; return location serviceability
+          description: Successful completion; return location ID from SOLO
           schema:
             $ref: '#/definitions/LocationIDLookupResponse'
         default:
@@ -187,17 +155,6 @@ definitions:
 #
 ##############################################
 
-#  ServiceableLocationRequest:
-#    properties:
-#      commonInputHeader:
-#        type: object
-#        $ref: '#/definitions/CommonInputHeader'
-#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-#      commonAddress:
-#        type: object
-#        $ref: '#/definitions/locationLookupByAddress'
-#        decription: <dr>
-#                  
   LocationIDLookupResponse:
     properties:
       commonReturn: 
@@ -208,56 +165,44 @@ definitions:
         type: integer
         description: Unique identifier for the location.
 
-#  ServiceabilityAtLocationRequest:
-#    properties:
-#      commonInputHeader:
-#        type: object
-#        $ref: '#/definitions/CommonInputHeader'
-#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-  
   ServiceabilityAtLocationResponse:
     properties:
-      commonReturn: 
-        type: object
-        $ref: '#/definitions/CommonNoErrorReturnHeader'
-        description: <dr>
-#      locationServiceabilityDetail: 
+#      commonReturn: 
 #        type: object
-#        $ref: '#/definitions/LocationServiceabilityDetail'
+#        $ref: '#/definitions/CommonNoErrorReturnHeader'
 #        description: <dr>
-      addressID:
-        description: Address/location identifier being queried for serviceability
-      dwellingType:
-        type: string
-        description: Code describing the type of dwelling present at the location.
-      managementArea:
-        type: string
-        description: Telephone number management area.
-      rateCenter:
-        type: string
-        description: Rate center associated with the location.
-      market:
-        type: string
-        description: Market associated with the location.
-      FTA:
-        type: string
-        description: Franchise tax area associated with the location.
-      lobProductServiceability:
-        type: array
-        items:
-          $ref: '#/definitions/LoBProductServiceability'
-      overbuilderIndicator:
-        type: array
-        items:
-          type: string
+#      addressID:
+#        description: Address/location identifier being queried for serviceability
+#      dwellingType:
+#        type: string
+#        description: Code describing the type of dwelling present at the location.
+#      managementArea:
+#        type: string
+#        description: Telephone number management area.
+#      rateCenter:
+#        type: string
+#        description: Rate center associated with the location.
+#      market:
+#        type: string
+#        description: Market associated with the location.
+#      FTA:
+#        type: string
+#        description: Franchise tax area associated with the location.
+#      lobProductServiceability:
+#        type: array
+#        items:
+#          $ref: '#/definitions/LoBProductServiceability'
+#      overbuilderIndicator:
+#        type: array
+#        items:
+#          type: string
+      Result:
+        type: object
+        $ref: '#/definitions/eiaResultHeader'
+      ServiceabiltyResult:
+        type: object
+        $ref: '#/definitions/ServiceabilityResult'
 
-#  ActiveServicesAtLocationRequest:
-#    properties:
-#      commonInputHeader:
-#        type: object
-#        $ref: '#/definitions/CommonInputHeader'
-#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-  
   ActiveServicesAtLocationResponse:
     properties:
       commonReturn: 
@@ -274,27 +219,6 @@ definitions:
 #	Common Object definitions
 #
 ##############################################
-
-#  CommonInputHeader:
-#    properties:
-#      username:
-#        type: string
-#        description: Encrypted username for proxy user authentication
-#      password:
-#        type: string
-#        description: Encrypted passaord for proxy user authentication
-#      invokingUser:
-#        type: string
-#        description: User name for the actual user that invoked the call (for audit purpose)
-#      applicationID:
-#       type: string
-#       description: Code identifying invoking application
-#      lineageID:
-#       type: integer
-#        description: Unique transaction identifier; used for transactional error handling
-#      timestamp:
-#        type: string
-#        description: Time that the service call was invoked
 
   CommonNoErrorReturnHeader:
     properties:
@@ -335,30 +259,6 @@ definitions:
 #
 ##############################################
 
-#  LocationServiceabilityDetail:
-#    properties:
-#      addressID:
-#        description: Address/location identifier being queried for serviceability
-#      dwellingType:
-#        type: string
-#        description: Code describing the type of dwelling present at the location.
-#      managementArea:
-#        type: string
-#        description: Telephone number management area.
-#      rateCenter:
-#        type: string
-#        description: Rate center associated with the location.
-#      market:
-#        type: string
-#        description: Market associated with the location.
-#      FTA:
-#        type: string
-#        description: Franchise tax area associated with the location.
-#      lobProductServiceability:
-#        type: array
-#        items:
-#          $ref: '#/definitions/LoBProductServiceability'
-
   LoBProductServiceability:
     properties:
       lobName: 
@@ -382,22 +282,149 @@ definitions:
       biller:
         type: string
         description: Designator for which billing system serves the particular address in question 
+        
+  cciaServiceability:
+    properties:
+      locationAvailableServices:
+        type: Object
+        $ref: '#/definitions/locationAvailableServices'
+        description: Key object returned from CCIA serviceabilty check
+        
+  locationAvailableServices:
+    properties:
+      addressLine1:
+        type: string
+        description: First line of address returned
+      city:
+        type: string
+        description: City of address returned
+      state:
+        type: string
+        description: State of address returned
+      ZipCode:
+        type: string
+        description: Base ZIP Code of address returned
+      ZipCode4:
+        type: string
+        description: ZIP+$ extension of address returned
+      BillingSystem:
+        type: string
+        description: Billing system location ID
+      HouseRef:
+        type: string
+        description: Billing system house reference
+      EntityID:
+        type: string
+        description: billing system entity ID
+      FTA:
+        type: string
+        description: Franchise Tax Area of address returned
+      BillingProvider:
+        type: string
+        description: Billing provider for the address returned
+      Status:
+        type: string
+        description: Service status (ACTIVE, PAST, NEVER) for Charter services at the address returned
+        enum:
+        - ACTIVE
+        - NEVER
+        - DISCONNECT
+      Sys:
+        type: string
+        description: SYS for address returned
+      Prin:
+        type: string
+        description: PRIN for address returned
+      Agent:
+        type: string
+        description: AGENT for address returned
+      Co:
+        type: string
+        description: COMPANY of address returned
+      Div:
+        type: string
+        description: DIVISION of address returned
+      RateCenter:
+        type: string
+        description: Controlling Rate Center of address returned
+      Bulk:
+        type: boolean
+        description: Bulk indicator
+      NonPay:
+        type: boolean
+        description: An account at returned address is in NON-PAY status
+      OverbuilderIndicator:
+        type: string
+        description: Address returned is part of overbuilder complex
+      DwellingTypeCategory:
+        type: string
+        description: Type of dwelling at returned address
+        enum:
+        - OTHER
+      LocationStatus:
+        type: string
+        description: Code representing specific serviceability (e.g. S7)
+      DeliverySegmentIndicatorCable:
+        type: string
+        description: Cable service segment indicator
+      DeliverySegmentIndicatorInternet:
+        type: string
+        description: Internet service segment indicator
+      DeliverySegmentIndicatorTelephone:
+        type: string
+        description: Telephone service segment indicator
+      ServiceStatusCable:
+        type: string
+        description: cable service status code
+      ServiceStatusInternet:
+        type: string
+        description: Internet service status code
+      ServiceStatusTelephone:
+        type: string
+        description: Telephone service status code
+      Service:
+        type: array
+        items:
+          $ref: '#/deescription/serviceServiceability'
+      
+  serviceServiceability:
+    properties:
+      Description: 
+        type: string
+        description: service description
+      Available:
+        type: boolean
+        description: Evaluation of `Service Is Available?`
+        
+  eiaResultHeader:
+    properties:
+      ReturnCode:
+        type: string
+        description: Indicator if process successfully completed
+      ReferenceCode:
+        type: string
+        description: Unique identifier for the specific service transaction (passed from sender?)
+      Type:
+        type: string
+        description: Type of message
+      Description:
+        type: string
+        description: Description of service message
+      DateTime:
+        type: string
+        format: date
+        description: date/time that the service returned
+      Source:
+        type: string
+        description: Invoking service call
+      Server:
+        type: string
+        description: Server node on which service was implemented 
 
-#  locationLookupByAddress:
-#    properties:
-#      addressLine1:
-#        type: string
-#        descriprtion: <dr>
-#      addressLine2:
-#        type: string
-#        descriprtion: <dr>
-#      addressCity:
-#        type: string
-#        descriprtion: <dr>
-#      addressStateCode:
-#        type: string
-#        descriprtion: <dr>
-#      addressZipCode:
-#        type: string
-#        descriprtion: <dr>
+  ServiceabilityResult:
+    properties:
+      LocationAvailableServices:
+        type: object
+        $ref: '#/defintiions/LocationAvailableServices'
+        
       
