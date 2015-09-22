@@ -49,8 +49,7 @@ paths:
     
   /inProcessOrders/v1/{inProcessOrderID}:
     get:
-      description: |
-        Searches for `inProcessOrder` characteristics for the `order` whose ID is specified in the URI.
+      description: Searches for `inProcessOrder` characteristics for the `order` whose ID is specified in the URI.
       parameters:
         - 
           name: X-Charter-Transaction-ID
@@ -84,10 +83,49 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
-  /inProcessOrders/v1/{inProcessOrderID}/opcOrderHeader:
+#  /inProcessOrders/v1/{inProcessOrderID}/opcOrderHeader:
+#    put:
+#      summary: Add the Order Header (metadata) Information
+#      description: The order header information describes some general information that applies to all items in the order (e.g. Reason, Sales Agent, Service Requested Date, etc.).
+#      parameters:
+#        - 
+#          name: X-Charter-Transaction-ID
+#          in: header
+#          required: true
+#          type: string
+#          description: Unique transaction identifier; used for transactional error handling
+#        - 
+#          name: X-Charter-Application-ID
+#          in: header
+#          required: true
+#          type: string
+#          description: Code identifying invoking application or sales channel
+#        -
+#          name: inProcessOrderID
+#          in: path
+#          description: Unique identifier for an `inProcessOrder`
+#          required: true
+#          type: integer
+#        - 
+#          name: OrderHeader
+#          in: body
+#          schema:
+#            $ref: '#/definitions/opcOrderHeader' 
+#          description: Line items (in offer/product/component form) to be added to the in-Process Order
+#
+#      tags:
+#        - IPO_Header
+#
+#      responses:
+#        200:
+#          description: Items successfully added; return number of lines added
+#          schema:
+#            $ref: '#/definitions/ipoStatusResponse' 
+
+  /inProcessOrders/v1/{inProcessOrderID}/validatedOrder:
     put:
-      summary: Add the Order Header (metadata) Information
-      description: The order header information describes some general information that applies to all items in the order (e.g. Reason, Sales Agent, Service Requested Date, etc.).
+      summary: Add the Order Items and attributes to the specified order
+      description: The Order Items set contains all the offer/product/component services to be included with the order.  This is populated from the ImplProductConfigurationRepsonse (return from OE Order Validation) and translated from OE-specific structure into the itsm and attributes portions of the standard Charter-specific OPC Order Structure contained herein.  Orchestrate with an update of the order status to VALIDATED.
       parameters:
         - 
           name: X-Charter-Transaction-ID
@@ -107,120 +145,26 @@ paths:
           description: Unique identifier for an `inProcessOrder`
           required: true
           type: integer
-      
         - 
-          name: OrderHeader
+          name: orderItems
           in: body
-          schema:
-#            $ref: '#/definitions/Placeholder' 
-            $ref: '#/definitions/opcOrderHeader' 
-          description: Line items (in offer/product/component form) to be added to the in-Process Order
-
-      tags:
-        - IPO_Header
-
-      responses:
-        200:
-          description: Items successfully added; return number of lines added
-          schema:
-            $ref: '#/definitions/Placeholder' 
-#            $ref: '#/definitions/orderItemsResponse'
-    
-  /inProcessOrders/v1/{inProcessOrderID}/opcOrderItems:
-    put:
-      summary: Add the Order Items to the specified order
-      description: The Order Items set contains all the offer/product/component services to be included with the order.
-      parameters:
-        - 
-          name: X-Charter-Transaction-ID
-          in: header
-          required: true
-          type: string
-          description: Unique transaction identifier; used for transactional error handling
-        - 
-          name: X-Charter-Application-ID
-          in: header
-          required: true
-          type: string
-          description: Code identifying invoking application or sales channel
-        -
-          name: inProcessOrderID
-          in: path
-          description: Unique identifier for an `inProcessOrder`
-          required: true
-          type: integer
-
-        - 
-          name: OrderItems
-          in: body
-#            $ref: '#/definitions/Placeholder' 
           schema: 
             $ref: '#/definitions/opcOrderItems' 
           description: Line items (in offer/product/component form) to be added to the in-Process Order.  Supports simultaneous addition of attributes.
 
       tags:
-        - IPO_Items
+        - validtedOffer
 
       responses:
         200:
-          description: Items successfully added; return number of lines added
+          description: Items successfully added; return order status
           schema:
-            $ref: '#/definitions/Placeholder' 
-#            $ref: '#/definitions/orderItemsResponse'
+            $ref: '#/definitions/ipoStatusResponse'
 
-  /inProcessOrders/v1/{inProcessOrderID}/opcOrderItems/{itemNumber}/attributes:
-    post:
-      summary: Assign an attribute or set of attributes for the specified order item
-      description: <dr>
-      parameters:
-        - 
-          name: X-Charter-Transaction-ID
-          in: header
-          required: true
-          type: string
-          description: Unique transaction identifier; used for transactional error handling
-        - 
-          name: X-Charter-Application-ID
-          in: header
-          required: true
-          type: string
-          description: Code identifying invoking application or sales channel
-        -
-          name: inProcessOrderID
-          in: path
-          description: Unique identifier for an `inProcessOrder`
-          required: true
-          type: integer
-
-        -
-          name: itemNumber
-          in: path
-          description: Unique identifier, when combined with OrderID for a specifiec item in an `inProcessOrder`
-          required: true
-          type: integer
-
-        - 
-          name: Attributes
-          in: body
-          schema:
-            $ref: '#/definitions/Placeholder' 
-#            $ref: '#/definitions/Attributes' 
-          description: Attribute value details
-
-      tags:
-        - IPO_Attributes
-
-      responses:
-        200:
-          description: Items successfully added; return number of attributes created/assigned
-          schema:
-            $ref: '#/definitions/Placeholder' 
-#            $ref: '#/definitions/orderItemsResponse'
-
-  /inProcessOrders/v1/{inProcessOrderID}/opcOrderItems/{itemNumber}/attributes/{attributeID}:
+  /inProcessOrders/v1/{inProcessOrderID}/submittedOrder:
     put:
-      summary: Update an attribute value for the specified order item line
-      description: <dr>
+      summary: Update IPO with transaction-specific data from BIL
+      description: On return from BIL, we will have references for the Biller Order, SOLO Product and Work Orders and the SOLO MEC Order, in addition to any new entries in other reference tables resulting from the proces (PARTY, ACCOUNT, etc). Orchestrate with an update of the order status to SUBMITTED.
       parameters:
         - 
           name: X-Charter-Transaction-ID
@@ -240,40 +184,121 @@ paths:
           description: Unique identifier for an `inProcessOrder`
           required: true
           type: integer
-
-        -
-          name: itemNumber
-          in: path
-          description: Unique identifier, when combined with OrderID for a specifiec item in an `inProcessOrder`
-          required: true
-          type: integer
-
-        -
-          name: attributeID
-          in: path
-          description: Unique identifier, when combined with OrderID and itemNumber for a specifiec attribute of an item in an `inProcessOrder`
-          required: true
-          type: integer
-
         - 
-          name: Attribute
+          name: bilReference
           in: body
-          schema:
-            $ref: '#/definitions/Placeholder' 
-#            $ref: '#/definitions/Attribute' 
-          description: Attribute value details
+          schema: 
+            $ref: '#/definitions/bilReference' 
+          description: Line items (in offer/product/component form) to be added to the in-Process Order.  Supports simultaneous addition of attributes.
 
       tags:
-        - IPO_Attributes
+        - submittedOffer
 
       responses:
         200:
-          description: Items successfully added; return updated attribute
+          description: Items successfully added; return order status
           schema:
-            $ref: '#/definitions/Placeholder' 
+            $ref: '#/definitions/ipoStatusResponse'
+
+#  /inProcessOrders/v1/{inProcessOrderID}/opcOrderItems/{itemNumber}/attributes:
+#    post:
+#      summary: Assign an attribute or set of attributes for the specified order item
+#      description: <dr>
+#      parameters:
+#        - 
+#         name: X-Charter-Transaction-ID
+#          in: header
+#          required: true
+#          type: string
+#          description: Unique transaction identifier; used for transactional error handling
+#        - 
+#         name: X-Charter-Application-ID
+#          in: header
+#          required: true
+#          type: string
+#          description: Code identifying invoking application or sales channel
+#        -
+#          name: inProcessOrderID
+#          in: path
+#          description: Unique identifier for an `inProcessOrder`
+#          required: true
+#          type: integer
+#        -
+#          name: itemNumber
+#          in: path
+#          description: Unique identifier, when combined with OrderID for a specifiec item in an `inProcessOrder`
+#          required: true
+#          type: integer
+#        - 
+#          name: Attributes
+#          in: body
+#          schema:
+#            $ref: '#/definitions/Placeholder' 
+#          description: Attribute value details
+#
+#      tags:
+#        - IPO_Attributes
+#
+#      responses:
+#        200:
+#          description: Items successfully added; return number of attributes created/assigned
+#          schema:
+#            $ref: '#/definitions/Placeholder' 
+
+#  /inProcessOrders/v1/{inProcessOrderID}/opcOrderItems/{itemNumber}/attributes/{attributeID}:
+#    put:
+#      summary: Update an attribute value for the specified order item line
+#      description: <dr>
+#      parameters:
+#        - 
+#          name: X-Charter-Transaction-ID
+#          in: header
+#          required: true
+#          type: string
+#          description: Unique transaction identifier; used for transactional error handling
+#        - 
+#          name: X-Charter-Application-ID
+#          in: header
+#          required: true
+#          type: string
+#          description: Code identifying invoking application or sales channel
+#        -
+#          name: inProcessOrderID
+#          in: path
+#          description: Unique identifier for an `inProcessOrder`
+#          required: true
+#          type: integer
+#        -
+#          name: itemNumber
+#          in: path
+#          description: Unique identifier, when combined with OrderID for a specifiec item in an `inProcessOrder`
+#          required: true
+#          type: integer
+#        -
+#          name: attributeID
+#          in: path
+#          description: Unique identifier, when combined with OrderID and itemNumber for a specifiec attribute of an item in an `inProcessOrder`
+#          required: true
+#          type: integer
+#        - 
+#          name: Attribute
+#          in: body
+#          schema:
+#            $ref: '#/definitions/Placeholder' 
+#            $ref: '#/definitions/Attribute' 
+#          description: Attribute value details
+#
+#      tags:
+#        - IPO_Attributes
+#
+#      responses:
+#        200:
+#          description: Items successfully added; return updated attribute
+#          schema:
+#            $ref: '#/definitions/ipoStatusResponse' 
 #            $ref: '#/definitions/orderItemsResponse'
 
-  /inProcessOrders/v1/{inProcessOrderID}/orderVerification:
+  /inProcessOrders/v1/{inProcessOrderID}/thirdPartyVerification:
     put:
       summary: Add 'V&V' information to the specified order
       description: Certain items in an order will have additional Verification and Validation ('V&V') criteria associated with them (e.g. TPV for ported TNs).  While generated because of specific items, 'V&V' will be maintained at the order (header) level; a single set of 'V&V' data will cover the entire order.
@@ -301,26 +326,124 @@ paths:
           name: OrderValidationVerification
           in: body
           schema:
-#            $ref: '#/definitions/Placeholder' 
             $ref: '#/definitions/orderVerification' 
           description: Line items (in offer/product/component form) to be added to the in-Process Order.  Supports simultaneous addition of attributes.
 
       tags:
-        - IPO_Verification
+        - tpvVerification
 
       responses:
         200:
-          description: Items successfully added; return number of lines added
+          description: Items successfully added; return status
           schema:
-            $ref: '#/definitions/Placeholder' 
-#            $ref: '#/definitions/orderItemsResponse'
+            $ref: '#/definitions/ipoStatusResponse' 
+
+  /inProcessOrders/v1/{inProcessOrderID}/scheduledOrder:
+    put:
+      summary: Update IPO with schedule information
+      description: <dr>
+      parameters:
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        -
+          name: inProcessOrderID
+          in: path
+          description: Unique identifier for an `inProcessOrder`
+          required: true
+          type: integer
+        - 
+          name: orderSchedule
+          in: body
+          schema:
+            $ref: '#/definitions/orderSchedule' 
+          description: <dr>
+
+      tags:
+        - scheduledOrder
+
+      responses:
+        200:
+          description: Items successfully added; return status
+          schema:
+            $ref: '#/definitions/ipoStatusResponse' 
+
+  /inProcessOrders/v1/{inProcessOrderID}/customerPrePay:
+    put:
+      summary: Update IPO with schedule information
+      description: <dr>
+      parameters:
+        - 
+          name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - 
+          name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        -
+          name: inProcessOrderID
+          in: path
+          description: Unique identifier for an `inProcessOrder`
+          required: true
+          type: integer
+        - 
+          name: customerPII
+          in: body
+          schema:
+            $ref: '#/definitions/PII' 
+          description: <dr>
+
+      tags:
+        - customerPrePay
+
+      responses:
+        200:
+          description: Pre-pay determination successfully complete; return details
+          schema:
+            $ref: '#/definitions/ipoStatusResponse' 
+  
 
 definitions:
 
-  Placeholder:
+  SuccessReturn:
     properties:
-      foo:
-        type: integer
+      X-Charter-Transaction-ID:
+        type: string
+        description: Return the transaction ID submitted for lineage tracking
+      timestamp:
+        type: string
+        format: datetime
+        description: date/time that the service returned
+  
+  ipoStatusResponse:
+    properties:
+      SuccessReturn:
+        type: object
+        $ref: '#/definitions/SuccessReturn'
+      ipoStatus:
+        type: string
+        description: Status of the in-process-order following the successful completion of the operation
+        enum:
+        - CREATED
+        - VALIDATED
+        - SUBMITTED
+        - SCHEDULED
+        - CREDITCHECK
+        - CONFIRMED
         
   inProcessOrder:
     properties:
@@ -486,38 +609,7 @@ definitions:
         type: string
       postalCode:
         type: string
-        
-#  scheduledWorkOrder:
-#    properties:
-#      workOrderID:
-#        type: integer
-#        description: Unique identifier of the work order 
-#      specialInstructionsTech:
-#        type: string
-#        description: <dr>
-#      specialInstructionsDispatch:
-#        type: string
-#        description: <dr>
-#      woCallFirstFlag:
-#        type: string
-#        description: <dr>
-#      woCallFirstTN:
-#        type: string
-#        description: <dr>
-#      serviceWindowID:
-#        type: string
-#        description: ID of the schedule window assigned in the schedule and quota management system for this work order
-#    scheduleDate:
-#       type: string
-#       format: date
-#       description: The date on which the work order is scheduled to be performed
-#      scheduleStartTime:
-#        type: string
-#        description: Time the work is scheduled to begin
-#      scheduledEndTime:
-#        type: string
-#        description: Time the work is schedueld to be complete
-        
+
   Party:
     properties:
       id:
@@ -935,18 +1027,17 @@ definitions:
         type: string
         description: Contact/callback eMail address for the individual regarding the order
         
-
-  CommonNoErrorReturnHeader:
-    properties:
+#  CommonNoErrorReturnHeader:
+#    properties:
 #      X-Charter-Transaction-ID:
-      lineageID:
-        type: string
-        description: Unique transaction identifier; used for transactional error handling.  Mapped from X-Charter-Transaction-ID.
+#      lineageID:
+#        type: string
+#        description: Unique transaction identifier; used for transactional error handling.  Mapped from X-Charter-Transaction-ID.
 
   CommonErrorReturn:
     properties:
-#      X-Charter-Transaction-ID:
-      lineageID:
+      X-Charter-Transaction-ID:
+#      lineageID:
         type: string
         description: Unique transaction identifier; used for transactional error handling  Mapped from X-Charter-Transaction-ID.
       errorInfo:
@@ -956,20 +1047,20 @@ definitions:
 
   CommonErrors:
     properties:
-      errCode:
+      errorCode:
         type: string
-      errMessage:
+      errorMessage:
         type: string
-      errDescription:
+      description:
         type: string
-      errGUID:
+      errorUUID: 
         type: string
         
   inProcessOrderCreation:
     properties:
       commonNoErrorReturnHeader:
         type: object
-        $ref: '#/definitions/CommonNoErrorReturnHeader'
+        $ref: '#/definitions/SuccessReturn'
       inProcessOrderID:
         type: integer
         description: Unique identifier for the in-Proces order
@@ -1020,58 +1111,18 @@ definitions:
           - Service Request
           - Special Request
           - Trouble Call
-#      workOrderID:
-#        type: integer
-#        description: Unique identifier of the work order 
       specialInstructionsTech:
         type: string
         description: <dr>
       specialInstructionsDispatch:
         type: string
         description: <dr>
-#      woCallFirstFlag:
-#        type: string
-#        description: <dr>
       woCallFirstTN:
         type: string
         description: <dr>
       serviceWindowID:
         type: string
         description: ID of the schedule window assigned in the schedule and quota management system for this work order
-#      scheduleDate:
-#        type: string
-#        format: date
-#        description: The date on which the work order is scheduled to be performed
-#      scheduleStartTime:
-#        type: string
-#        description: Time the work is scheduled to begin
-#      scheduledEndTime:
-#        type: string
-#        description: Time the work is schedueld to be complete
-
-      
-#  WorkOrderCollection:
-#    description: Standard HATEOAS wrapper for a collection, including the array of `Work Orders` and an array of links definining possible operations on the collection
-#    properties:
-#      content:
-#        type: array
-#        items:
-#          $ref: "#/definitions/WorkOrder"
-#      links:
-#        type: array
-#        items:
-#          $ref: "#/definitions/Link"
-
-#  CustomerCreditCheckResponse:
-#    properties:
-#      commonReturn: 
-#        type: object
-#        $ref: '#/definitions/CommonNoErrorReturnHeader'
-#        description: <dr>
-#      customerCreditCheckReturn:
-#        type: object
-#        $ref: '#/definitions/customerVerification'
-#        description: <dr>
 
   customerVerification:
     properties:
@@ -1114,3 +1165,32 @@ definitions:
         type: number
         format: double
 
+  bilReference:
+    properties:
+      soloAccountID:
+        type: integer
+        description: Unique identifer for the account in the Biller Isolation layer
+      soloPartyID:
+        type: integer
+        description: Unique identifer for the responsible party in the Biller Isolation layer
+      soloAddressID:  
+        type: integer
+        description: Unique identifer for the service address tied to the account in the Biller Isolation layer
+      soloProductOrderID:
+        type: integer
+        description: Unique identifer for the product order tied to the account in the Biller Isolation layer
+      soloWorkOrderID:
+        type: integer
+        description: Unique identifer for the work order (job) tied to the account in the Biller Isolation layer
+      mecOrderID:
+        type: integer
+        description: Unique identifer for the OPC (MEC) order in the Biller Isolation layer
+      billerAccountNum:
+        type: string
+        description: Unique identifer for the account in the Biller
+      billerProductOrderNum:
+        type: string
+        description: Unique identifer for the product order tied to the account in the Biller 
+      billerWorkOrderNum:
+        type: string
+        description: Unique identifer for the work order (job) tied to the account in the Biller
