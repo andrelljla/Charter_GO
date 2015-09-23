@@ -823,38 +823,38 @@ definitions:
         type: integer
         description: <dr>
 
-  customerInformationReturn:
-    properties:
-      firstName:
-        type: string
-        description: Given name
-      lastName:
-        type: string
-        description: Family name
-      primaryTN:
-        type: string
-        description: Primary telephone number
-      primaryTNType:
-        type: string
-        description: Primary telephone number type designation (home, work, cell, etc)
-      alternateTN:
-        type: string
-        description: Alternate telephone number
-      alternateTNType:
-        type: string
-        description: Alternate telephone number type designation (home, work, cell, etc)
-      OtherTN:
-        type: string
-        description: Other alternate telephone number
-      OtherTNType:
-        type: string
-        description: Other alternate telephone number type designation (home, work, cell, etc)
-      email:
-        type: string
-        description: <dr>
-      customerID:
-        type: integer
-        description: <dr>
+#  customerInformationReturn:
+#    properties:
+#      firstName:
+#        type: string
+#        description: Given name
+#      lastName:
+#        type: string
+#        description: Family name
+#      primaryTN:
+#        type: string
+#        description: Primary telephone number
+#      primaryTNType:
+#        type: string
+#        description: Primary telephone number type designation (home, work, cell, etc)
+#      alternateTN:
+#        type: string
+#        description: Alternate telephone number
+#      alternateTNType:
+#        type: string
+#        description: Alternate telephone number type designation (home, work, cell, etc)
+#      OtherTN:
+#       type: string
+#       description: Other alternate telephone number
+#      OtherTNType:
+#        type: string
+#        description: Other alternate telephone number type designation (home, work, cell, etc)
+#      email:
+#        type: string
+#        description: <dr>
+#      customerID:
+#        type: integer
+#        description: <dr>
           
   postalAddress:
     properties:
