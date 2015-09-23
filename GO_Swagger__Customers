@@ -518,11 +518,19 @@ definitions:
         description: Name prefix/Title of the individual (e.g. Mr, Mrs, Dr)
       indivNameSuffix:
         type: string
-        description: Name suffix of the individual 9e.g. Jr, III, IV)
+        description: Name suffix of the individual (e.g. Jr, III, IV)
       partyAddress:
         type: array
         items:
           $ref: '#/definitions/postalAddress'
+      partyTelephone:
+        type: array
+        items:
+          $ref: '#/definitions/TelephoneNumber'
+      partyEMail:
+        type: array
+        item:
+          $ref: '#/definitions/eMailAddress'
       customerAccountLookupReturn:
         type: array
         items:
