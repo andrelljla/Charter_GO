@@ -393,9 +393,12 @@ definitions:
         description: Address returned is part of overbuilder complex
       DwellingTypeCategory:
         type: string
-        description: Type of dwelling at returned address
+        description: Category of dwelling at returned address
         enum:
         - OTHER
+      DwellType:
+        type: string
+        description: Dwelling Type
       LocationStatus:
         type: string
         description: Code representing specific serviceability (e.g. S7)
