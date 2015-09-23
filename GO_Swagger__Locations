@@ -15,10 +15,64 @@ produces:
   - application/json
 paths:
 
+  /serviceability:
+    get:
+      summary: Get location serviceability based on address parameters
+      description: Given only a set of address parameters, return the LoB Serviceability for that location.  Relies on the EA service to find the addressID given the address parameters.
+      parameters:
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        - name: addrStreetLine1
+          type: string
+          in: query
+          required: true
+          description: Line 1 of the street address component of the address lookup 
+        - name: addrStreetLine2
+          type: string
+          in: query
+          required: false
+          description: Line 2 of the street address component of the address lookup  
+        - name: addrCity
+          type: string
+          in: query
+          required: false
+          description: City component of the address lookup
+        - name: addrState
+          type: string
+          in: query
+          required: false
+          description: State component of the address lookup
+        - name: addrZIP
+          type: string
+          in: query
+          required: false
+          description: ZIP Code component of the address lookup
+
+      tags:
+        - W18
+      responses:
+        200:
+          description: Successful completion; return location ID from SOLO
+          schema:
+            $ref: '#/definitions/ServiceabilityAtLocationResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  
   /serviceability/{AddressID}:
     get:
       summary: Docref W13, W18 - Determine serviceability at location/address
-      description: Determine the products and services eligible for sale at the requested address/location.  The same service will be used to determine both "New Connect" location service compatability as well as "Transfer-To" Location service compatability.  Boolean value for serviceability (is/is not serivceable) can be inferred from the existence of rows in the service return data set. 
+      description: Determine the products and services eligible for sale at the requested address/location.  Does not rely on the EA service to findAddressID; assumes this is provided by other means such as Adaptive Search. The same service will be used to determine both "New Connect" location service compatability as well as "Transfer-To" Location service compatability.  Boolean value for serviceability (is/is not serivceable) can be inferred from the existence of rows in the service return data set. 
       parameters:
         - 
           name: AddressID
