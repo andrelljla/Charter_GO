@@ -129,7 +129,7 @@ paths:
           type: integer
       tags:
         - W02-GW
-        - W02-GO
+
       responses:
         200:
           description: An array of `Accounts` matching the specified criteria, sorted in descending order of search rank
@@ -147,12 +147,6 @@ paths:
       summary: Docref W02 - Retrieve customer ID, account ID, and related account information
       description: Retrieves information on a person or entity previously known to Charter but who does not have a (readily previously identified) active account
       parameters:
-#        - name: CommonInputHeader
-#          in: body
-#          description: Incudes input parameters common to all invocations
-#          required: true
-#          schema: 
-#            $ref: "#/definitions/CommonInputHeader"
         - 
           name: X-Charter-Transaction-ID
           in: header
@@ -165,17 +159,6 @@ paths:
           required: true
           type: string
           description: Code identifying invoking application or sales channel
-#        - name: timestamp
-#          in: header
-#          required: true
-#          type: string
-#          format: date-time
-#          description: Time that the service call was invoked
-#        - name: invokingUser
-#          in: header
-#          required: true
-#          type: string
-#          description: User name for the actual user that invoked the call (for audit purpose)
         - name: firstName
           in: query
           type: string
@@ -228,14 +211,14 @@ paths:
           in: query
           type: integer
           description: <dr>
-        - name: customerID
-          in: query
-          type: integer
-          description: <dr>
-        - name: addressID
-          in: query
-          type: integer
-          description: <dr>
+#        - name: customerID
+#          in: query
+#          type: integer
+#          description: <dr>
+#        - name: addressID
+#          in: query
+#          type: integer
+#          description: <dr>
 
       tags:
         - W02-GO
@@ -313,12 +296,6 @@ paths:
           description: Unique identifier (from SOLO) for the account being updated
           required: true
           type: string
-#        - name: CommonInputHeader
-#          in: body
-#          description: Incudes input parameters common to all invocations
-#          required: true
-#          schema: 
-#            $ref: "#/definitions/CommonInputHeader"
         - 
           name: X-Charter-Transaction-ID
           in: header
@@ -331,17 +308,7 @@ paths:
           required: true
           type: string
           description: Code identifying invoking application or sales channel
-#        - name: timestamp
-#          in: header
-#          required: true
-#          type: string
-#          format: date-time
-#          description: Time that the service call was invoked
-#        - name: invokingUser
-#          in: header
-#          required: true
-#          type: string
-#          description: User name for the actual user that invoked the call (for audit purpose)
+
       tags:
         - W14
       responses:
@@ -379,23 +346,7 @@ paths:
           required: true
           type: string
           description: Code identifying invoking application or sales channel
-#        - name: timestamp
-#          in: header
-#          required: true
-#          type: string
-#          format: date-time
-#          description: Time that the service call was invoked
-#        - name: invokingUser
-#          in: header
-#          required: true
-#          type: string
-#          description: User name for the actual user that invoked the call (for audit purpose)
-#        - name: CommonInputHeader
-#          in: body
-#          description: Incudes input parameters common to all invocations
-#          required: true
-#          schema: 
-#            $ref: "#/definitions/CommonInputHeader"
+
       tags:
         - W17
       responses:
@@ -531,56 +482,105 @@ definitions:
 #
 ##############################################
 
-#  GetCustomerIDRequest:
-#    properties:
-#      commonInputHeader:
-#        type: object
-#        $ref: '#/definitions/CommonInputHeader'
-#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-#      customerAccountLookupInput:
-#        type: object
-#        $ref: '#/definitions/customerAccountLookupInput'
-#        description: <dr>
-                  
   GetCustomerIDResponse:
     properties:
       commonReturn: 
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
+      partyID:
+        type: integer
+        description: Unique identifier for the selected party
+      partyType:
+        type: string
+        description: Party can be an Individual, Organization, or Manufacturer
+        enum:
+        - INDIV
+        - ORGN
+        - MANUF
+      indivBirthDate:
+        type: string
+        description: Birth date for an individual
+      indivGenderTypeCode:
+        type: string
+        description: Gender of the individual
+      indivGivenName:
+        type: string
+        description: First name of the individual
+      indivMiddleName:
+        type: string
+        description: Middle name of the individual
+      indivFamilyName:
+        type: string
+        description: Last name of the individual
+      indivNamePrefix:
+        type: string
+        description: Name prefix/Title of the individual (e.g. Mr, Mrs, Dr)
+      indivNameSuffix:
+        type: string
+        description: Name suffix of the individual 9e.g. Jr, III, IV)
+      partyAddress:
+        type: array
+        items:
+          $ref: '#/definitions/postalAddress'
       customerAccountLookupReturn:
         type: array
         items:
           $ref: '#/definitions/customerAccountLookupReturn'
         description: <dr>
 
-#  GetCustomerInformationRequest:
-#    properties:
-#      commonInputHeader:
-#        type: object
-#        $ref: '#/definitions/CommonInputHeader'
-#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-                  
   GetCustomerInformationResponse:
     properties:
       commonReturn: 
         type: object
         $ref: '#/definitions/CommonNoErrorReturnHeader'
         description: <dr>
-      CustomerInformationResponse:
-        type: object
-        $ref: '#/definitions/customerInformationReturn'
+#      CustomerInformationResponse:
+#        type: object
+#        $ref: '#/definitions/customerInformationReturn'
+      namePrefix:
+        type: string
+        description: Name prefix/title for an individual
+      firstName:
+        type: string
+        description: Given name
+      middleName:
+        type: string
+        description: Middle intitial/name for an individual
+      lastName:
+        type: string
+        description: Family name
+      nameSuffix:
+        type: string
+        description: Name suffix for an individual
+      primaryTN:
+        type: string
+        description: Primary telephone number
+      primaryTNType:
+        type: string
+        description: Primary telephone number type designation (home, work, cell, etc)
+      alternateTN:
+        type: string
+        description: Alternate telephone number
+      alternateTNType:
+        type: string
+        description: Alternate telephone number type designation (home, work, cell, etc)
+      OtherTN:
+        type: string
+        description: Other alternate telephone number
+      OtherTNType:
+        type: string
+        description: Other alternate telephone number type designation (home, work, cell, etc)
+      email:
+        type: string
+        description: <dr>
+      customerID:
+        type: integer
+        description: <dr>
+
             
   CustomerCreditCheckRequest:
     properties:
-#      commonInputHeader:
-#        type: object
-#        $ref: '#/definitions/CommonInputHeader'
-#        description: Common parameters submitted with all service calls to support authentication, reporting, logging and troubleshooting.
-#      customerCreditCheckInput:
-#        type: object
-#        $ref: '#/definitions/customerCreditCheckInput'
-#        description: <dr>
       firstName:
         type: string
         description: <dr>
@@ -858,6 +858,9 @@ definitions:
           
   postalAddress:
     properties:
+      addressID:
+        type: string
+        description: Unique identifier for the address
       addressLine1:
         type: string
         description: <dr>
