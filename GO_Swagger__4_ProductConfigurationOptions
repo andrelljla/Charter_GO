@@ -63,7 +63,7 @@ paths:
         - name: getProductConfigurationOptions
           in: body
           schema:
-            $ref: '#/definitions/ImplRetrieveProductInOrderConfigurationRequest'
+            $ref: '#/definitions/ImplProductConfigurationOptionsRequest'
           required: true
           description: <dr>
 
@@ -115,6 +115,17 @@ definitions:
       errGUID:
         type: string
 
+  ImplProductConfigurationOptionsRequest:
+    properties:
+      implRetrieveProductInOrderConfigurationRequest:
+        type: object
+        $ref: '#/definitions/ImplRetrieveProductInOrderConfigurationRequest'
+        description: Main input
+      serviceabilityObject:
+        type: object
+        $ref: '#/definitions/ServiceabilityObject'
+        description: Addiktional information to support serviceability
+        
   ImplRetrieveProductInOrderConfigurationRequest:
     properties:
       activityForConfiguration:
@@ -139,15 +150,6 @@ definitions:
         type: object
         $ref: '#/definitions/ReturnConfigurationData'
         description: Configuration Data
-        
-  ImplProductConfigurationOptionsResponse:
-    properties:
-      implBaseReturn:
-        type: object 
-        $ref: "#/definitions/CommonNoErrorReturn"
-      implRetrieveProductOrderConfigurationResponse:
-        type: object
-        $ref: "#/definitions/ImplRetrieveProductInOrderConfigurationResponse"
         
 #############
   FlexAttributeValue:
@@ -901,6 +903,87 @@ definitions:
       summaryInd:
         type: boolean
         description: Indicates that the summary information of the requested product/offer/bundle must be returned.  The summary details include information of the catalog data and the instance information.  Summary details do not include pricing details.  Mandatory - always send TRUE.
+
+  ServiceabilityObject:
+    properties:
+      sys:
+        type: string
+        description: Value of SYS
+      prin:
+        type: string
+        description: Value of PRIN
+      agent:
+        type: string
+        description: Value of AGENT
+      LOBServiceability:
+        type: array
+        items:
+          $ref: '#/definitions/LOBServiceability'
+      availabilityGroup:
+        type: string
+        description: Parameter used for phone
+      dwellType:
+        type: string
+        description: Type used for competitive area     
+      customerIsNew:
+        type: boolean
+        description: Indicator to indicate whether this is a new (TRUE) or existing (FALSE) customer
+      customerHasActiveAccount:
+        type: boolean
+        description: Indicator to indicate whether the customer has n active account (TRUE) or not (FALSE)
+      customerType:
+        type: string
+        description: Business or Residential - all Residential in current release
+        enum:
+        - Business
+        - Residential
+      orderActionType:
+        type: string
+        description: Constrained LoV for Action Type (CH - Change, CE - Cease, SU - Suspend, HM - Change Move, RT - Restart, CR - Cease Restart, PR - Provide)
+        enum:
+        - CH
+        - CE
+        - SU
+        - HM
+        - RT
+        - CR
+        - PR
+      userRole:
+        type: string
+        description: User Role (CSR or manager)
+        enum: 
+        - manager
+        - CSR
+      offerCode:
+        type: array
+        items: 
+          type: string
+        description: list of specific offer codes or IDs
+      additional attributes:
+        type: array
+        items:
+          $ref: '#/definitions/AdditionalAttribute'
+        description: If some of the parameters for eligibility rules/serviceability are necessary (and were not in the initial list) can be added here
+
+  LOBServiceability:
+    properties:
+      LOBName:
+        type: string
+        description: Line Of Business name
+      LOBServiceStatus:
+        type: string
+        description: An indication if the LOB is serviceable or not
+
+  AdditionalAttribute:
+    properties:
+      name:
+        type: string
+        description: Custom attribute name
+      value: 
+        type: string
+        description: Custom attribute value
+        
+
   
   ImplRetrieveProductInOrderConfigurationResponse:
     properties:
@@ -919,3 +1002,13 @@ definitions:
       productOrderItemType:
         type: string
         description: Action that is taken on the product  
+
+  ImplProductConfigurationOptionsResponse:
+    properties:
+      implBaseReturn:
+        type: object 
+        $ref: "#/definitions/CommonNoErrorReturn"
+      implRetrieveProductOrderConfigurationResponse:
+        type: object
+        $ref: "#/definitions/ImplRetrieveProductInOrderConfigurationResponse"
+        
