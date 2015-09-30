@@ -86,8 +86,18 @@ definitions:
   
   ImplErrorInfo:
     properties:
-      foo:
+      errorCode:
         type: string
+        description: Error code, single string
+      errorMessage:
+        type: string
+        description: Error message
+      Description:
+        type: string
+        description: Description of the error (human-readable)
+      errorUUID:
+        type: string
+        description: Unique number to identify the error event
         
 
   CommonErrorReturn:
