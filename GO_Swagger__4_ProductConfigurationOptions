@@ -502,32 +502,44 @@ definitions:
 
   ProductSpecification:
     properties:
-      offeringToProductId:
-        type: string
-        description: Offering to Product Relation ID.
-      lob:
-        type: string
-        description: Line of business code
       plan:
         type: object
         $ref: '#/definitions/PriceSchema'
         description: Pricing Object
-      minimumQuantity:
-        type: integer
-        description: Minimum quantity
-      maximumQuantity:
-        type: integer
-        description: Maximum quantity
-      lobImage:
-        type: string
-        description: LOB Image
-      lobName:
-        type: string
-        description: Line of business name, localized for language
+      dynamicProperties:
+        type: array
+        items:
+          $ref: '#/definitions/FlexAttr'
+        description: Dynamic Properties
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
+        description: Documents associated to the ProductSpecification
+      characteristics:
+        type: array
+        items:
+          $ref: '#/definitions/ProductSpecCharacteristic'
+        description: The ProductSpecCharacteristics used by a ProductSpecification.
       name:
         type: string
         description: The reference number of the ProductOrderItem
-
+      id:
+        type: string
+        description: The unique primary key of the ProductSpecification, together with the related ProductCatalogVersion
+      type:
+        type: string
+        description: The type of the ProductSpecification. A means of classification 
+      level:
+        type: string
+        description: Level of the product, in other words whether it is GLP or not
+      description: 
+        type: string
+        description: The ID of the ProductOrderItem
+      code: 
+        type: string
+        description: The ID of the Product
+        
   ProductOffering:
     properties:
       products: 
