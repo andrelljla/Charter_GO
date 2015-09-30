@@ -58,13 +58,37 @@ paths:
         200:
           description: Successful completion; return array of categories, subcategories & filters
           schema:
-              $ref: '#/definitions/implBrowsingCategoriesStructureOutput'
+              $ref: '#/definitions/ImplBrowsingCategoriesStructureResponse'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/CommonErrorReturn'
  
 definitions:
+  
+  ImplBrowsingCategoriesStructureResponse:
+    properties:
+      implBrowsingCategoriesStructureOutput:
+        type: obejct
+        $ref: '#/definitions/implBrowsingCategoriesStructureOutput'
+        description: Main output
+      transactionId:
+        type: string
+        description: A unique ID for a certain REST call
+      timeStamp:
+        type: integer
+        description: The time of the response Expected Date as Long (Epoch time format)
+      implErrorInfo:
+        type: array
+        items:
+          $ref: '#/definitions/ImplErrorInfo'
+        description: Used for business errors
+  
+  ImplErrorInfo:
+    properties:
+      foo:
+        type: string
+        
 
   CommonErrorReturn:
     properties:
@@ -139,7 +163,7 @@ definitions:
           
   implBrowsingCategory:
     properties:
-      Category:
+      category:
         type: object
         $ref: '#/definitions/BrowsingCategory'
         description: Category properties
@@ -150,7 +174,7 @@ definitions:
         description: Child Category Properties
       id:
         type: string
-        description: Category ID
+        description: Category Instance ID
         
   BrowsingCategory:
     properties:
