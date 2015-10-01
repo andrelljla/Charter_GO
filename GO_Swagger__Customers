@@ -529,8 +529,12 @@ definitions:
           $ref: '#/definitions/TelephoneNumber'
       partyEMail:
         type: array
-        item:
-          $ref: '#/definitions/eMailAddress'
+        items:
+          $ref: '#/definitions/EmailAddress'
+#      partyEMail:
+#        type: array
+#        item:
+#          $ref: '#/definitions/eMailAddress'
       customerAccountLookupReturn:
         type: array
         items:
