@@ -159,6 +159,11 @@ paths:
           required: true
           type: string
           description: Code identifying invoking application or sales channel
+        - name: serviceAddressID
+          in: query
+          type: string
+          required: true
+          description: Address ID (SOLO) for which service is being requested.  Retrieved as part of the serviceability check performed earlier in the process flow.
         - name: firstName
           in: query
           type: string
