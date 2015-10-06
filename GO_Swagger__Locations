@@ -15,6 +15,39 @@ produces:
   - application/json
 paths:
 
+  /serviceability/{AddressId}/pendingDisconnect:
+    get:
+      summary: Get pendign disconnect date by address
+      description: <dr>
+      parameters:
+        - name: AddressID
+          in: path
+          required: true
+          type: integer
+          description: Unique identifier for the address/location being queried for serviceability
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+
+      tags:
+        - W01
+      responses:
+        200:
+          description: Successful completion; return pending disconnect date.  Date will be sysdate if no active services at location, the scheduled disconnect date if an order is placed, or the end of time date if services are active at the location and no disconnect order is placed.
+          schema:
+            $ref: '#/definitions/PendingDisconnect'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
   /serviceability:
     get:
       summary: Get location serviceability based on address parameters
@@ -465,4 +498,16 @@ definitions:
 #        type: object
 #        $ref: '#/defintiions/LocationAvailableServices'
         
+      
+  PendingDisconnect:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+      disconnectDate: 
+        type: string
+        description: Earliest date a new install could be scheduled
       
