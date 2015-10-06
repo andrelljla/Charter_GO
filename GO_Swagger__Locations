@@ -143,10 +143,10 @@ paths:
 
   /serviceability/{AddressId}/pendingDisconnect:
     get:
-      summary: Get pendign disconnect date by address
-      description: <dr>
+      summary: Get pending disconnect date by address
+      description: Retrieve the scheduled disconnect date for services at the location.  Date will be sysdate if no active services at location, the scheduled disconnect date if an order is placed, or the end of time date if services are active at the location and no disconnect order is placed.  Date represents the earliest date new services can be provided.
       parameters:
-        - name: AddressID
+        - name: AddressId
           in: path
           required: true
           type: integer
@@ -166,7 +166,7 @@ paths:
         - W01
       responses:
         200:
-          description: Successful completion; return pending disconnect date.  Date will be sysdate if no active services at location, the scheduled disconnect date if an order is placed, or the end of time date if services are active at the location and no disconnect order is placed.
+          description: Successful completion; return pending disconnect date.  
           schema:
             $ref: '#/definitions/PendingDisconnect'
         default:
@@ -216,15 +216,6 @@ definitions:
 #
 ##############################################
 
-  CommonNoErrorReturnHeader:
-    properties:
-      lineageID:
-        type: integer
-        description: Unique transaction identifier; used for transactional error handling
-      timestamp:
-        type: string
-        description: Time that the service call was returned
-        
   CommonErrorReturn:
     properties:
       lineageID:
