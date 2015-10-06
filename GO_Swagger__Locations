@@ -15,39 +15,6 @@ produces:
   - application/json
 paths:
 
-  /serviceability/{AddressId}/pendingDisconnect:
-    get:
-      summary: Get pendign disconnect date by address
-      description: <dr>
-      parameters:
-        - name: AddressID
-          in: path
-          required: true
-          type: integer
-          description: Unique identifier for the address/location being queried for serviceability
-        - name: X-Charter-Transaction-ID
-          in: header
-          required: true
-          type: string
-          description: Unique transaction identifier; used for transactional error handling
-        - name: X-Charter-Application-ID
-          in: header
-          required: true
-          type: string
-          description: Code identifying invoking application or sales channel
-
-      tags:
-        - W01
-      responses:
-        200:
-          description: Successful completion; return pending disconnect date.  Date will be sysdate if no active services at location, the scheduled disconnect date if an order is placed, or the end of time date if services are active at the location and no disconnect order is placed.
-          schema:
-            $ref: '#/definitions/PendingDisconnect'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/CommonErrorReturn'
-
   /serviceability:
     get:
       summary: Get location serviceability based on address parameters
@@ -173,66 +140,39 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/CommonErrorReturn'
-       		      
-#  /Locations:
-#    get:
-#      summary: Docref W13, W18 precursor - Search for Location ID from within Gateway Ordering Application
-#      description: Retrieves a specific location identifier (AddressID) based on a set of address parameters. Precursor to retrieving serviceability by location.  Overlaps with existing adaptive Search capability such that if adaptive capabilities can be referenced from within the Gateway Ordering application (with the appropriate data feeds) this function (and possibly the serviceabiltyAtLocation function as well) may be pre-empted. Application will force collection of sufficient data to ensure a maximum of 1 location ID will be returned.
-#      parameters:
-#        - 
-#          name: X-Charter-Transaction-ID
-#          in: header
-#          required: true
-#          type: string
-#          description: Unique transaction identifier; used for transactional error handling
-#        - 
-#          name: X-Charter-Application-ID
-#          in: header
-#          required: true
-#          type: string
-#          description: Code identifying invoking application or sales channel
-#        - 
-#          name: addrStreetLine1
-#          type: string
-#          in: query
-#          required: true
-#          description: Line 1 of the street address component of the address lookup 
-#        - 
-#          name: addrStreetLine2
-#          type: string
-#          in: query
-#         required: false
-#          description: Line 2 of the street address component of the address lookup  
-#        - 
-#          name: addrCity
-#          type: string
-#          in: query
-#          required: false
-#          description: City component of the address lookup
-#        - 
-#          name: addrState
-#          type: string
-#          in: query
-#          required: false
-#          description: State component of the address lookup
-#        - 
-#          name: addrZIP
-#          type: string
-#          in: query
-#          required: false
-#          description: ZIP Code component of the address lookup
-#          
-#      tags:
-#        - W18
-#      responses:
-#        200:
-#          description: Successful completion; return location ID from SOLO
-#          schema:
-#            $ref: '#/definitions/LocationIDLookupResponse'
-#        default:
-#          description: Unexpected error
-#          schema:
-#            $ref: '#/definitions/CommonErrorReturn'
+
+  /serviceability/{AddressId}/pendingDisconnect:
+    get:
+      summary: Get pendign disconnect date by address
+      description: <dr>
+      parameters:
+        - name: AddressID
+          in: path
+          required: true
+          type: integer
+          description: Unique identifier for the address/location being queried for serviceability
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+
+      tags:
+        - W01
+      responses:
+        200:
+          description: Successful completion; return pending disconnect date.  Date will be sysdate if no active services at location, the scheduled disconnect date if an order is placed, or the end of time date if services are active at the location and no disconnect order is placed.
+          schema:
+            $ref: '#/definitions/PendingDisconnect'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
 
 definitions:
 
@@ -242,18 +182,14 @@ definitions:
 #
 ##############################################
 
-#  LocationIDLookupResponse:
-#    properties:
-#      commonReturn: 
-#        type: object
-#        $ref: '#/definitions/CommonNoErrorReturnHeader'
-#        description: <dr>
-#      locationID:
-#        type: integer
-#        description: Unique identifier for the location.
-
   ServiceabilityAtLocationResponse:
     properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
       Result:
         type: object
         $ref: '#/definitions/eiaResultHeader'
@@ -263,10 +199,12 @@ definitions:
 
   ActiveServicesAtLocationResponse:
     properties:
-      commonReturn: 
-        type: object
-        $ref: '#/definitions/CommonNoErrorReturnHeader'
-        description: <dr>
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
       ActiveServicesByAccount:
         type: array
         items:
@@ -317,18 +255,6 @@ definitions:
 #
 ##############################################
 
-#  LoBProductServiceability:
-#    properties:
-#      lobName: 
-#        type: string
-#        description: Line of Business (e.g. PHONE, TV, INTERNET)
-#      lobProduct:
-#        type: string
-#        description: Specific product within the LoB being referenced for serviceability
-#      lobProductServiceabilityStatus:
-#        type: boolean
-#        description: Indicator to identify if the is specified product is serviceable at the submitted location
-    
   LoBLocationAccountActiveProduct:
     properties:
       accountID:
@@ -350,13 +276,6 @@ definitions:
       biller:
         type: string
         description: Designator for which billing system serves the particular address in question 
-        
-#  cciaServiceability:
-#    properties:
-#      locationAvailableServices:
-#        type: Object
-#        $ref: '#/definitions/locationAvailableServices'
-#        description: Key object returned from CCIA serviceabilty check
         
   cciaServiceability:
     properties:
@@ -492,13 +411,6 @@ definitions:
         type: string
         description: Server node on which service was implemented 
 
-#  ServiceabilityResult:
-#    properties:
-#      LocationAvailableServices:
-#        type: object
-#        $ref: '#/defintiions/LocationAvailableServices'
-        
-      
   PendingDisconnect:
     properties:
       lineageID:
@@ -510,4 +422,3 @@ definitions:
       disconnectDate: 
         type: string
         description: Earliest date a new install could be scheduled
-      
