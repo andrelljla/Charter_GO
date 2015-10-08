@@ -118,22 +118,22 @@ definitions:
         description: SOLO ID of the location
       userID:
         type: string
-        description: User ID (for role-based eligibility determination)
-      ImplOfferID:
+        description: User/CSR ID (for role-based eligibility determination)
+      implOfferID:
         type: array
         items:
-          $ref: '#/definitions/OrderOffer'
+          $ref: '#/definitions/ImplOfferID'
         description: <description required>
       serviceRequiredDate:
         type: integer
         format: int64
         description: Date service is being requested; submitted in EpochTime format (milliseconds since 1/1/1970 00:00 GMT)
-      ImplAssignedProduct:
+      implAssignedProduct:
         type: array
         items:
-          $ref: '#/definitions/AssignedProduct'
+          $ref: '#/definitions/ImplAssignedProduct'
 
-  OrderOffer:
+  ImplOfferID:
     properties:
       offerID:
         type: string
@@ -145,14 +145,14 @@ definitions:
           - PR
           - PV
         
-  AssignedProduct:
+  ImplAssignedProduct:
     properties:
       apID:
         type: string
         description: Assigned Product ID
       orderActionType:
         type: string
-        description: action type for this specific product (CH-Change, CE-Cease, SU-Suspend, HM-Change Move, RT-Restart, CR-Cease Restart, PR-Provide)
+        description: action type for this specific product (CH-Change, CE-Cease, SU-Suspend, HM-Change Move, RT-Restart, CR-Cease Restart, PR-Provide, PV-Provide Move)
         enum:
          - CH
          - CE
@@ -161,12 +161,10 @@ definitions:
          - RT
          - CR
          - PR
+         - PV
 
   implCreateOrderResponse:
     properties:
-      implCreateOrderOutput:
-        type: object
-        $ref: '#/definitions/implCreateOrderOutput'
       transactionID:
         type: string
         description: Unique transaction identifier; used for transactional error handling
@@ -174,10 +172,16 @@ definitions:
         type: integer
         format: int64
         description: Time that the service call was returned, in EpochTime format
+      implCreateOrderOutput:
+        type: object
+        $ref: '#/definitions/implCreateOrderOutput'
+      implErrorInfo:
+        type: array
+        items:
+          $ref: '#/definitions/ImplErrorInfo'
 
   implCreateOrderOutput:
     properties:
       orderID:
         type: string
         description: Unique identifier (within Order Engine) used by Gateway Ordering for all communication with Order Engine during the transaction. 
-        
