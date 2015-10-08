@@ -23,12 +23,12 @@ paths:
           in: path
           type: string
           required: true
-          description: <dr>
+          description: The (SOLO) ID of the customer.  In the case of new connect, use 0.
         - name: product-order-id
           in: path
           type: string
           required: true
-          description: <dr>
+          description: The product order ID as defined in Order Engine
         - name: username
           in: header
           type: string
@@ -42,8 +42,13 @@ paths:
         - name: applicationID
           in: header
           type: string
-          description: Unique designation for the invoking application (e.g. GatewayOrdering)
+          description: Unique designation for the invoking application (e.g. GatewayOrdering).  Will map from X-CHARTER-APPLICATION_ID
           required: true
+        - name: transactionId
+          in: header
+          type: string
+          required: true
+          description: A unique ID for a specific REST call.  Maps from X-CHARTER-TRANSACTION-ID.
         - name: timestamp
           in: header
           type: integer
@@ -105,9 +110,6 @@ definitions:
 
   implProductOrderItemsResponse:
     properties:
-      implProductOrderItemHeaders:
-        type: object
-        $ref: '#/definitions/implProductOrderItemHeaders'
       transactionID:
         type: integer
         description: Unique transaction identifier; used for transactional error handling
@@ -115,13 +117,16 @@ definitions:
           type: integer
           format: int64
           description: time the REST call was returned, in EpochTime format
+      implProductOrderItemHeaders:
+        type: object
+        $ref: '#/definitions/ImplProductOrderItemHeaders'
       implErrorInfo:
         type: array
         items:
           $ref: '#/definitions/ImplErrorInfo'
         description: Used for business errors
 
-  implProductOrderItemHeaders:
+  ImplProductOrderItemHeaders:
     properties:
       productOrderItemHeaders:
         type: array
@@ -139,7 +144,7 @@ definitions:
       implCalculatedPrices:
         type: array
         items:
-          $ref: '#/definitions/implCalculatedPrice'
+          $ref: '#/definitions/ImplCalculatedPrice'
       referenceNumber:
         type: string
         description: A unique string that identifies the order item and is typically displayed to human users on screens and reports.  Generally derived as Item Number + "A"
@@ -156,28 +161,28 @@ definitions:
       productName:
         type: string
         description: Product catalog name
-      allowedActions:
-        type: array
-        items:
-          type: string
-        description: Constrained of allowed actions
-        enum:
-          - AMEND
-          - CANCEL
-          - CANCEL_OFFER
-          - CANCEL_PARTIAL
-          - CANCEL_REPLACE_OFFER
-          - CREATE
-          - DISCONTINUE
-          - EDIT
-          - RESUME_NEGOTIATION
-          - TAKEOVER
-          - WITHDRAW_AMEND
-          - WITHDRAW_CANCEL
+#      allowedActions:
+#        type: array
+#        items:
+#          type: string
+#        description: Constrained of allowed actions
+#        enum:
+#          - AMEND
+#          - CANCEL
+#          - CANCEL_OFFER
+#          - CANCEL_PARTIAL
+#          - CANCEL_REPLACE_OFFER
+#          - CREATE
+#          - DISCONTINUE
+#          - EDIT
+#          - RESUME_NEGOTIATION
+#          - TAKEOVER
+#          - WITHDRAW_AMEND
+#          - WITHDRAW_CANCEL
       createdBy:
         type: string
         description: The USER ID that initiated the request
-      ActionType:
+      actionType:
         type: string
         description: Constrained list of action to be performed on the associated product in teh context of this order item.
         enum:
@@ -207,13 +212,17 @@ definitions:
       lineOfBusiness:
         type: string
         description: Line of business
+        enum:
+        - TV
+        - Phone
+        - Internet
       isPartOfBundle:
         type: boolean
         description: Indicator to represent if the product is part of a Bundle offer
       productLevel:
         type: string
         description: Billing level at which pricing can be applied (Group or Subscription)
-      ID:
+      id:
         type: string
         description: Order Action ID
       status:
@@ -230,49 +239,57 @@ definitions:
         - REJECT
         - TO_BE_CANCELED
 
-  implCalculatedPrice:
+  ImplCalculatedPrice:
     properties:
       sequenceId:
         type: integer
         description: Sequence ID
       ppCid:
         type: string
-        description: The Price Plan Catalog ID (PPCID) 
+        description: The Price Plan Catalog ID (PPCID) automatically generated in MEC
       ppType:
         type: string
-        description: <description required>
+        description: Price plan type. Constrained LoV (RP-Retail/Regular Price; each Price Plan is associated to a Retail price; a record with this price plan type is mandatory.  DP-Percentage Discount; reduces the RP by the specified percentage. DF-Flat Discount;  this amount overrides the regular price.  DD-Dollar off discount; reduces the regular price by the specified dollar amount. 
+        enum:
+        - RP
+        - DP
+        - DF
+        - DD
       tierFrom:
         type: string
-        description: <description required>
+        description: The discount tier start (in month).  For example, 1 means from start of service; 13 means start of second year of service.
       tierTo:
         type: string
-        description: <description required>
+        description: The discount tier end (in months).  For example, 12 means end of the first year of service (discount is applied for 1 year only).  The value 999 will mean that the discount is not limited in time.
       quantityAtt:
         type: string
-        description: <description required>
+        description: The ID of the quantity attribute on the component.  This code (defined in MEC for each attribute) will help the target application to find the quantity value set during product configuration.
       quantityFrom:
         type: integer
-        description: <description required>
+        description: The number of service instances from which the discount is applied
       quantityTo:
         type: integer
-        description: <description required>
+        description: The number of service instances to which the discount is applied.  The value 999 will mean that the discount is not limited by number of instances. 
       amountType:
         type: string
-        description: <description required>
+        description: Type of the amount/price in the next column.  Constrained LoV (OC - One-time Price; RC - Recurring Price)
+        enum:
+        - OC
+        - RC
       amount:
-        type: integer
-        description: <description required>
+        type: number
+        description: The dollar amount value for the retail price, flat discount, or dollar-off discount, or the percentage of in case of percentage discount.
       quantity:
         type: integer
-        description: <dr>
+        description: Number of related price plans.
       startDate:
        type: integer
        format: int64
-       description: The Price Plan effective date.  
+       description: The Price Plan effective date, in Epoch Time format.  
       endDate:
        type: integer
        format: int64
-       description: The Price Plan end date.  
+       description: The Price Plan end date, in Epoch Time format.  An empty field will mean that no expiration date was set.
       biller:
         type: string
         description: Name of the biller (default to CSG for GO R2 scope)
@@ -306,4 +323,3 @@ definitions:
       basicItemQuantity:
         type: integer
         description: Number of instances of price entity
-      
