@@ -24,12 +24,12 @@ paths:
           in: path
           type: string
           required: true
-          description: <dr>
+          description: Business customer ID.  In the case of New Connect, use 0
         - name: product-order-item-id
           in: path
           type: string
           required: true
-          description: <dr>
+          description: The Order Action ID (or Product Order Item ID) of the order that contains the product that is having its device changed.
         - name: username
           in: header
           type: string
@@ -43,23 +43,45 @@ paths:
         - name: applicationID
           in: header
           type: string
-          description: Unique designation for the invoking application (e.g. GatewayOrdering)
+          description: Unique designation for the invoking application (e.g. GatewayOrdering).  Maps to X-CHARTER-APPLICATION-ID.
           required: true
+        - name: transactionId
+          type: string
+          in: header
+          required: true
+          description: Unique call for a specific instance of a REST call.  Maps to X-CHARTER-TRANSACTION-ID.
         - name: timestamp
           in: header
           type: integer
           description: time the REST call was invoked, represented in Epoch time format
           required: true
+        - name: lo
+          required: true
+          in: query
+          type: string
+          description: Locale identifier, used for language translation
         - name: sc
           required: true
           in: query
           type: string
           description: Sales Channel identifier
-        - name: locale
-          required: true
+        - name: poi
+          required: false
           in: query
           type: string
-          description: Locale identifier, used for language translation
+          description: The Product Order ID that this product is part of.  If sent, might impact pricing of the product.
+        - name: rp
+          required: false
+          in: query
+          type: boolean
+          description: Indicates whether to retrieve the Price Schema options
+        - name: rpc
+          required: false
+          in: query
+          type: boolean
+          description: Indicates whether to return the list prices of available components
+        
+
         - name: getProductConfigurationOptions
           in: body
           schema:
@@ -119,7 +141,6 @@ definitions:
 
   ImplProductConfigurationOptionsResponse:
     properties:
-      
       implRetrieveProductOrderConfigurationResponse:
         type: object
         $ref: "#/definitions/ImplRetrieveProductInOrderConfigurationResponse"
@@ -268,9 +289,6 @@ definitions:
         - P
         - T
         - D
-#      basicItemQuantity:
-#        type: integer
-        description: Amount of instances of price entity
 
   TopLevelConfiguration:
     properties:
@@ -940,15 +958,12 @@ definitions:
   
   ReturnConfigurationData:
     properties:
-      productConfigurationInd:
-        type: boolean
-        description: Indicates that the entire configuration of the requested product/offer/bundle, the existing and the available options must be returned.  Mandatory - always send TRUE
       catalogDataInd:
         type: boolean
         description: Indicates that the returned information includes the detailed catalog information of the requested product/offer/bundle.  Does not include prices.  Mandatory - always send TRUE.
       quotedPricesInd:
         type: boolean
-        description: Indicates that the returned information includes the quoted prices of the requested product/offer/bundle.  Prices do not include tax information.  Mandatory - always send TRUE.
+        description: Indicates that the returned information includes the quoted prices of the requested product/offer/bundle.  Prices do not include tax information.  Mandatory - always send FALSE.
       summaryInd:
         type: boolean
         description: Indicates that the summary information of the requested product/offer/bundle must be returned.  The summary details include information of the catalog data and the instance information.  Summary details do not include pricing details.  Mandatory - always send TRUE.
@@ -970,10 +985,10 @@ definitions:
           $ref: '#/definitions/LOBServiceability'
       availabilityGroup:
         type: string
-        description: Parameter used for phone
+        description: Parameter used for phone.  Constrained LoV managed in MEC.
       dwellType:
         type: string
-        description: Type used for competitive area     
+        description: Type used for competitive area.  Constrained LoV managed in MEC.
       customerIsNew:
         type: boolean
         description: Indicator to indicate whether this is a new (TRUE) or existing (FALSE) customer
@@ -982,10 +997,10 @@ definitions:
         description: Indicator to indicate whether the customer has n active account (TRUE) or not (FALSE)
       customerType:
         type: string
-        description: Business or Residential - all Residential in current release
+        description: COM(mercial) or RES(idential) - all Residential in current release
         enum:
-        - Business
-        - Residential
+        - COM
+        - RES
       orderActionType:
         type: string
         description: Constrained LoV for Action Type (CH - Change, CE - Cease, SU - Suspend, HM - Change Move, RT - Restart, CR - Cease Restart, PR - Provide)
@@ -999,10 +1014,11 @@ definitions:
         - PR
       userRole:
         type: string
-        description: User Role (CSR or manager)
+        description: User Role (CSR or manager).  LoV managed in MEC.
         enum: 
-        - manager
-        - CSR
+        - AP-CHRTGWY-Manager-Sales
+        - AP-CHTRGWY-Supervisor-Sales
+        - AP-CHTRGWY-Rep-3-Sales
       offerCode:
         type: array
         items: 
@@ -1016,12 +1032,19 @@ definitions:
 
   LOBServiceability:
     properties:
-      LOBName:
+      lobName:
         type: string
-        description: Line Of Business name
-      LOBServiceStatus:
+        description: Line Of Business name.  Constrained LoV managed in MEC.
+        enum:
+        - TV
+        - Phone
+        - Internet
+      lobServiceableStatus:
         type: string
-        description: An indication if the LOB is serviceable or not
+        description: An indication if the LOB is serviceable (Y) or not (N)
+        enum:
+        - Y
+        - N
 
   AdditionalAttribute:
     properties:
@@ -1055,7 +1078,7 @@ definitions:
     properties:
       activityForConfiguration:
         type: string
-        description: The parameter used to filter the Product Catalog rules and the Activity Designer display information.  The activity name can have any value that represents the action performed by the client and does not necessarily have to map to an activity (step) in the ordering process.
+        description: The parameter used to filter the Product Catalog rules and the Activity Designer display information.  The activity name can have any value that represents the action performed by the client and does not necessarily have to map to an activity (step) in the ordering process.  Constrained LoV managed in MEC.
       serviceRequiredDate:
         type: number
         description: Charter must send system date.  Expects date as LONG.
@@ -1067,7 +1090,7 @@ definitions:
         - NOT_SELECTED
       settingsView:
         type: string
-        description: Need description
+        description: The Settings View filter of the Product Specifications.  Charter will always send FULL.
         enum:
         - FULL
         - QUICK_SETTINGS
