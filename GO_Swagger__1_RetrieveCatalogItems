@@ -120,43 +120,33 @@ definitions:
     properties:
       implCategoryItemsInput:
         type: object
-        $ref: '#/definitions/implCategoryItemsInput'
+        $ref: '#/definitions/ImplCategoryItemsInput'
       serviceabilityObject:
         type: object
         description:  Additional information to support serviceability and offer eligbility
-        $ref: '#/definitions/serviceabilityObject'
+        $ref: '#/definitions/ServiceabilityObject'
 
-  implCategoryItemsInput:
+  ImplCategoryItemsInput:
     properties:
       sortType:
         type: string
         description: Sorting will be done according to one of the valid values (NM - Sort by catalog item name; OC - sort according to catalog item one-time charge;  OR - sort according to catalog item overall rating; PD - sort according to the date the catalog item was published; RC - sort according to catalog item recurring charge).
         enum:
-        - NM
-        - OC
-        - OR
-        - PD
-        - RC
+        - NAME
+        - ONETIME_CHARGE
+        - PUBLISHED_DATE
+        - RECURRING_CHARGE
       includeExpiredOfferings:
         type: boolean
         description: If value is TRUE, return expired ProductOfferings and PriceSchemas according to the requested, in addition to the not expired entities.  If no value is sent, will default to FALSE.
       sortAscending:
         type: boolean
         description: Default will be ascending order (TRUE).  If false, sort in descending order.
-      customerID:
-        type: string
-        description: ID of the customer.  In the case of a new customer, default to 0.  JLA - Duplicate of path variable?
       includeEligibleOfferingOnly:
         type: boolean
-        description: If True, return only elible offers.  If False, return all offers.
-      includeAtLeastInputLOBs:
-        type: boolean
-        description: If the value is TRUE, return all the eligible and sellable PRoductOfferings having at least those lines of business specified in the ProductOfferingFilterInfo.lineOfBusiness that contains the matching result
-      text:
-        type: string
-        description: A free text string input based on which the search criteria is performed on the ProductOfferings and ProductSpecification data
-        
-  serviceabilityObject:
+        description: If True, return only eligible offers.  False value will not be used at Charter.
+
+  ServiceabilityObject:
     properties:
       sys:
         type: string
@@ -173,7 +163,7 @@ definitions:
           $ref: '#/definitions/LOBServiceability'
       availabilityGroup:
         type: string
-        description: Parameter used for phone
+        description: Parameter used for phone.  BPT Value, e.g. CHARTER RESIDENCE, ENHANCED DATA SERVICES, ENHANCED RES VIDEO.
       dwellType:
         type: string
         description: Type used for competitive area     
@@ -204,8 +194,9 @@ definitions:
         type: string
         description: User Role (CSR or manager)
         enum: 
-        - manager
-        - CSR
+        - AP-CHTRGWY-Manager-Sales
+        - AP-CHTRGWY-Supervisor-Sales
+        - AP-CHTRGWY-Rep-3-Sales
       offerCode:
         type: array
         items: 
@@ -237,9 +228,6 @@ definitions:
         
   implRetrieveCatalogItemsResponse:
     properties:
-      implSearchResults:
-        type: object
-        $ref: '#/definitions/implSearchResults'
       transactionID:
         type: integer
         description: Unique transaction identifier; used for transactional error handling
@@ -247,133 +235,109 @@ definitions:
           type: integer
           format: int64
           description: time the REST call was returned, in EpochTime format
+      implSearchResults:
+        type: array
+        items:
+          $ref: '#/definitions/ImplSearchResult'
       implErrorInfo:
         type: array
         items:
           $ref: '#/definitions/ImplErrorInfo'
           
-  implSearchResults:
+  ImplSearchResult:
     properties:
-      items:
-        type: object
-        $ref: "#/definitions/SearchCatalogItems"
-        description: <description required>
-      categories:
-        type: array
-        items:
-          $ref: '#/definitions/SearchResultsCategory'
-      flexAttr:
-        type: array
-        items:
-          $ref: '#/definitions/FlexAttr'
-        
-  SearchCatalogItems:
-    properties:
-      itemsPerCategory:
-        type: integer
-        format: int32
-        description: Number of items to present on each page
-      itemsPerPage:
-        type: integer
-        format: int32
-        description: Maximum number of items on each page
-      startIndex:
-        type: integer
-        format: int32
-        description: Starting index point for this representation
-      totalResults:
-        type: integer
-        format: int32
-        description: Total number of search results
-      results:
-        type: array
-        items: 
-         $ref: '#/definitions/SearchResult'
-        description: Defined offers that meet the eligibility criteria
-    
-  SearchResult:
-    properties:
-      RecurringPrice:
+      recurringPrice:
         type: object
         $ref: '#/definitions/CommonPrice'
-        description: Recurring price
-      OneTimePrice:
+        description: Recurring (monthly) price
+      oneTimePrice:
         type: object
         $ref: '#/definitions/CommonPrice'
-        description: One-time price
-#      catalogPrices:
-#        type: array
-#        items:
-#          $ref: '#/definitions/implCalculatedPrice'
-#        description: Calculated price by type
+        definition: One-Time price
       lob:
         type: array
-        items: 
+        items:
           type: string
-        description: Line(s) of business (combination of TV, INTERNET, PHONE)   
+          enum:
+          - TV
+          - INTERNET
+          - PHONE
+        description: Support for multiple Line Of Business in a single offer
       catalogItemID:
         type: string
-        description: Catalog ID for the item
+        description: The Catalog ID of the item (offer)
       catalogItemName:
         type: string
-        description: Name by which the offer is commonly referenced
+        description: Name of the item as defined in the catalog
       businessType:
         type: string
-        description: Representation of the business type of item in the search result
+        description: Representation of the business type of the tiem in the search result.
+        enum:
+        - ACCESSORY
+        - BUNDLE_PLAN
+        - DEVICE
+        - F_N_F_SERVICE
+        - OFFERING
+        - PLAN
+        - PRICE_PACKAGE
+        - SERVICE
+        - TV_CHANNEL
+        - TV_PACKAGE
       catalogItemDescription:
         type: string
         description: Item's description
       catalogItemImage:
         type: string
-        description: URL of link to item's image
+        description: URL of image
       attachments:
         type: array
         items:
           $ref: '#/definitions/Attachment'
-#      planType:
-#        type: string
-#        description: Represents if plans are either Pre-paid (PRE) or post-paid (POST)
-#      minNumOfSubscribers:
-#        type: string
-#        description: <description required>
-#      numOfSubscribers:
-#        type: string
-#        description: <description required>
+        description: List of attachments
       parentAssignedID:
         type: string
-        description: Contains assigned ID of parent service for PRICE_PACKAGE items.
+        description: Relevant only for the PRICE_PACKAGE result; contains assigned ID of parent service
       parentCatalogItemID:
         type: string
-        description: Contains catalog ID of parent service for PRICE_PACKAGE items.
+        description: Relevant only for the PRICE_PACKAGE result; contains catalog ID of parent service
       parentCatalogItemName:
         type: string
-        description: Contains catalog name of parent service for PRICE_PACKAGE items.
+        description: Relevant only for the PRICE_PACKAGE result; contains name of parent service
       parentCurrentStatus:
         type: string
-        description: Contains status of parent service for PRICE_PACKAGE items.
+        description: Relevant only for the PRICE_PACKAGE result; contains status of parent service
+        enum:
+        - ACTIVE
+        - PROPOSED_CURRENT_PRODUCT_OFFERING
+        - PROPOSED_OTHER_PRODUCT_OFFERING
+        - SUSPENDED
       relationID:
         type: string
-        description: Catalog ID of relation
+        description: Relation ID (as defined in catalog)
       containingOfferings:
         type: array
         items:
           $ref: '#/definitions/ContainingOffering'
-        description: The containing offerings of the search result
-      eligibilityReason:
-        type: string
-        description: Description of eligibility status reason.  for eligibilty rules, thre is an option to define a message with a reason as to why the offer is not eligible; e.g. that the product offering is only for new customers.
       eligibilityStatus:
         type: string
         description: Whether eligibility status is Eligible
+        enum:
+        - DD-CUSTOMER_NOT_ELIGIBLE
+        - EA-ELIGIBLE
+        - DA-NOT_RECOMMENDED
+        - RD-USER_NOT_ALLOWED_TO_SELL
       expiredIndication:
         type: boolean
         description: Indication of expired item
-      catalogItemType:
+      type: 
         type: string
         description: Represents the type of the catalog item
+        enum:
+        - PRODUCT_OFFERING
+        - PRODUCT_SPEC
       currency:
         type: string
-        description: Reflects catalog price currency.  default = `USD`
+        description: Reflects catalog prices, if defined in multiple currencies
       flexAttr:
         type: array
         items:
@@ -417,91 +381,7 @@ definitions:
           - DECIMAL
           - INTEGER
           - STRING
-        
-  CatalogSearchResult:
-    properties:
-      RecurringPrice:
-        type: object
-        $ref: '#/definitions/CommonPrice'
-        description: Recurring Price
-      OneTimePrice:
-        type: object
-        $ref: '#/definitions/CommonPrice'
-        description: Recurring Price
-      lobs:
-        type: array
-        items:
-          type: string
-        description: Line(s) of business which apply
-      catalogItemID:
-        type: string
-        description: Item's ID from the Master Enterprise Catalog
-      catalogItemName:
-        type: string
-        description: Item's name from the Master Enterprise Catalog
-      businessType:
-        type: string
-        description: Will hold the item business type as per one of the valid values
-        enum:
-          - ACCESSORY
-          - BUNDLE_PLAN
-          - DEVICE
-          - F_N_F SERVICE
-          - OFFERING
-          - PLAN
-          - PRICE_PACKAGE
-          - TV_CHANNEL
-          - TV_PACKAGE
-      catalogItemDescription:
-        type: string
-        description: Item's description from the Master Enterprise Catalog
-      catalogItemImage:
-        type: string
-        description: URL of image
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/Attachment'
-      parentAssignedID:
-        type: string
-        description: Contains the assigned product ID of a parent service for a PRICE_PACKAGE
-      parentCatalogItemID:
-        type: string
-        description: Contains the catalog ID of a parent service for a PRICE_PACKAGE
-      parentCatalogItemName:
-        type: string
-        description: Contains name of the parent service for a PRICE_PACKAGE
-      parentCurrentStatus:
-        type: string
-        description: Contains status of perent service for a PRICE_PACKAGE.
-      relationID:
-        type: string
-        description: Relation ID
-      containingOfferings:
-        type: array
-        items:
-          $ref: '#/definitions/ContainingOffering'
-      eligibilityReason:
-        type: string
-        description: Description of eligibility status reason.  For eligibility rules, there is an option to define a message with a reason why the ofer is not eligbile, i.e. This Product Offering is for new customers only.
-      eligibilityStatus:
-        type: string
-        description: Wheher eligibility status is Eligible
-      expiredIndication:
-        type: boolean
-        description: Indication of expired item
-      type:
-        type: string
-        description: Distinguishes between PRODUCT_OFFERING and PRODUCT_SPECIFICATION
-      currency:
-        type: string
-        description: Reflects catalog prices, if defined in multiple currencies
-      flexAttr:
-        type: array
-        items:
-          $ref: '#/definitions/FlexAttr'
-        description: List of additional properties that are assigned to the ProductOffering      
-      
+
   CommonPrice:
     properties:
       originalAmount:
@@ -539,11 +419,12 @@ definitions:
     properties:
       offeringID:
         type: string
-        description: <description required>
+        description: Catalog ID of the containing offering
       productSpecIDs:
         type: array
         items: 
           type: string
+        description: Catalog ID of the top-level product that contains the search result.  First ID in the array is related to the first ID in the product offering
       offeringToProductIDs:
         type: array
         items:
@@ -560,36 +441,3 @@ definitions:
       type:
         type: string
         description: <description required>
-
-  SearchResultsCategory:
-    properties:
-      categoryName:
-        type: string
-        description: <description required>
-      currentPlanRelationID:
-        type: string
-        description: <description required>
-      itemsPerCategory:
-        type: integer
-        format: int32
-        description: Number of items to present on each page
-      itemsPerPage:
-        type: integer
-        format: int32
-        description: Maximum number of items on each page
-      startIndex:
-        type: integer
-        format: int32
-        description: Starting index point for this representation
-      totalResultsInCategory:
-        type: integer
-        format: int32
-        description: Total number of search results
-      categoryID:
-        type: string
-        description: <description required>
-      results:
-        type: array
-        items: 
-          $ref: '#/definitions/CatalogSearchResult'
-        description: Defined offers that meet the eligibility criteria
