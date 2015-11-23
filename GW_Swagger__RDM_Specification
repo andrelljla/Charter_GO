@@ -29,9 +29,9 @@ paths:
           required: true
           type: string
           description: Code identifying invoking application or sales channel
-        - name: FunctionRequest
+        - name: dwellingType
           in: body
-          description: Incudes input parameters common to all invocations
+          description: Limiting and filtering criteria
           required: true
           schema: 
             $ref: "#/definitions/DwellingTypeRequest"
@@ -39,7 +39,7 @@ paths:
         - CTD-00
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; return key RDM elements
           schema:
             $ref: '#/definitions/DwellingTypeResponse'
         default:
@@ -62,9 +62,9 @@ paths:
           required: true
           type: string
           description: Code identifying invoking application or sales channel
-        - name: FunctionRequest
+        - name: workOrderTypes
           in: body
-          description: Incudes input parameters common to all invocations
+          description: Limiting and filtering criteria
           required: true
           schema: 
             $ref: "#/definitions/WorkOrderRequest"
@@ -72,7 +72,7 @@ paths:
         - CTD-03
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; return key RDM elements
           schema:
             $ref: '#/definitions/WorkOrderResponse'
         default:
@@ -105,7 +105,7 @@ paths:
         - CTD-10
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; return key RDM elements
           schema:
             $ref: '#/definitions/WorkOrderCancelResponse'
         default:
@@ -138,7 +138,7 @@ paths:
         - NewDS_badWords
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; return key RDM elements
           schema:
             $ref: '#/definitions/BadWordsResponse'
         default:
@@ -171,7 +171,7 @@ paths:
         - CTD-CF
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; return key RDM elements
           schema:
             $ref: '#/definitions/HouseCustomResponse'
         default:
@@ -204,7 +204,7 @@ paths:
         - NewDS_CustBAS
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; return key RDM elements
           schema:
             $ref: '#/definitions/CustomerTypeResponse'
         default:
@@ -237,7 +237,7 @@ paths:
         - NewDS_PhoneType
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; return key RDM elements
           schema:
             $ref: '#/definitions/TelephoneNumberTypeResponse'
         default:
@@ -270,7 +270,7 @@ paths:
         - CTD-02
       responses:
         200:
-          description: Successful completion; return key IDs
+          description: Successful completion; return key RDM elements
           schema:
             $ref: '#/definitions/SalutationResponse'
         default:
@@ -354,31 +354,61 @@ definitions:
 
   DwellingTypeRequest:
     properties:
-      foo:
+      locationClass:
+        type: array
+        items:
+          type: string
+        enum:
+          - RESIDENTIAL
+          - ENTERPRISE
+          - RESI_BULK_MASTER
+          - SMALL_BUSINESS
+          - TENANT
+        description: Specific location class(es) used to restrict the LoV returned
+      asOfDate:
         type: string
-        description: <dr>
-        
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+      
   DwellingTypeResponse:
     properties:
-      foo:
+      goldValue:
+        type: string
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+      goldLongDescription:
+        type: string
+        description: RDM "Gold Long Description" used for more detailed information
+      csgBillerValue:
+        type: string
+        description: Code to be submitted to CSG when this "Gold Code" is selected
+      viewType:
         type: string
         description: <dr>
-
+      HHPFI: 
+        type: string
+        description: <dr>
+      locationClass:
+        type: string
+        description: Location class (residential, small business etc) to which this value applies
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
+        
   WorkOrderRequest:
     properties:
-      foo:
-        type: string
-        description: <dr>
-        
-  WorkOrderResponse:
-    properties:
-      foo:
-        type: string
-        description: <dr>
-
-  WorkOrderCancelRequest:
-    properties:
-      BuyFlowCategories:
+      buyFlowCategories:
         type: array
         items: 
           type: string
@@ -390,7 +420,51 @@ definitions:
           - SPECIAL_REQUEST
           - TROUBLE_CALL
           - UPGRADE_DOWNGRADE
+      asOfDate:
+        type: string
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
         
+  WorkOrderResponse:
+    properties:
+      foo:
+        type: string
+        description: <dr>
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
+
+  WorkOrderCancelRequest:
+    properties:
+      buyFlowCategories:
+        type: array
+        items: 
+          type: string
+        description: (Constrained) list of process flows/categories for which to retrieve valid order cancellation codes
+        enum:
+          - CONNECT
+          - DISCONNECT
+          - RESTART
+          - SPECIAL_REQUEST
+          - TROUBLE_CALL
+          - UPGRADE_DOWNGRADE
+      asOfDate:
+        type: string
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+  
   WorkOrderCancelResponse:
     properties:
       goldValue:
@@ -413,63 +487,176 @@ definitions:
         items:
           type: string
         description: List of buy flows/categories to which this value applies
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
 
   BadWordsRequest:
     properties:
-      foo:
+      asOfDate:
         type: string
-        description: <dr>
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
         
   BadWordsResponse:
     properties:
-      foo:
+      badWordID:
         type: string
-        description: <dr>
+        description: Unique identifier for the bad word
+      badWordDescription:
+        type: string
+        description: The "bad word" itself
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
 
   HouseCustomRequest:
     properties:
-      foo:
+      asOfDate:
         type: string
-        description: <dr>
-        
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+       
   HouseCustomResponse:
     properties:
-      foo:
+      goldValue:
         type: string
-        description: <dr>
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+      goldLongDescription:
+        type: string
+        description: RDM "Gold Long Description" used for more detailed information
+      csgBillerValue:
+        type: string
+        description: Code to be submitted to CSG when this "Gold Code" is selected
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
 
   CustomerTypeRequest:
     properties:
-      foo:
+      asOfDate:
         type: string
-        description: <dr>
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
         
   CustomerTypeResponse:
     properties:
-      foo:
+      goldValue:
         type: string
-        description: <dr>
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+      goldLongDescription:
+        type: string
+        description: RDM "Gold Long Description" used for more detailed information
+      csgBillerValue:
+        type: string
+        description: Code to be submitted to CSG when this "Gold Code" is selected
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
 
   TelephoneNumberTypeRequest:
     properties:
-      foo:
+      asOfDate:
         type: string
-        description: <dr>
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
         
   TelephoneNumberTypeResponse:
     properties:
-      foo:
+      goldValue:
         type: string
-        description: <dr>
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+      goldLongDescription:
+        type: string
+        description: RDM "Gold Long Description" used for more detailed information
+      csgBillerValue:
+        type: string
+        description: Code to be submitted to CSG when this "Gold Code" is selected
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
 
   SalutationRequest:
     properties:
-      foo:
+      asOfDate:
         type: string
-        description: <dr>
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
         
   SalutationResponse:
     properties:
-      foo:
+      goldValue:
         type: string
-        description: <dr>
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+      goldLongDescription:
+        type: string
+        description: RDM "Gold Long Description" used for more detailed information
+      csgBillerValue:
+        type: string
+        description: Code to be submitted to CSG when this "Gold Code" is selected
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
