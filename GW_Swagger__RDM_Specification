@@ -398,6 +398,9 @@ definitions:
       locationClass:
         type: string
         description: Location class (residential, small business etc) to which this value applies
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
       isDeleted:
         type: boolean
         description: Indicates if the code is logically deleted from the RDM tables
@@ -421,7 +424,9 @@ definitions:
           - RESTART
           - SPECIAL_REQUEST
           - TROUBLE_CALL
-          - UPGRADE_DOWNGRADE
+          - UPGRADE
+          - DOWNGRADE
+          - SIDEGRADE
       asOfDate:
         type: string
         format: date
@@ -432,9 +437,12 @@ definitions:
         
   WorkOrderResponse:
     properties:
-      foo:
+      discoReasonCategory:
         type: string
-        description: <dr>
+        description: General category for disconnect reason; used for reporting
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
       isDeleted:
         type: boolean
         description: Indicates if the code is logically deleted from the RDM tables
@@ -458,7 +466,9 @@ definitions:
           - RESTART
           - SPECIAL_REQUEST
           - TROUBLE_CALL
-          - UPGRADE_DOWNGRADE
+          - UPGRADE
+          - DOWNGRADE
+          - SIDEGRADE
       asOfDate:
         type: string
         format: date
@@ -489,6 +499,9 @@ definitions:
         items:
           type: string
         description: List of buy flows/categories to which this value applies
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
       isDeleted:
         type: boolean
         description: Indicates if the code is logically deleted from the RDM tables
@@ -517,6 +530,9 @@ definitions:
       badWordDescription:
         type: string
         description: The "bad word" itself
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
       isDeleted:
         type: boolean
         description: Indicates if the code is logically deleted from the RDM tables
@@ -585,6 +601,9 @@ definitions:
       csgBillerValue:
         type: string
         description: Code to be submitted to CSG when this "Gold Code" is selected
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
       isDeleted:
         type: boolean
         description: Indicates if the code is logically deleted from the RDM tables
@@ -619,6 +638,9 @@ definitions:
 #      csgBillerValue:
 #        type: string
 #        description: Code to be submitted to CSG when this "Gold Code" is selected
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
       isDeleted:
         type: boolean
         description: Indicates if the code is logically deleted from the RDM tables
@@ -653,6 +675,9 @@ definitions:
       csgBillerValue:
         type: string
         description: Code to be submitted to CSG when this "Gold Code" is selected
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
       isDeleted:
         type: boolean
         description: Indicates if the code is logically deleted from the RDM tables
@@ -662,4 +687,3 @@ definitions:
       effectiveEndDate:
         type: string
         description: Effective end date for the value
-
