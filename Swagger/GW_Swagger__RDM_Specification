@@ -1,0 +1,689 @@
+# this is draft #1 of the Customers component of the WebAPI specification for Gateway Ordering
+swagger: '2.0'
+info:
+  title: Gateway API - RDM Interfaces
+  description: Defines the Gateway interface specifications for accessing the data domains managed by the Teradata RDM solution
+  version: "1.0.0"
+# the domain of the service
+host: gateway.chartercom.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /RDM/v1
+produces:
+  - application/json
+paths:
+  /dwellingTypes:
+    get:
+      summary: Dwelling Type
+      description: Retrieve the list of applicable dwelling type codes by category
+      parameters:
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        - name: dwellingType
+          in: body
+          description: Limiting and filtering criteria
+          required: true
+          schema: 
+            $ref: "#/definitions/DwellingTypeRequest"
+      tags:
+        - CTD-00
+      responses:
+        200:
+          description: Successful completion; return key RDM elements
+          schema:
+            $ref: '#/definitions/DwellingTypeResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /workOrderReasons:
+    get:
+      summary: Work Order Reason
+      description: Retrieve the list of applicable work order reason codes by category
+      parameters:
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        - name: workOrderTypes
+          in: body
+          description: Limiting and filtering criteria
+          required: true
+          schema: 
+            $ref: "#/definitions/WorkOrderRequest"
+      tags:
+        - CTD-03
+      responses:
+        200:
+          description: Successful completion; return key RDM elements
+          schema:
+            $ref: '#/definitions/WorkOrderResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /workOrderCancelReasons:
+    get:
+      summary: Work Order Cancel Reason Codes
+      description: Retrieve the list of applicable work order cancellation reason codes by category
+      parameters:
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        - name: cancelRequest
+          in: body
+          description: Additional parameters used to select the appropriate Cancel codes
+          required: true
+          schema: 
+            $ref: "#/definitions/WorkOrderCancelRequest"
+      tags:
+        - CTD-10
+      responses:
+        200:
+          description: Successful completion; return key RDM elements
+          schema:
+            $ref: '#/definitions/WorkOrderCancelResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /badWords:
+    get:
+      summary: Bad Words
+      description: Retrieve the list of prohibited "bad words" for validation
+      parameters:
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        - name: FunctionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/BadWordsRequest"
+      tags:
+        - NewDS_badWords
+      responses:
+        200:
+          description: Successful completion; return key RDM elements
+          schema:
+            $ref: '#/definitions/BadWordsResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+#  /houseCustomFields:
+#    get:
+#      summary: House Custom Fields
+#      description: Retrieve the custom house fields
+#      parameters:
+#        - name: X-Charter-Transaction-ID
+#          in: header
+#          required: true
+#          type: string
+#          description: Unique transaction identifier; used for transactional error handling
+#        - name: X-Charter-Application-ID
+#          in: header
+#          required: true
+#          type: string
+#          description: Code identifying invoking application or sales channel
+#        - name: FunctionRequest
+#          in: body
+#          description: Incudes input parameters common to all invocations
+#          required: true
+#          schema: 
+#            $ref: "#/definitions/HouseCustomRequest"
+#      tags:
+#        - CTD-CF
+#      responses:
+#        200:
+#          description: Successful completion; return key RDM elements
+#          schema:
+#            $ref: '#/definitions/HouseCustomResponse'
+#        default:
+#          description: Unexpected error
+#          schema:
+#            $ref: '#/definitions/CommonErrorReturn'
+
+  /customerTypes:
+    get:
+      summary: Customer Types
+      description: Retrieve the list of valid customer types 
+      parameters:
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        - name: FunctionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/CustomerTypeRequest"
+      tags:
+        - NewDS_CustBAS
+      responses:
+        200:
+          description: Successful completion; return key RDM elements
+          schema:
+            $ref: '#/definitions/CustomerTypeResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /TelephoneNumberTypes:
+    get:
+      summary: Phone Types
+      description: Retrieve the list of valid telephone types
+      parameters:
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        - name: FunctionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/TelephoneNumberTypeRequest"
+      tags:
+        - NewDS_PhoneType
+      responses:
+        200:
+          description: Successful completion; return key RDM elements
+          schema:
+            $ref: '#/definitions/TelephoneNumberTypeResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+  /Salutations:
+    get:
+      summary: Salutation List
+      description: Retrieve the list of personal salutations
+      parameters:
+        - name: X-Charter-Transaction-ID
+          in: header
+          required: true
+          type: string
+          description: Unique transaction identifier; used for transactional error handling
+        - name: X-Charter-Application-ID
+          in: header
+          required: true
+          type: string
+          description: Code identifying invoking application or sales channel
+        - name: FunctionRequest
+          in: body
+          description: Incudes input parameters common to all invocations
+          required: true
+          schema: 
+            $ref: "#/definitions/SalutationRequest"
+      tags:
+        - CTD-02
+      responses:
+        200:
+          description: Successful completion; return key RDM elements
+          schema:
+            $ref: '#/definitions/SalutationResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/CommonErrorReturn'
+
+definitions:
+
+##############################################
+#
+#	Common Object definitions
+#
+##############################################
+
+  CommonErrorReturn:
+    properties:
+      lineageID:
+        type: integer
+        description: Unique transaction identifier; used for transactional error handling
+      timestamp:
+        type: string
+        description: Time that the service call was returned
+      errorInfo:
+        type: array
+        items:
+          $ref: "#/definitions/CommonErrors"
+  
+  CommonErrors:
+    properties:
+      errCode:
+        type: string
+      errMessage:
+        type: string
+      errDescription:
+        type: string
+      errGUID:
+        type: string
+
+#  Link:
+#    description: A link to a related resource
+#    properties:
+#      rel:
+#        type: string
+#      href:
+#        type: string
+#      type:
+#        type: string
+#      title:
+#        type: string
+  Error:
+    description: An error condition
+    properties:
+      userMessage:
+        type: string
+        description: A user-friendly message describing the error and (ideally) what to do about it
+      devopsMessage:
+        type: string
+        description: A detailed message containing information of use to developers or operations people
+
+#  ValidationError:
+#    description: A collection of global and attribute-level validation errors
+#    properties:
+#      errors:
+#        type: array
+#        items:
+#          $ref: "#/definitions/AttributeError"
+
+#  AttributeError:
+#    properties:
+#      attribute:
+#        type: string
+#      errors:
+#        type: array
+#        items:
+#          type: string
+
+##############################################
+#
+#	Function-Specific Object definitions
+#
+##############################################
+
+  DwellingTypeRequest:
+    properties:
+      locationClass:
+        type: array
+        items:
+          type: string
+        enum:
+          - RESIDENTIAL
+          - ENTERPRISE
+          - RESI_BULK_MASTER
+          - SMALL_BUSINESS
+          - TENANT
+        description: Specific location class(es) used to restrict the LoV returned
+      asOfDate:
+        type: string
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+      
+  DwellingTypeResponse:
+    properties:
+      goldValue:
+        type: string
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+      goldLongDescription:
+        type: string
+        description: RDM "Gold Long Description" used for more detailed information
+      csgBillerValue:
+        type: string
+        description: Code to be submitted to CSG when this "Gold Code" is selected
+      viewType:
+        type: string
+        description: <dr>
+      HHPFI: 
+        type: string
+        description: <dr>
+      locationClass:
+        type: string
+        description: Location class (residential, small business etc) to which this value applies
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
+        
+  WorkOrderRequest:
+    properties:
+      buyFlowCategories:
+        type: array
+        items: 
+          type: string
+        description: (Constrained) list of process flows/categories for which to retrieve valid order cancellation codes
+        enum:
+          - CONNECT
+          - DISCONNECT
+          - RESTART
+          - SPECIAL_REQUEST
+          - TROUBLE_CALL
+          - UPGRADE
+          - DOWNGRADE
+          - SIDEGRADE
+      asOfDate:
+        type: string
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+        
+  WorkOrderResponse:
+    properties:
+      discoReasonCategory:
+        type: string
+        description: General category for disconnect reason; used for reporting
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
+
+  WorkOrderCancelRequest:
+    properties:
+      buyFlowCategories:
+        type: array
+        items: 
+          type: string
+        description: (Constrained) list of process flows/categories for which to retrieve valid order cancellation codes
+        enum:
+          - CONNECT
+          - DISCONNECT
+          - RESTART
+          - SPECIAL_REQUEST
+          - TROUBLE_CALL
+          - UPGRADE
+          - DOWNGRADE
+          - SIDEGRADE
+      asOfDate:
+        type: string
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+  
+  WorkOrderCancelResponse:
+    properties:
+      goldValue:
+        type: string
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+      goldLongDescription:
+        type: string
+        description: RDM "Gold Long Description" used for more detailed information
+      csgBillerValue:
+        type: string
+        description: Code to be submitted to CSG when this "Gold Code" is selected
+      hiddenFromCSR:
+        type: boolean
+        description: Is value to be displayed to CSR
+      reasonCategory: 
+        type: array
+        items:
+          type: string
+        description: List of buy flows/categories to which this value applies
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
+
+  BadWordsRequest:
+    properties:
+      asOfDate:
+        type: string
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+        
+  BadWordsResponse:
+    properties:
+      badWordID:
+        type: string
+        description: Unique identifier for the bad word
+      badWordDescription:
+        type: string
+        description: The "bad word" itself
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
+
+#  HouseCustomRequest:
+#    properties:
+#      asOfDate:
+#        type: string
+#        format: date
+#        description: The date for which effective values will be returned.  Default to SYSDATE if not provided# explicitly.
+#      includeDeletedOfferings:
+#        type: boolean
+#        description: Include values marked for logical delete.  Default will be FALSE.
+       
+#  HouseCustomResponse:
+#    properties:
+#      goldValue:
+#        type: string
+#        description: The RDM "Gold Code" value
+#      goldDescription:
+#        type: string
+#        description: RDM "Gold Description" used for presentation
+#      goldLongDescription:
+#        type: string
+#        description: RDM "Gold Long Description" used for more detailed information
+#      csgBillerValue:
+#        type: string
+#        description: Code to be submitted to CSG when this "Gold Code" is selected
+#      isDeleted:
+#        type: boolean
+#        description: Indicates if the code is logically deleted from the RDM tables
+#      effectiveStartDate:
+#        type: string
+#        description: Effective start date for the value
+#      effectiveEndDate:
+#        type: string
+#        description: Effective end date for the value
+
+  CustomerTypeRequest:
+    properties:
+      asOfDate:
+        type: string
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+        
+  CustomerTypeResponse:
+    properties:
+      goldValue:
+        type: string
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+      goldLongDescription:
+        type: string
+        description: RDM "Gold Long Description" used for more detailed information
+      csgBillerValue:
+        type: string
+        description: Code to be submitted to CSG when this "Gold Code" is selected
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
+
+  TelephoneNumberTypeRequest:
+    properties:
+      asOfDate:
+        type: string
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+        
+  TelephoneNumberTypeResponse:
+    properties:
+      goldValue:
+        type: string
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+#      goldLongDescription:
+#        type: string
+#        description: RDM "Gold Long Description" used for more detailed information
+#      csgBillerValue:
+#        type: string
+#        description: Code to be submitted to CSG when this "Gold Code" is selected
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
+
+  SalutationRequest:
+    properties:
+      asOfDate:
+        type: string
+        format: date
+        description: The date for which effective values will be returned.  Default to SYSDATE if not provided explicitly.
+      includeDeletedOfferings:
+        type: boolean
+        description: Include values marked for logical delete.  Default will be FALSE.
+        
+  SalutationResponse:
+    properties:
+      goldValue:
+        type: string
+        description: The RDM "Gold Code" value
+      goldDescription:
+        type: string
+        description: RDM "Gold Description" used for presentation
+      goldLongDescription:
+        type: string
+        description: RDM "Gold Long Description" used for more detailed information
+      csgBillerValue:
+        type: string
+        description: Code to be submitted to CSG when this "Gold Code" is selected
+      displayOrder:
+        type: number
+        description: Value on which the returned items can be sorted
+      isDeleted:
+        type: boolean
+        description: Indicates if the code is logically deleted from the RDM tables
+      effectiveStartDate:
+        type: string
+        description: Effective start date for the value
+      effectiveEndDate:
+        type: string
+        description: Effective end date for the value
